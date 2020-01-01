@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import titleOptions from './options/title';
+import legendOptions from './options/legend';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -15,16 +16,24 @@ export function activate(context: vscode.ExtensionContext) {
 	};
 
 	const completion = vscode.languages.registerCompletionItemProvider(selector, {
-		provideCompletionItems(
-			document: vscode.TextDocument,
-			position: vscode.Position
-		) {
-			let linePrefix = document.lineAt(position).text.substr(0, position.character);
-			if (linePrefix.endsWith('title:')) {
-				return titleOptions;
+		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+			const {activeTextEditor} = vscode.window;
+			let line: number = activeTextEditor?.selection.active.line || 0;
+			let linePrefix: string = document.lineAt(line).text;
+			while (line >= 0) {
+				linePrefix = document.lineAt(line).text;
+				if (linePrefix.indexOf('title: {') !== -1) {
+					return titleOptions;
+				}
+
+				if (linePrefix.indexOf('legend: {') !== -1) {
+					return legendOptions;
+				}
+
+				line -= 1;
 			}
 		}
-	}, ':');
+	}, '.');
 
 	context.subscriptions.push(disposable, completion);
 }
