@@ -10,6 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onLanguage:typescript",
+		"onLanguage:javascript",
 		"onCommand:extension.echarts"
 	],
 	"main": "./out/extension.js",
