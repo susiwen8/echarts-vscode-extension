@@ -21,6 +21,12 @@
 				"command": "extension.echarts",
 				"title": "ECharts"
 			}
+		],
+		"snippets": [
+			{
+				"language": "javascript",
+				"path": "./src/snippets.json"
+			}
 		]
 	},
 	"scripts": {
