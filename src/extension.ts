@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
 import titleOptions from './options/title';
 import legendOptions from './options/legend';
+import {utils} from './utils';
+
+const actionArray: string[] = utils.generateAToZArray();
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -15,27 +18,33 @@ export function activate(context: vscode.ExtensionContext) {
 		language: 'javascript'
 	};
 
-	const completion = vscode.languages.registerCompletionItemProvider(selector, {
-		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-			const {activeTextEditor} = vscode.window;
-			let line: number = activeTextEditor?.selection.active.line || 0;
-			let linePrefix: string = document.lineAt(line).text;
-			while (line >= 0) {
-				linePrefix = document.lineAt(line).text;
-				if (linePrefix.indexOf('title: {') !== -1) {
-					return titleOptions;
+	context.subscriptions.push(disposable);
+
+	actionArray.map(action => {
+		const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
+			{
+				provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+					const {activeTextEditor} = vscode.window;
+					let line: number = activeTextEditor?.selection.active.line || 0;
+					let linePrefix: string = document.lineAt(line).text;
+					while (line >= 0) {
+						linePrefix = document.lineAt(line).text;
+						if (linePrefix.indexOf('title: {') !== -1) {
+							return titleOptions;
+						}
+	
+						if (linePrefix.indexOf('legend: {') !== -1) {
+							return legendOptions;
+						}
+	
+						line -= 1;
+					}
 				}
-
-				if (linePrefix.indexOf('legend: {') !== -1) {
-					return legendOptions;
-				}
-
-				line -= 1;
-			}
-		}
-	}, '.');
-
-	context.subscriptions.push(disposable, completion);
+			},
+			action
+		);
+		context.subscriptions.push(completion);
+	});
 }
 
 export function deactivate() {}
