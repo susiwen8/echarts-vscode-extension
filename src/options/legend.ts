@@ -2,11 +2,10 @@ import {
     CompletionItem,
     CompletionItemKind
 } from 'vscode';
-import * as options from '../json/legend.json';
+import {urls} from '../urls';
+import {utils} from '../utils';
 
-const jsonData = options as any;
-
-const titleOptionsName: Array<string> = [
+const legendOptionsName: Array<string> = [
     'type',
     'id',
     'show',
@@ -60,39 +59,44 @@ const titleOptionsName: Array<string> = [
     'selectorButtonGap'
 ];
 
-const legendOptions: Array<CompletionItem> = titleOptionsName.map(item => {
-    let completionItem: CompletionItem;
-    let insertText: string;
+async function getLegendOptions(): Promise<Array<CompletionItem>> {
+    const jsonData: any = await utils.getData(urls.LEGEND_URL);
+    return legendOptionsName.map(item => {
+        let completionItem: CompletionItem;
+        let insertText: string;
+    
+        switch (item) {
+            case 'textStyle':
+                completionItem = new CompletionItem(item, CompletionItemKind.Struct);
+                insertText = '{\n}';
+                break;
+    
+            case 'backgroundColor':
+            case 'borderColor':
+            case 'shadowColor':
+                completionItem = new CompletionItem(item, CompletionItemKind.Color);
+                insertText = '\'\'';
+                break;
+    
+            case 'itemGap':
+            case 'zlevel':
+            case 'z':
+            case 'borderWidth':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = '';
+                break;
+    
+            default:
+                completionItem = new CompletionItem(item, CompletionItemKind.Text);
+                insertText = '\'\'';
+        }
+    
+        completionItem.insertText = `${item}: ${insertText},`;
+        completionItem.documentation = jsonData[item];
+        return completionItem;
+    });
+}
 
-    switch (item) {
-        case 'textStyle':
-            completionItem = new CompletionItem(item, CompletionItemKind.Struct);
-            insertText = '{\n}';
-            break;
-
-        case 'backgroundColor':
-        case 'borderColor':
-        case 'shadowColor':
-            completionItem = new CompletionItem(item, CompletionItemKind.Color);
-            insertText = '\'\'';
-            break;
-
-        case 'itemGap':
-        case 'zlevel':
-        case 'z':
-        case 'borderWidth':
-            completionItem = new CompletionItem(item, CompletionItemKind.Value);
-            insertText = '';
-            break;
-
-        default:
-            completionItem = new CompletionItem(item, CompletionItemKind.Text);
-            insertText = '\'\'';
-    }
-
-    completionItem.insertText = `${item}: ${insertText},`;
-    completionItem.documentation = jsonData[item];
-    return completionItem;
-});
+const legendOptions = getLegendOptions();
 
 export default legendOptions;

@@ -2,8 +2,8 @@ import {
     CompletionItem,
     CompletionItemKind
 } from 'vscode';
-import axios from 'axios'
-
+import {urls} from '../urls';
+import {utils} from '../utils';
 
 const titleOptionsName: Array<string> = [
     'id',
@@ -37,17 +37,8 @@ const titleOptionsName: Array<string> = [
     'shadowOffsetY'
 ];
 
-async function getData(): Promise<any> {
-    try {
-        const res = await axios.get('https://echarts.apache.org/zh/documents/option-parts/option.title.json?');
-        return res.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function getTitleOptions(): Promise<Array<CompletionItem>> {
-    const jsonData: any = await getData();
+    const jsonData: any = await utils.getData(urls.TITLE_URL);
     return titleOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: string;
