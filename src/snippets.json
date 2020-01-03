@@ -1,17 +1,17 @@
 {
     "title": {
         "prefix": ["title"],
-        "body": ["title: {", "\t$0", "}"],
+        "body": ["title: {", "\t$0", "},"],
         "description": "Title option"
     },
     "legend": {
         "prefix": ["legend"],
-        "body": ["legend: {", "\t$0", "}"],
+        "body": ["legend: {", "\t$0", "},"],
         "description": "Legend option"
     },
     "grid": {
         "prefix": ["grid"],
-        "body": ["grid: {", "\t$0", "}"],
+        "body": ["grid: {", "\t$0", "},"],
         "description": "Grid option"
     }
 }
