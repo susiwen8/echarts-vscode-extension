@@ -8,5 +8,10 @@
         "prefix": ["legend"],
         "body": ["legend: {", "\t$0", "}"],
         "description": "Legend option"
+    },
+    "grid": {
+        "prefix": ["grid"],
+        "body": ["grid: {", "\t$0", "}"],
+        "description": "Grid option"
     }
 }

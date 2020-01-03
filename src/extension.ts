@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import titleOptions from './options/title';
 import legendOptions from './options/legend';
+import gridOptions from './options/grid';
 import {utils} from './utils';
 
 const actionArray: string[] = utils.generateAToZArray();
@@ -32,6 +33,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 					if (linePrefix.indexOf('legend: {') !== -1) {
 						return legendOptions;
+					}
+
+					if (linePrefix.indexOf('grid: {') !== -1) {
+						return gridOptions;
 					}
 
 					line -= 1;
