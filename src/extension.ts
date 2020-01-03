@@ -1,17 +1,29 @@
 import * as vscode from 'vscode';
-import titleOptions from './options/title';
-import legendOptions from './options/legend';
-import gridOptions from './options/grid';
+import getTitleOptions from './options/title';
+import getLegendOptions from './options/legend';
+import getGridOptions from './options/grid';
 import {utils} from './utils';
 
 const actionArray: string[] = utils.generateAToZArray();
+let globalLanguage: string = 'zh';
 
 export function activate(context: vscode.ExtensionContext) {
 
 	console.log('Congratulations, your extension "echarts" is now active!');
 
-	let disposable = vscode.commands.registerCommand('extension.echarts', () => {
-		vscode.window.showInformationMessage('ECharts autocomplete is up!');
+	let active = vscode.commands.registerCommand('extension.echarts', () => {
+		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
+		globalLanguage = 'zh';
+	});
+
+	let activeEn = vscode.commands.registerCommand('extension.echarts.en', () => {
+		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
+		globalLanguage = 'en';
+	});
+
+	let activeZh = vscode.commands.registerCommand('extension.echarts.zh', () => {
+		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
+		globalLanguage = 'zh';
 	});
 
 	const selector: vscode.DocumentSelector = {
@@ -29,15 +41,15 @@ export function activate(context: vscode.ExtensionContext) {
 				while (line >= 0 && linePrefix.indexOf('}') === -1) {
 					linePrefix = document.lineAt(line).text;
 					if (linePrefix.indexOf('title: {') !== -1) {
-						return titleOptions;
+						return getTitleOptions(globalLanguage);
 					}
 
 					if (linePrefix.indexOf('legend: {') !== -1) {
-						return legendOptions;
+						return getLegendOptions(globalLanguage);
 					}
 
 					if (linePrefix.indexOf('grid: {') !== -1) {
-						return gridOptions;
+						return getGridOptions(globalLanguage);
 					}
 
 					line -= 1;
@@ -47,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 		...actionArray
 	);
 
-	context.subscriptions.push(disposable, completion);
+	context.subscriptions.push(active, activeEn, activeZh, completion);
 }
 
 export function deactivate() {}

@@ -42,8 +42,8 @@ const titleOptionsName: string[] = [
     'shadowOffsetY'
 ];
 
-async function getTitleOptions(): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls.TITLE_URL);
+async function getTitleOptions(globalLanguage: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[globalLanguage].TITLE_URL);
     return titleOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
@@ -127,6 +127,4 @@ async function getTitleOptions(): Promise<CompletionItem[]> {
     });
 }
 
-const titleOptions = getTitleOptions();
-
-export default titleOptions;
+export default getTitleOptions;

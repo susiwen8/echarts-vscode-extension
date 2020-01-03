@@ -12,7 +12,9 @@
 	"activationEvents": [
 		"onLanguage:typescript",
 		"onLanguage:javascript",
-		"onCommand:extension.echarts"
+		"onCommand:extension.echarts",
+		"onCommand:extension.echarts.en",
+		"onCommand:extension.echarts.zh"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -20,6 +22,14 @@
 			{
 				"command": "extension.echarts",
 				"title": "ECharts"
+			},
+			{
+				"command": "extension.echarts.en",
+				"title": "ECharts english version"
+			},
+			{
+				"command": "extension.echarts.zh",
+				"title": "ECharts chinese version"
 			}
 		],
 		"snippets": [

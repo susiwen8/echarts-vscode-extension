@@ -64,8 +64,8 @@ const legendOptionsName: string[] = [
     'selectorButtonGap'
 ];
 
-async function getLegendOptions(): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls.LEGEND_URL);
+async function getLegendOptions(globalLanguage: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[globalLanguage].TITLE_URL);
     return legendOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
@@ -197,6 +197,4 @@ async function getLegendOptions(): Promise<CompletionItem[]> {
     });
 }
 
-const legendOptions = getLegendOptions();
-
-export default legendOptions;
+export default getLegendOptions;

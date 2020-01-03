@@ -31,8 +31,8 @@ const gridOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getGridOptions(): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls.GRID_URL);
+async function getGridOptions(globalLanguage: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[globalLanguage].TITLE_URL);
     return gridOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: string;
@@ -68,6 +68,4 @@ async function getGridOptions(): Promise<CompletionItem[]> {
     });
 }
 
-const gridOptions = getGridOptions();
-
-export default gridOptions;
+export default getGridOptions;
