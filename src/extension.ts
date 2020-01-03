@@ -18,33 +18,29 @@ export function activate(context: vscode.ExtensionContext) {
 		language: 'javascript'
 	};
 
-	context.subscriptions.push(disposable);
-
-	actionArray.map(action => {
-		const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
-			{
-				provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-					const {activeTextEditor} = vscode.window;
-					let line: number = activeTextEditor?.selection.active.line || 0;
-					let linePrefix: string = document.lineAt(line).text;
-					while (line >= 0) {
-						linePrefix = document.lineAt(line).text;
-						if (linePrefix.indexOf('title: {') !== -1) {
-							return titleOptions;
-						}
-	
-						if (linePrefix.indexOf('legend: {') !== -1) {
-							return legendOptions;
-						}
-	
-						line -= 1;
+	const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
+		{
+			provideCompletionItems(document: vscode.TextDocument) {
+				const {activeTextEditor} = vscode.window;
+				let line: number = activeTextEditor?.selection.active.line || 0;
+				let linePrefix: string = document.lineAt(line).text;
+				while (line >= 0) {
+					linePrefix = document.lineAt(line).text;
+					if (linePrefix.indexOf('title: {') !== -1) {
+						return titleOptions;
 					}
+
+					if (linePrefix.indexOf('legend: {') !== -1) {
+						return legendOptions;
+					}
+
+					line -= 1;
 				}
-			},
-			action
-		);
-		context.subscriptions.push(completion);
-	});
+			}
+		},
+		...actionArray
+	);
+	context.subscriptions.push(disposable, completion);
 }
 
 export function deactivate() {}

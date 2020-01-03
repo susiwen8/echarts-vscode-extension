@@ -1,11 +1,15 @@
+/**
+ * @file Legend component
+ */
+
 import {
     CompletionItem,
     CompletionItemKind
 } from 'vscode';
 import {urls} from '../urls';
-import {utils} from '../utils';
+import {utils, Options} from '../utils';
 
-const legendOptionsName: Array<string> = [
+const legendOptionsName: string[] = [
     'type',
     'id',
     'show',
@@ -59,8 +63,8 @@ const legendOptionsName: Array<string> = [
     'selectorButtonGap'
 ];
 
-async function getLegendOptions(): Promise<Array<CompletionItem>> {
-    const jsonData: any = await utils.getData(urls.LEGEND_URL);
+async function getLegendOptions(): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls.LEGEND_URL);
     return legendOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: string;
@@ -92,7 +96,7 @@ async function getLegendOptions(): Promise<Array<CompletionItem>> {
         }
     
         completionItem.insertText = `${item}: ${insertText},`;
-        completionItem.documentation = jsonData[item];
+        completionItem.documentation = jsonData && jsonData[item];
         return completionItem;
     });
 }

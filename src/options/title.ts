@@ -1,11 +1,15 @@
+/**
+ * @file Title component
+ */
+
 import {
     CompletionItem,
     CompletionItemKind
 } from 'vscode';
 import {urls} from '../urls';
-import {utils} from '../utils';
+import {utils, Options} from '../utils';
 
-const titleOptionsName: Array<string> = [
+const titleOptionsName: string[] = [
     'id',
     'show',
     'text',
@@ -37,9 +41,9 @@ const titleOptionsName: Array<string> = [
     'shadowOffsetY'
 ];
 
-async function getTitleOptions(): Promise<Array<CompletionItem>> {
-    const jsonData: any = await utils.getData(urls.TITLE_URL);
-    return titleOptionsName.map(item => {
+async function getTitleOptions(): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls.TITLE_URL);
+    return titleOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: string;
 
@@ -71,7 +75,7 @@ async function getTitleOptions(): Promise<Array<CompletionItem>> {
         }
     
         completionItem.insertText = `${item}: ${insertText},`;
-        completionItem.documentation = jsonData[item];
+        completionItem.documentation = jsonData && jsonData[item];
         return completionItem;
     });
 }
