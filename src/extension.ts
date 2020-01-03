@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "echarts" is now active!');
 
 	let active = vscode.commands.registerCommand('extension.echarts', () => {
-		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
+		vscode.window.showInformationMessage('ECharts 中文版补全已开启!');
 		globalLanguage = 'zh';
 	});
 
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	let activeZh = vscode.commands.registerCommand('extension.echarts.zh', () => {
-		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
+		vscode.window.showInformationMessage('ECharts 中文版补全已开启!');
 		globalLanguage = 'zh';
 	});
 
