@@ -25,11 +25,11 @@
 			},
 			{
 				"command": "extension.echarts.en",
-				"title": "ECharts english version"
+				"title": "ECharts autocomplete english version"
 			},
 			{
 				"command": "extension.echarts.zh",
-				"title": "ECharts chinese version"
+				"title": "ECharts 自动补全中文版"
 			}
 		],
 		"snippets": [
