@@ -25,7 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
 				const {activeTextEditor} = vscode.window;
 				let line: number = activeTextEditor?.selection.active.line || 0;
 				let linePrefix: string = document.lineAt(line).text;
-				while (line >= 0) {
+
+				while (line >= 0 && linePrefix.indexOf('}') === -1) {
 					linePrefix = document.lineAt(line).text;
 					if (linePrefix.indexOf('title: {') !== -1) {
 						return titleOptions;
@@ -45,6 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 		...actionArray
 	);
+
 	context.subscriptions.push(disposable, completion);
 }
 
