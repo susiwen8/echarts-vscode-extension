@@ -34,7 +34,7 @@ export const urls: Urls = {
         SINGLEAXIS_URL: `${ZH_HOST}option.singleAxis.json`,
         TIMELINE_URL: `${ZH_HOST}option.timeline.json`,
         GRAPHIC_URL: `${ZH_HOST}option.graphic.json`,
-        CALENDAR: `${ZH_HOST}option.calendar.json`,
+        CALENDAR_URL: `${ZH_HOST}option.calendar.json`,
         DATASET_URL: `${ZH_HOST}option.dataset.json`,
         ARIA_URL: `${ZH_HOST}option.aria.json`,
         TEXTSTYLE_URL: `${ZH_HOST}option.textStyle.json`,
