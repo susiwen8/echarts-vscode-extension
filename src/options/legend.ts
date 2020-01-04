@@ -65,7 +65,7 @@ const legendOptionsName: string[] = [
 ];
 
 async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].TITLE_URL);
+    const jsonData: Options|undefined = await utils.getData(urls[lang].LEGEND_URL);
     return legendOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

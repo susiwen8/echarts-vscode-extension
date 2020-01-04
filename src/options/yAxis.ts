@@ -48,7 +48,7 @@ const yAxisOptionsName: string[] = [
 ];
 
 async function getyAxisOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].TITLE_URL);
+    const jsonData: Options|undefined = await utils.getData(urls[lang].YAXIS_URL);
     return yAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

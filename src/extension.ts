@@ -5,6 +5,9 @@ import getLegendOptions from './options/legend';
 import getGridOptions from './options/grid';
 import getxAxisOptions from './options/xAxis';
 import getyAxisOptions from './options/yAxis';
+import getPolarOptions from './options/polar';
+import getRadiusAxisOptions from './options/radiusAxis';
+import getAnglesAxisOptions from './options/angleAxis';
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -54,13 +57,19 @@ async function getAllOptions(lang: string): Promise<void> {
 		legendOption,
 		gridOption,
 		xAxisOption,
-		yAxisOption
+		yAxisOption,
+		polarOption,
+		radiusAxisOption,
+		angleAxisOption,
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
 		getGridOptions(lang),
 		getxAxisOptions(lang),
-		getyAxisOptions(lang)
+		getyAxisOptions(lang),
+		getPolarOptions(lang),
+		getRadiusAxisOptions(lang),
+		getAnglesAxisOptions(lang),
 	]);
 }
 
@@ -120,6 +129,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 					if (linePrefix.indexOf('yAxis: {') !== -1) {
 						return yAxisOption;
+					}
+
+					if (linePrefix.indexOf('polar: {') !== -1) {
+						return polarOption;
+					}
+
+					if (linePrefix.indexOf('radiusAxis: {') !== -1) {
+						return radiusAxisOption;
+					}
+
+					if (linePrefix.indexOf('angleAxis: {') !== -1) {
+						return angleAxisOption;
 					}
 
 					line -= 1;

@@ -32,7 +32,7 @@ const gridOptionsName: string[] = [
 ];
 
 async function getGridOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].TITLE_URL);
+    const jsonData: Options|undefined = await utils.getData(urls[lang].GRID_URL);
     return gridOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: string;
