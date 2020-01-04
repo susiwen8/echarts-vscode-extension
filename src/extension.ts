@@ -10,6 +10,9 @@ import getRadiusAxisOptions from './options/radiusAxis';
 import getAnglesAxisOptions from './options/angleAxis';
 import getRadarOptions from './options/radar';
 import getTooltipOptions from './options/tooltip';
+import getAxisPointerOptions from './options/axisPointer';
+import getToolboxOptions from './options/toolbox';
+import getBrushOptions from './options/brush';
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -64,7 +67,10 @@ async function getAllOptions(lang: string): Promise<void> {
 		radiusAxisOption,
 		angleAxisOption,
 		tooltipOption,
-		radarOption
+		radarOption,
+		axisPointerOption,
+		toolboxOption,
+		brushOption
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
@@ -76,6 +82,9 @@ async function getAllOptions(lang: string): Promise<void> {
 		getAnglesAxisOptions(lang),
 		getTooltipOptions(lang),
 		getRadarOptions(lang),
+		getAxisPointerOptions(lang),
+		getToolboxOptions(lang),
+		getBrushOptions(lang),
 	]);
 }
 
@@ -156,6 +165,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 					if (linePrefix.indexOf('tooltip: {' ) !== -1) {
 						return tooltipOption;
+					}
+
+					if (linePrefix.indexOf('axisPointer: {' ) !== -1) {
+						return tooltipOption;
+					}
+
+					if (linePrefix.indexOf('toolbox: {' ) !== -1) {
+						return toolboxOption;
+					}
+
+					if (linePrefix.indexOf('brush: {' ) !== -1) {
+						return brushOption;
 					}
 
 					line -= 1;
