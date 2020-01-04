@@ -8,6 +8,8 @@ import getyAxisOptions from './options/yAxis';
 import getPolarOptions from './options/polar';
 import getRadiusAxisOptions from './options/radiusAxis';
 import getAnglesAxisOptions from './options/angleAxis';
+import getRadarOptions from './options/radar';
+import getTooltipOptions from './options/tooltip';
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -61,6 +63,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		polarOption,
 		radiusAxisOption,
 		angleAxisOption,
+		tooltipOption,
+		radarOption
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
@@ -70,6 +74,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		getPolarOptions(lang),
 		getRadiusAxisOptions(lang),
 		getAnglesAxisOptions(lang),
+		getTooltipOptions(lang),
+		getRadarOptions(lang),
 	]);
 }
 
@@ -107,6 +113,7 @@ export function activate(context: vscode.ExtensionContext) {
 			provideCompletionItems(document: vscode.TextDocument) {
 				const {activeTextEditor} = vscode.window;
 				let line: number = activeTextEditor?.selection.active.line || 0;
+				// console.log(document.getText().replace(/\s/g, ''));
 				let linePrefix: string = document.lineAt(line).text;
 
 				while (line >= 0 && linePrefix.indexOf('}') === -1) {
@@ -141,6 +148,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 					if (linePrefix.indexOf('angleAxis: {') !== -1) {
 						return angleAxisOption;
+					}
+
+					if (linePrefix.indexOf('radar: {' ) !== -1) {
+						return radarOption;
+					}
+
+					if (linePrefix.indexOf('tooltip: {' ) !== -1) {
+						return tooltipOption;
 					}
 
 					line -= 1;

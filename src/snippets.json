@@ -1,4 +1,9 @@
 {
+    "option": {
+        "prefix": ["option"],
+        "body": ["option: {", "\t$0", "},"],
+        "description": "Options for ECharts"
+    },
     "title": {
         "prefix": ["title"],
         "body": ["title: {", "\t$0", "},"],
