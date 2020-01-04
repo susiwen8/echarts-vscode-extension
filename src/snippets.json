@@ -13,5 +13,120 @@
         "prefix": ["grid"],
         "body": ["grid: {", "\t$0", "},"],
         "description": "Grid option"
+    },
+    "xAxis": {
+        "prefix": ["xAxis"],
+        "body": ["xAxis: {", "\t$0", "},"],
+        "description": "xAxis option"
+    },
+    "yAxis": {
+        "prefix": ["yAxis"],
+        "body": ["yAxis: {", "\t$0", "},"],
+        "description": "yAxis option"
+    },
+    "polar": {
+        "prefix": ["polar"],
+        "body": ["polar: {", "\t$0", "},"],
+        "description": "Polar option"
+    },
+    "radiusAxis": {
+        "prefix": ["radiusAxis"],
+        "body": ["radiusAxis: {", "\t$0", "},"],
+        "description": "RadiusAxis option"
+    },
+    "angleAxis": {
+        "prefix": ["angleAxis"],
+        "body": ["angleAxis: {", "\t$0", "},"],
+        "description": "AngleAxis option"
+    },
+    "radar": {
+        "prefix": ["radar"],
+        "body": ["radar: {", "\t$0", "},"],
+        "description": "Radar option"
+    },
+    "dataZoom": {
+        "prefix": ["dataZoom"],
+        "body": ["dataZoom: [", "\t$0", "],"],
+        "description": "DataZoom option"
+    },
+    "visualMap": {
+        "prefix": ["visualMap"],
+        "body": ["visualMap: [", "\t$0", "],"],
+        "description": "VisualMap option"
+    },
+    "tooltip": {
+        "prefix": ["tooltip"],
+        "body": ["tooltip: {", "\t$0", "},"],
+        "description": "Tooltip option"
+    },
+    "axisPointer": {
+        "prefix": ["axisPointer"],
+        "body": ["axisPointer: {", "\t$0", "},"],
+        "description": "AxisPointer option"
+    },
+    "toolbox": {
+        "prefix": ["toolbox"],
+        "body": ["toolbox: {", "\t$0", "},"],
+        "description": "Toolbox option"
+    },
+    "brush": {
+        "prefix": ["brush"],
+        "body": ["brush: {", "\t$0", "},"],
+        "description": "Brush option"
+    },
+    "geo": {
+        "prefix": ["geo"],
+        "body": ["geo: {", "\t$0", "},"],
+        "description": "Geo option"
+    },
+    "parallel": {
+        "prefix": ["parallel"],
+        "body": ["parallel: {", "\t$0", "},"],
+        "description": "Parallel option"
+    },
+    "parallelAxis": {
+        "prefix": ["parallelAxis"],
+        "body": ["parallelAxis: {", "\t$0", "},"],
+        "description": "ParallelAxis option"
+    },
+    "singleAxis": {
+        "prefix": ["singleAxis"],
+        "body": ["singleAxis: {", "\t$0", "},"],
+        "description": "SingleAxis option"
+    },
+    "timeline": {
+        "prefix": ["timeline"],
+        "body": ["timeline: {", "\t$0", "},"],
+        "description": "Timeline option"
+    },
+    "graphic": {
+        "prefix": ["graphic"],
+        "body": ["graphic: {", "\t$0", "},"],
+        "description": "Graphic option"
+    },
+    "calendar": {
+        "prefix": ["calendar"],
+        "body": ["calendar: {", "\t$0", "},"],
+        "description": "Calendar option"
+    },
+    "dataset": {
+        "prefix": ["dataset"],
+        "body": ["dataset: {", "\t$0", "},"],
+        "description": "Dataset option"
+    },
+    "aria": {
+        "prefix": ["aria"],
+        "body": ["aria: {", "\t$0", "},"],
+        "description": "Aria option"
+    },
+    "series": {
+        "prefix": ["series"],
+        "body": ["series: [", "\t$0", "],"],
+        "description": "Series option"
+    },
+    "textStyle": {
+        "prefix": ["textStyle"],
+        "body": ["textStyle: {", "\t$0", "},"],
+        "description": "TextStyle option"
     }
 }

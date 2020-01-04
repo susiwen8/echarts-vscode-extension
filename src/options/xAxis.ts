@@ -79,7 +79,7 @@ async function getxAxisOptions(lang: string): Promise<CompletionItem[]> {
             case 'z':
             case 'borderWidth':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: '',`);
+                insertText = new SnippetString(`${item}: $0,`);
                 break;
     
             default:
