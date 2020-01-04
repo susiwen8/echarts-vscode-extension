@@ -91,9 +91,12 @@ async function getRadiusAxisOptions(lang: string): Promise<CompletionItem[]> {
                 break;
                 
             case 'min':
-            case 'max':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMin\',function (value) {}|},');
+                break;
+            case 'max':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMax\',function (value) {}|},');
                 break;
                 
             case 'polarIndex':

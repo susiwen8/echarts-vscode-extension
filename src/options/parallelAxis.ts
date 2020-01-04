@@ -1,5 +1,5 @@
 /**
- * @file xAxis component
+ * @file parallelAxis component
  */
 
 import {
@@ -10,12 +10,12 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const xAxisOptionsName: string[] = [
+const parallelAxisOptionsName: string[] = [
     'id',
-    'show',
-    'gridIndex',
-    'position',
-    'offset',
+    'dim',
+    'parallelIndex',
+    'realtime',
+    'areaSelectStyle',
     'type',
     'name',
     'nameLocation',
@@ -38,18 +38,12 @@ const xAxisOptionsName: string[] = [
     'axisTick',
     'minorTick',
     'axisLabel',
-    'splitLine',
-    'minorSplitLine',
-    'splitArea',
-    'data',
-    'axisPointer',
-    'zlevel',
-    'z'
+    'data'
 ];
 
-async function getxAxisOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].XAXIS_URL);
-    return xAxisOptionsName.map((item: string) => {
+async function getParallelAxisOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].PARALLELAXIS_URL);
+    return parallelAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -59,12 +53,23 @@ async function getxAxisOptions(lang: string): Promise<CompletionItem[]> {
             case 'axisTick':
             case 'minorTick':
             case 'axisLabel':
-            case 'splitLine':
-            case 'minorSplitLine':
-            case 'splitArea':
-            case 'axisPointer':
+            case 'areaSelectStyle':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0\n},`);
+                break;
+
+            case 'realtime':
+            case 'inverse':
+            case 'silent':
+            case 'scale':
+            case 'triggerEvent':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
+                break;
+
+            case 'type':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '\'${1|value,category,time,log|}\',');
                 break;
 
             case 'nameLocation':
@@ -77,19 +82,20 @@ async function getxAxisOptions(lang: string): Promise<CompletionItem[]> {
                 insertText = new SnippetString(`${item}: ` + '${1|true,false,[]|},');
                 break;
 
-            case 'min':
+            case 'data':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMin\',function (value) {}|},');
+                insertText = new SnippetString(`${item}: [$0]`);
                 break;
-            case 'max':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMax\',function (value) {}|},');
-                break;
-    
-            case 'itemGap':
-            case 'zlevel':
-            case 'z':
-            case 'borderWidth':
+
+            case 'dim':
+            case 'parallelIndex':
+            case 'nameGap':
+            case 'nameRotate':
+            case 'splitNumber':
+            case 'minInterval':
+            case 'maxInterval':
+            case 'interval':
+            case 'logBase':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: $0,`);
                 break;
@@ -105,4 +111,4 @@ async function getxAxisOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getxAxisOptions;
+export default getParallelAxisOptions;

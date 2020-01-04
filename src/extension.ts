@@ -13,6 +13,16 @@ import getTooltipOptions from './options/tooltip';
 import getAxisPointerOptions from './options/axisPointer';
 import getToolboxOptions from './options/toolbox';
 import getBrushOptions from './options/brush';
+import getGeoOptions from './options/geo';
+import getParallelOptions from './options/parallel';
+import getParallelAxisOptions from './options/parallelAxis';
+import getSingleAxisOption from './options/singleAxis';
+import getTimelineOption from './options/timeline';
+import getGraphicOptions from './options/graphic';
+import getCalendarOptions from './options/calendar';
+import getDatasetOptions from './options/dataset';
+import getAriaOptions from './options/aria';
+import getTextStyleOptions from './options/textStyle'
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -41,21 +51,9 @@ let titleOption: vscode.CompletionItem[],
 	datasetOption: vscode.CompletionItem[],
 	ariaOption: vscode.CompletionItem[],
 	seriesOption: vscode.CompletionItem[],
-	colorOption: vscode.CompletionItem,
-	backgroundColorOption: vscode.CompletionItem,
-	textStyleOption: vscode.CompletionItem[],
-	animation: vscode.CompletionItem,
-	animationThreshold: vscode.CompletionItem,
-	animationDuration: vscode.CompletionItem,
-	animationEasing: vscode.CompletionItem,
-	animationDelay: vscode.CompletionItem,
-	animationDurationUpdate: vscode.CompletionItem,
-	animationEasingUpdate: vscode.CompletionItem,
-	animationDelayUpdate: vscode.CompletionItem,
-	blendMode: vscode.CompletionItem,
-	hoverLayerThreshold: vscode.CompletionItem,
-	useUTC: vscode.CompletionItem;
+	textStyleOption: vscode.CompletionItem[];
 
+// TODO: no internet connection
 async function getAllOptions(lang: string): Promise<void> {
 	[
 		titleOption,
@@ -70,7 +68,17 @@ async function getAllOptions(lang: string): Promise<void> {
 		radarOption,
 		axisPointerOption,
 		toolboxOption,
-		brushOption
+		brushOption,
+		geoOption,
+		parallelOption,
+		parallelAxisOption,
+		singleAxisOption,
+		timelineOption,
+		graphicOption,
+		calendarOption,
+		datasetOption,
+		ariaOption,
+		textStyleOption
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
@@ -85,6 +93,16 @@ async function getAllOptions(lang: string): Promise<void> {
 		getAxisPointerOptions(lang),
 		getToolboxOptions(lang),
 		getBrushOptions(lang),
+		getGeoOptions(lang),
+		getParallelOptions(lang),
+		getParallelAxisOptions(lang),
+		getSingleAxisOption(lang),
+		getTimelineOption(lang),
+		getGraphicOptions(lang),
+		getCalendarOptions(lang),
+		getDatasetOptions(lang),
+		getAriaOptions(lang),
+		getTextStyleOptions(lang)
 	]);
 }
 
@@ -163,6 +181,10 @@ export function activate(context: vscode.ExtensionContext) {
 						return radarOption;
 					}
 
+					if (linePrefix.indexOf('axisPointer: {' ) !== -1) {
+						return axisPointerOption;
+					}
+
 					if (linePrefix.indexOf('tooltip: {' ) !== -1) {
 						return tooltipOption;
 					}
@@ -177,6 +199,46 @@ export function activate(context: vscode.ExtensionContext) {
 
 					if (linePrefix.indexOf('brush: {' ) !== -1) {
 						return brushOption;
+					}
+
+					if (linePrefix.indexOf('geo: {' ) !== -1) {
+						return geoOption;
+					}
+
+					if (linePrefix.indexOf('parallel: {') !== -1) {
+						return parallelOption;
+					}
+
+					if (linePrefix.indexOf('parallelAxis: {') !== -1) {
+						return parallelAxisOption;
+					}
+
+					if (linePrefix.indexOf('singleAxis: {') !== -1) {
+						return singleAxisOption;
+					}
+
+					if (linePrefix.indexOf('timeline: {') !== -1) {
+						return timelineOption;
+					}
+
+					if (linePrefix.indexOf('graphic: {') !== -1) {
+						return graphicOption;
+					}
+
+					if (linePrefix.indexOf('calendar: {') !== -1) {
+						return calendarOption;
+					}
+
+					if (linePrefix.indexOf('dataset: {') !== -1) {
+						return datasetOption;
+					}
+
+					if (linePrefix.indexOf('aria: {') !== -1) {
+						return ariaOption;
+					}
+
+					if (linePrefix.indexOf('textStyle: {') !== -1) {
+						return textStyleOption;
 					}
 
 					line -= 1;

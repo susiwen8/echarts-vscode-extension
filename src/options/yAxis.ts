@@ -66,12 +66,24 @@ async function getyAxisOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0\n},`);
                 break;
+
+            case 'nameLocation':
+                completionItem = new CompletionItem(item, CompletionItemKind.Enum);
+                insertText = new SnippetString(`${item}: ` + '\'${1|start,middle,center,end|}\',');
+                break;
+
+            case 'boundaryGap':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|true,false,[]|},');
+                break;
     
-            case 'backgroundColor':
-            case 'borderColor':
-            case 'shadowColor':
-                completionItem = new CompletionItem(item, CompletionItemKind.Color);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+            case 'min':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMin\',function (value) {}|},');
+                break;
+            case 'max':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMax\',function (value) {}|},');
                 break;
     
             case 'itemGap':
