@@ -8,6 +8,11 @@ export interface Options {
     [propName: string]: string;
 }
 
+export enum VisualMapType {
+    Continuous = 'continuous',
+    Piecewise = 'piecewise'
+}
+
 /**
  * Axios request
  * @param url request url

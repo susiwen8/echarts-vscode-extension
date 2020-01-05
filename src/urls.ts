@@ -38,6 +38,8 @@ export const urls: Urls = {
         DATASET_URL: `${ZH_HOST}option.dataset.json`,
         ARIA_URL: `${ZH_HOST}option.aria.json`,
         TEXTSTYLE_URL: `${ZH_HOST}option.textStyle.json`,
+        VISUALMAP_CONTINUOUS: `${ZH_HOST}option.visualMap-continuous.json`,
+        VISUALMAP_PIECEWISE: `${ZH_HOST}option.visualMap-piecewise.json`,
     },
     en: {
         TITLE_URL: `${EN_HOST}option.title.json?`,
@@ -64,6 +66,7 @@ export const urls: Urls = {
         DATASET_URL: `${EN_HOST}option.dataset.json`,
         ARIA_URL: `${EN_HOST}option.aria.json`,
         TEXTSTYLE_URL: `${EN_HOST}option.textStyle.json`,
-
+        VISUALMAP_CONTINUOUS: `${EN_HOST}option.visualMap-continuous.json`,
+        VISUALMAP_PIECEWISE: `${EN_HOST}option.visualMap-piecewise.json`,
     }
 };

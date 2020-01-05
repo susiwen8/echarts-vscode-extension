@@ -54,10 +54,15 @@
         "body": ["dataZoom: [", "\t$0", "],"],
         "description": "DataZoom option"
     },
-    "visualMap": {
+    "visualMap-continuous": {
         "prefix": ["visualMap"],
-        "body": ["visualMap: [", "\t$0", "],"],
-        "description": "VisualMap option"
+        "body": ["visualMap: [", "\t{", "\t\ttype: 'continuous',","\t\t$0", "\t},", "],"],
+        "description": "VisualMap continuous option"
+    },
+    "visualMap-piecewise": {
+        "prefix": ["visualMap"],
+        "body": ["visualMap: [", "\t{", "\t\ttype: 'piecewise',", "\t\t$0","\t},", "],"],
+        "description": "VisualMap piecewise option"
     },
     "tooltip": {
         "prefix": ["tooltip"],
