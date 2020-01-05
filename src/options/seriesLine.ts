@@ -1,4 +1,3 @@
-
 /**
  * @file Series-Line component
  */
@@ -137,7 +136,6 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
-            case 'animationDuration':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
                 break;
@@ -155,13 +153,14 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
             case 'animationDelay':
             case 'animationDurationUpdate':
             case 'animationDelayUpdate':
+            case 'animationDuration':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
 
             case 'symbol':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'image://\',function (value, params) {}|},');
+                insertText = new SnippetString(`${item}: ` + '${1|\'emptyCircle\',\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
                 break;
 
             case 'symbolSize':

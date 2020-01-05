@@ -32,6 +32,7 @@ import getVisualMapOptions from './options/visualMap';
 import getDataZoomOptions from './options/dataZoom';
 import getBarOptions from './options/seriesBar';
 import getLineOptions from './options/seriesLine';
+import getPieOptions from './options/seriesPie';
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -116,7 +117,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		dataZoomInsideOption,
 		dataZoomSliderOption,
 		seriesBarOption,
-		seriesLineOption
+		seriesLineOption,
+		seriesPieOption,
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
@@ -146,7 +148,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		getDataZoomOptions(lang, DataZoomType.Inside),
 		getDataZoomOptions(lang, DataZoomType.Slider),
 		getBarOptions(lang),
-		getLineOptions(lang)
+		getLineOptions(lang),
+		getPieOptions(lang)
 	]);
 }
 
@@ -345,6 +348,106 @@ export function activate(context: vscode.ExtensionContext) {
 					if (linePrefix.indexOf(ChartType.Line) !== -1) {
 						prevOption = seriesLineOption;
 						return seriesLineOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Pie) !== -1) {
+						prevOption = seriesPieOption;
+						return seriesPieOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Scatter) !== -1) {
+						prevOption = seriesScatterOption;
+						return seriesScatterOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.EffectScatter) !== -1) {
+						prevOption = seriesEffectScatterOption;
+						return seriesEffectScatterOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Radar) !== -1) {
+						prevOption = seriesRadarOption;
+						return seriesRadarOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Tree) !== -1) {
+						prevOption = seriesTreeOption;
+						return seriesTreeOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.TreeMap) !== -1) {
+						prevOption = seriesTreemapOption;
+						return seriesTreemapOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.SunBurst) !== -1) {
+						prevOption = seriesSunburstOption;
+						return seriesSunburstOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.BoxPlot) !== -1) {
+						prevOption = seriesBoxplotOption;
+						return seriesBoxplotOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.CandleStick) !== -1) {
+						prevOption = seriesCandlestickOption;
+						return seriesCandlestickOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.HeatMap) !== -1) {
+						prevOption = seriesHeatmapOption;
+						return seriesHeatmapOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Map) !== -1) {
+						prevOption = seriesMapOption;
+						return seriesMapOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Parallel) !== -1) {
+						prevOption = seriesParallelOption;
+						return seriesParallelOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Lines) !== -1) {
+						prevOption = seriesLinesOption;
+						return seriesLinesOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Graph) !== -1) {
+						prevOption = seriesGraphOption;
+						return seriesGraphOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Sankey) !== -1) {
+						prevOption = seriesSankeyOption;
+						return seriesSankeyOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Funnel) !== -1) {
+						prevOption = seriesFunnelOption;
+						return seriesFunnelOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Gauge) !== -1) {
+						prevOption = seriesGaugeOption;
+						return seriesGaugeOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.PictorialBar) !== -1) {
+						prevOption = seriesPictorialBarOption;
+						return seriesPictorialBarOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.ThemeRiver) !== -1) {
+						prevOption = seriesThemeRiverOption;
+						return seriesThemeRiverOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Custom) !== -1) {
+						prevOption = seriesCustomOption;
+						return seriesCustomOption;
 					}
 
 					line -= 1;

@@ -1,5 +1,5 @@
 /**
- * @file Series-Bar component
+ * @file Series-Scatter component
  */
 
 import {
@@ -10,30 +10,30 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesBarOptionsName: string[] = [
+const seriesScatterOptionsName: string[] = [
     'id',
     'name',
-    'legendHoverLink',
     'coordinateSystem',
     'xAxisIndex',
     'yAxisIndex',
-    'roundCap',
+    'polarIndex',
+    'geoIndex',
+    'calendarIndex',
+    'hoverAnimation',
+    'legendHoverLink',
+    'symbol',
+    'symbolSize',
+    'symbolRotate',
+    'symbolKeepAspect',
+    'symbolOffset',
+    'large',
+    'largeThreshold',
+    'cursor',
     'label',
     'itemStyle',
     'emphasis',
-    'stack',
-    'cursor',
-    'barWidth',
-    'barMaxWidth',
-    'barMinWidth',
-    'barMinHeight',
-    'barGap',
-    'barCategoryGap',
-    'large',
-    'largeThreshold',
     'progressive',
     'progressiveThreshold',
-    'progressiveChunkMode',
     'dimensions',
     'encode',
     'seriesLayoutBy',
@@ -57,9 +57,9 @@ const seriesBarOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getBarOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_BAR_URL);
-    return seriesBarOptionsName.map((item: string) => {
+async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_SCATTER_URL);
+    return seriesScatterOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -77,23 +77,16 @@ async function getBarOptions(lang: string): Promise<CompletionItem[]> {
                 break;
 
             case 'legendHoverLink':
-            case 'roundCap':
             case 'large':
             case 'clip':
             case 'silent':
             case 'animation':
+            case 'symbolKeepAspect':
+            case 'hoverAnimation':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'barWidth':
-            case 'barMaxWidth':
-            case 'barMinWidth':
-                completionItem = new CompletionItem(item, CompletionItemKind.Enum);
-                insertText = new SnippetString(`${item}: ` + '${1|5,\'\'|},');
-                break;
-
-            case 'barMinHeight':
             case 'largeThreshold':
             case 'progressive':
             case 'progressiveThreshold':
@@ -103,11 +96,6 @@ async function getBarOptions(lang: string): Promise<CompletionItem[]> {
             case 'animationThreshold':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
-                break;
-
-            case 'progressiveChunkMode':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|sequential,mod|}\',');
                 break;
 
             case 'seriesLayoutBy':
@@ -122,15 +110,30 @@ async function getBarOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
+
+            case 'symbol':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
+                break;
+
+            case 'symbolSize':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|10,[],function (value, params) {}|},');
+                break;
     
             case 'xAxisIndex':
             case 'yAxisIndex':
+            case 'polarIndex':
+            case 'geoIndex':
+            case 'calendarIndex':
+            case 'symbolRotate':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: $0,`);
                 break;
 
             case 'dimensions':
             case 'data':
+            case 'symbolOffset':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
                 break;
@@ -151,4 +154,4 @@ async function getBarOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getBarOptions;
+export default getScatterOptions;
