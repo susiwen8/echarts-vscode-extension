@@ -49,9 +49,14 @@
         "body": ["radar: {", "\t$0", "},"],
         "description": "Radar option"
     },
-    "dataZoom": {
+    "dataZoom-inside": {
         "prefix": ["dataZoom"],
-        "body": ["dataZoom: [", "\t$0", "],"],
+        "body": ["dataZoom: [", "\t{", "\t\ttype: 'inside',","\t\t$0", "\t},", "],"],
+        "description": "DataZoom option"
+    },
+    "dataZoom-slider": {
+        "prefix": ["dataZoom"],
+        "body": ["dataZoom: [", "\t{", "\t\ttype: 'slider',","\t\t$0", "\t},", "],"],
         "description": "DataZoom option"
     },
     "visualMap-continuous": {

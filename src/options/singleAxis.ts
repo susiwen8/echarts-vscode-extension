@@ -48,8 +48,7 @@ const singleAxisOptionsName: string[] = [
     'splitArea',
     'data',
     'axisPointer',
-    'tooltip',
-
+    'tooltip'
 ];
 
 async function getSingleAxisOptions(lang: string): Promise<CompletionItem[]> {

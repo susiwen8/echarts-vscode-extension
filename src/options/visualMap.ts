@@ -54,13 +54,13 @@ const visualMapOptionsName: string[] = [
     'selectedMode',
     'showLabel',
     'itemGap',
-    'itemSymbol',
+    'itemSymbol'
 ];
 
 async function getVisualMapOptions(lang: string, type: string): Promise<CompletionItem[]> {
     let url: string = type === VisualMapType.Piecewise
-        ? urls[lang].VISUALMAP_PIECEWISE
-        : urls[lang].VISUALMAP_CONTINUOUS;
+        ? urls[lang].VISUALMAP_PIECEWISE_URL
+        : urls[lang].VISUALMAP_CONTINUOUS_URL;
 
     const jsonData: Options|undefined = await utils.getData(url);
     return visualMapOptionsName.map((item: string) => {

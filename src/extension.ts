@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {utils, VisualMapType} from './utils';
+import {utils, VisualMapType, DataZoomType} from './utils';
 import getTitleOptions from './options/title';
 import getLegendOptions from './options/legend';
 import getGridOptions from './options/grid';
@@ -24,6 +24,7 @@ import getDatasetOptions from './options/dataset';
 import getAriaOptions from './options/aria';
 import getTextStyleOptions from './options/textStyle';
 import getVisualMapOptions from './options/visualMap';
+import getDataZoomOptions from './options/dataZoom';
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -36,8 +37,6 @@ let titleOption: vscode.CompletionItem[],
 	radiusAxisOption: vscode.CompletionItem[],
 	angleAxisOption: vscode.CompletionItem[],
 	radarOption: vscode.CompletionItem[],
-	dataZoom: vscode.CompletionItem[],
-	visualMapOption: vscode.CompletionItem[],
 	tooltipOption: vscode.CompletionItem[],
 	axisPointerOption: vscode.CompletionItem[],
 	toolboxOption: vscode.CompletionItem[],
@@ -54,7 +53,9 @@ let titleOption: vscode.CompletionItem[],
 	seriesOption: vscode.CompletionItem[],
 	textStyleOption: vscode.CompletionItem[],
 	visualMapContinuousOption: vscode.CompletionItem[],
-	visualMapPiecewiseOption: vscode.CompletionItem[];
+	visualMapPiecewiseOption: vscode.CompletionItem[],
+	dataZoomSliderOption: vscode.CompletionItem[],
+	dataZoomInsideOption: vscode.CompletionItem[];
 
 
 // TODO: no internet connection
@@ -85,6 +86,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		textStyleOption,
 		visualMapContinuousOption,
 		visualMapPiecewiseOption,
+		dataZoomInsideOption,
+		dataZoomSliderOption
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
@@ -111,6 +114,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		getTextStyleOptions(lang),
 		getVisualMapOptions(lang, VisualMapType.Continuous),
 		getVisualMapOptions(lang, VisualMapType.Piecewise),
+		getDataZoomOptions(lang, DataZoomType.Inside),
+		getDataZoomOptions(lang, DataZoomType.Slider)
 	]);
 }
 
@@ -287,6 +292,18 @@ export function activate(context: vscode.ExtensionContext) {
 					if (linePrefix.indexOf(VisualMapType.Piecewise) !== -1) {
 						prevOption = visualMapPiecewiseOption;
 						return visualMapPiecewiseOption;
+					}
+
+					// TODO: same with slider
+					if (linePrefix.indexOf(DataZoomType.Inside) !== -1) {
+						prevOption = dataZoomInsideOption;
+						return dataZoomInsideOption;
+					}
+
+					// TODO: this affect timeline option
+					if (linePrefix.indexOf(DataZoomType.Slider) !== -1) {
+						prevOption = dataZoomSliderOption;
+						return dataZoomSliderOption;
 					}
 
 					line -= 1;

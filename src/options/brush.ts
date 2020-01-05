@@ -27,7 +27,7 @@ const brushOptionsName: string[] = [
     'removeOnClick',
     'inBrush',
     'outOfBrush',
-    'z',
+    'z'
 ];
 
 async function getBrushOptions(lang: string): Promise<CompletionItem[]> {
