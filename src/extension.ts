@@ -1,5 +1,10 @@
 import * as vscode from 'vscode';
-import {utils, VisualMapType, DataZoomType} from './utils';
+import {
+	utils,
+	VisualMapType,
+	DataZoomType,
+	ChartType
+} from './utils';
 import getTitleOptions from './options/title';
 import getLegendOptions from './options/legend';
 import getGridOptions from './options/grid';
@@ -25,6 +30,8 @@ import getAriaOptions from './options/aria';
 import getTextStyleOptions from './options/textStyle';
 import getVisualMapOptions from './options/visualMap';
 import getDataZoomOptions from './options/dataZoom';
+import getBarOptions from './options/seriesBar';
+import getLineOptions from './options/seriesLine';
 
 const actionArray: string[] = utils.generateAToZArray();
 let lang: string = 'zh';
@@ -50,13 +57,33 @@ let titleOption: vscode.CompletionItem[],
 	calendarOption: vscode.CompletionItem[],
 	datasetOption: vscode.CompletionItem[],
 	ariaOption: vscode.CompletionItem[],
-	seriesOption: vscode.CompletionItem[],
 	textStyleOption: vscode.CompletionItem[],
 	visualMapContinuousOption: vscode.CompletionItem[],
 	visualMapPiecewiseOption: vscode.CompletionItem[],
 	dataZoomSliderOption: vscode.CompletionItem[],
-	dataZoomInsideOption: vscode.CompletionItem[];
-
+	dataZoomInsideOption: vscode.CompletionItem[],
+	seriesBarOption: vscode.CompletionItem[],
+	seriesLineOption: vscode.CompletionItem[],
+	seriesPieOption: vscode.CompletionItem[],
+	seriesScatterOption: vscode.CompletionItem[],
+	seriesEffectScatterOption: vscode.CompletionItem[],
+	seriesRadarOption: vscode.CompletionItem[],
+	seriesTreeOption: vscode.CompletionItem[],
+	seriesTreemapOption: vscode.CompletionItem[],
+	seriesSunburstOption: vscode.CompletionItem[],
+	seriesBoxplotOption: vscode.CompletionItem[],
+	seriesCandlestickOption: vscode.CompletionItem[],
+	seriesHeatmapOption: vscode.CompletionItem[],
+	seriesMapOption: vscode.CompletionItem[],
+	seriesParallelOption: vscode.CompletionItem[],
+	seriesLinesOption: vscode.CompletionItem[],
+	seriesGraphOption: vscode.CompletionItem[],
+	seriesSankeyOption: vscode.CompletionItem[],
+	seriesFunnelOption: vscode.CompletionItem[],
+	seriesGaugeOption: vscode.CompletionItem[],
+	seriesPictorialBarOption: vscode.CompletionItem[],
+	seriesThemeRiverOption: vscode.CompletionItem[],
+	seriesCustomOption: vscode.CompletionItem[];
 
 // TODO: no internet connection
 async function getAllOptions(lang: string): Promise<void> {
@@ -87,7 +114,9 @@ async function getAllOptions(lang: string): Promise<void> {
 		visualMapContinuousOption,
 		visualMapPiecewiseOption,
 		dataZoomInsideOption,
-		dataZoomSliderOption
+		dataZoomSliderOption,
+		seriesBarOption,
+		seriesLineOption
 	] = await Promise.all([
 		getTitleOptions(lang),
 		getLegendOptions(lang),
@@ -115,7 +144,9 @@ async function getAllOptions(lang: string): Promise<void> {
 		getVisualMapOptions(lang, VisualMapType.Continuous),
 		getVisualMapOptions(lang, VisualMapType.Piecewise),
 		getDataZoomOptions(lang, DataZoomType.Inside),
-		getDataZoomOptions(lang, DataZoomType.Slider)
+		getDataZoomOptions(lang, DataZoomType.Slider),
+		getBarOptions(lang),
+		getLineOptions(lang)
 	]);
 }
 
@@ -304,6 +335,16 @@ export function activate(context: vscode.ExtensionContext) {
 					if (linePrefix.indexOf(DataZoomType.Slider) !== -1) {
 						prevOption = dataZoomSliderOption;
 						return dataZoomSliderOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Bar) !== -1) {
+						prevOption = seriesBarOption;
+						return seriesBarOption;
+					}
+
+					if (linePrefix.indexOf(ChartType.Line) !== -1) {
+						prevOption = seriesLineOption;
+						return seriesLineOption;
 					}
 
 					line -= 1;
