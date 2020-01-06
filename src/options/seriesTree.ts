@@ -1,5 +1,5 @@
 /**
- * @file Series-Scatter component
+ * @file Series-Tree component
  */
 
 import {
@@ -10,108 +10,82 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesScatterOptionsName: string[] = [
+const seriesTreeOptionsName: string[] = [
     'id',
     'name',
-    'coordinateSystem',
-    'xAxisIndex',
-    'yAxisIndex',
-    'polarIndex',
-    'geoIndex',
-    'calendarIndex',
-    'hoverAnimation',
-    'legendHoverLink',
+    'zlevel',
+    'z',
+    'left',
+    'top',
+    'right',
+    'bottom',
+    'width',
+    'height',
+    'layout',
+    'orient',
     'symbol',
     'symbolSize',
     'symbolRotate',
     'symbolKeepAspect',
     'symbolOffset',
-    'large',
-    'largeThreshold',
-    'cursor',
-    'label',
+    'roam',
+    'expandAndCollapse',
+    'initialTreeDepth',
     'itemStyle',
+    'label',
+    'lineStyle',
     'emphasis',
-    'progressive',
-    'progressiveThreshold',
-    'dimensions',
-    'encode',
-    'seriesLayoutBy',
-    'datasetIndex',
+    'leaves',
     'data',
-    'markPoint',
-    'markLine',
-    'markArea',
-    'clip',
-    'zlevel',
-    'z',
-    'silent',
-    'animation',
-    'animationThreshold',
-    'animationDuration',
-    'animationEasing',
-    'animationDelay',
-    'animationDurationUpdate',
-    'animationEasingUpdate',
-    'animationDelayUpdate',
     'tooltip'
 ];
 
-async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_SCATTER_URL);
-    return seriesScatterOptionsName.map((item: string) => {
+async function getTreeOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_TREE_URL);
+    return seriesTreeOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
         switch (item) {
             case 'label':
             case 'itemStyle':
+            case 'lineStyle':
             case 'emphasis':
-            case 'encode':
-            case 'markPoint':
-            case 'markLine':
-            case 'markArea':
+            case 'leaves':
             case 'tooltip':
+            case 'data':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
-            case 'legendHoverLink':
-            case 'large':
-            case 'clip':
-            case 'silent':
-            case 'animation':
             case 'symbolKeepAspect':
-            case 'hoverAnimation':
+            case 'expandAndCollapse':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'largeThreshold':
-            case 'progressive':
-            case 'progressiveThreshold':
-            case 'datasetIndex':
+            case 'roam':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|true,false,\'scale\',\'move\'|},');
+                break;
+
             case 'zlevel':
             case 'z':
-            case 'animationThreshold':
-            case 'xAxisIndex':
-            case 'yAxisIndex':
-            case 'polarIndex':
-            case 'geoIndex':
-            case 'calendarIndex':
             case 'symbolRotate':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
                 break;
 
-            case 'seriesLayoutBy':
+            case 'layout':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|orthogonal,radial|}\',');
                 break;
 
-            case 'animationDelay':
-            case 'animationDurationUpdate':
-            case 'animationDelayUpdate':
+            case 'orient':
+                completionItem = new CompletionItem(item, CompletionItemKind.Text);
+                insertText = new SnippetString(`${item}: ` + '\'${1|LR,RL,TB,BT,horizontal,vertical|}\',');
+                break;
+
             case 'animationDuration':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
@@ -119,7 +93,7 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
 
             case 'symbol':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
+                insertText = new SnippetString(`${item}: ` + '${1|\'emptyCircle\',\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
                 break;
 
             case 'symbolSize':
@@ -127,8 +101,6 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
                 insertText = new SnippetString(`${item}: ` + '${1|10,[],function (value, params) {}|},');
                 break;
     
-            case 'dimensions':
-            case 'data':
             case 'symbolOffset':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
@@ -137,6 +109,26 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: \'cartesian2d\',`);
+                break;
+
+            case 'left':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|80,\'left\',\'center\',\'right\',\'%\'|},');
+                break;
+            case 'top':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|60,\'top\',\'middle\',\'bottom\',\'%\'|},');
+                break;
+            case 'right':
+            case 'bottom':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|20,\'\',\'%\'|},');
+                break;
+
+            case 'width':
+            case 'height':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}:` + '${1|\'\',10|},');
                 break;
     
             default:
@@ -150,4 +142,4 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getScatterOptions;
+export default getTreeOptions;

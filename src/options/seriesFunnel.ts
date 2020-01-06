@@ -1,5 +1,5 @@
 /**
- * @file Series-Line component
+ * @file Series-Funnel component
  */
 
 import {
@@ -10,45 +10,37 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesLineOptionsName: string[] = [
+const seriesFunnelOptionsName: string[] = [
     'id',
     'name',
-    'coordinateSystem',
-    'xAxisIndex',
-    'yAxisIndex',
-    'polarIndex',
-    'symbol',
-    'symbolSize',
-    'symbolRotate',
-    'symbolKeepAspect',
-    'symbolOffset',
-    'showSymbol',
-    'showAllSymbol',
-    'hoverAnimation',
+    'min',
+    'max',
+    'minSize',
+    'maxSize',
+    'sort',
+    'gap',
     'legendHoverLink',
-    'stack',
-    'cursor',
-    'connectNulls',
-    'clip',
-    'step',
+    'funnelAlign',
     'label',
+    'labelLine',
     'itemStyle',
-    'lineStyle',
-    'areaStyle',
     'emphasis',
-    'smooth',
-    'smoothMonotone',
-    'sampling',
-    'dimensions',
-    'encode',
+    'zlevel',
+    'z',
+    'left',
+    'top',
+    'right',
+    'bottom',
+    'width',
+    'height',
     'seriesLayoutBy',
     'datasetIndex',
+    'dimensions',
+    'encode',
     'data',
     'markPoint',
     'markLine',
     'markArea',
-    'zlevel',
-    'z',
     'silent',
     'animation',
     'animationThreshold',
@@ -61,68 +53,45 @@ const seriesLineOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getLineOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_LINE_URL);
-    return seriesLineOptionsName.map((item: string) => {
+async function getFunnelOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_FUNNEL_URL);
+    return seriesFunnelOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
         switch (item) {
             case 'label':
+            case 'labelLine':
             case 'itemStyle':
-            case 'lineStyle':
-            case 'areaStyle':
             case 'emphasis':
+            case 'tooltip':
             case 'encode':
             case 'markPoint':
             case 'markLine':
             case 'markArea':
-            case 'tooltip':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
             case 'legendHoverLink':
-            case 'clip':
             case 'silent':
             case 'animation':
-            case 'symbolKeepAspect':
-            case 'showSymbol':
-            case 'hoverAnimation':
-            case 'connectNulls':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'showAllSymbol':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'auto\',true,false|},');
-                break;
-
-            case 'smooth':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|0.5,true,false|},');
-                break;
-
-            case 'step':
+            case 'sort':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '${1|\'start\',\'middle\',\'end\'true,false|},');
+                insertText = new SnippetString(`${item}: ` + '${1|\'descending\',\'ascending\',\'none\',function (idx) {}|},');
                 break;
 
-            case 'smoothMonotone':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|x,y|}\',');
-                break;
-
-            case 'sampling':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|average,max,min,sum|}\',');
-                break;
-
-            case 'datasetIndex':
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
+            case 'min':
+            case 'max':
+            case 'gap':
+            case 'datasetIndex':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
                 break;
@@ -140,34 +109,41 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
 
-            case 'symbol':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'emptyCircle\',\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
-                break;
-
-            case 'symbolSize':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|4,[],function (value, params) {}|},');
-                break;
-    
-            case 'xAxisIndex':
-            case 'yAxisIndex':
-            case 'polarIndex':
-            case 'symbolRotate':
+            case 'left':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: $0,`);
+                insertText = new SnippetString(`${item}: ` + '${1|80,\'left\',\'center\',\'right\',\'%\'|},');
+                break;
+            case 'top':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|60,\'top\',\'middle\',\'bottom\',\'%\'|},');
+                break;
+            case 'right':
+            case 'bottom':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|20,\'auto\',\'%\'|},');
                 break;
 
-            case 'dimensions':
+            case 'width':
+            case 'height':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}:` + '${1|\'auto\',10|},');
+                break;
+
+            case 'minSize':
+            case 'maxSize':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}:` + '${1|\'\',10|},');
+                break;
+
             case 'data':
-            case 'symbolOffset':
+            case 'dimensions':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
                 break;
 
-            case 'coordinateSystem':
+            case 'funnelAlign':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|center,left,right|}\',');
                 break;
     
             default:
@@ -181,4 +157,4 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getLineOptions;
+export default getFunnelOptions;

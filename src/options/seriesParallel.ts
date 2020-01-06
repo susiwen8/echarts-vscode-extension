@@ -1,5 +1,5 @@
 /**
- * @file Series-Scatter component
+ * @file Series-Parallel component
  */
 
 import {
@@ -10,39 +10,21 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesScatterOptionsName: string[] = [
+const seriesParallelOptionsName: string[] = [
     'id',
-    'name',
     'coordinateSystem',
-    'xAxisIndex',
-    'yAxisIndex',
-    'polarIndex',
-    'geoIndex',
-    'calendarIndex',
-    'hoverAnimation',
-    'legendHoverLink',
-    'symbol',
-    'symbolSize',
-    'symbolRotate',
-    'symbolKeepAspect',
-    'symbolOffset',
-    'large',
-    'largeThreshold',
-    'cursor',
-    'label',
-    'itemStyle',
+    'parallelIndex',
+    'name',
+    'lineStyle',
     'emphasis',
+    'inactiveOpacity',
+    'activeOpacity',
+    'realtime',
+    'smooth',
     'progressive',
     'progressiveThreshold',
-    'dimensions',
-    'encode',
-    'seriesLayoutBy',
-    'datasetIndex',
+    'progressiveChunkMode',
     'data',
-    'markPoint',
-    'markLine',
-    'markArea',
-    'clip',
     'zlevel',
     'z',
     'silent',
@@ -53,60 +35,49 @@ const seriesScatterOptionsName: string[] = [
     'animationDelay',
     'animationDurationUpdate',
     'animationEasingUpdate',
-    'animationDelayUpdate',
-    'tooltip'
+    'animationDelayUpdate'
 ];
 
-async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_SCATTER_URL);
-    return seriesScatterOptionsName.map((item: string) => {
+async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_PARALLEL_URL);
+    return seriesParallelOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
         switch (item) {
-            case 'label':
-            case 'itemStyle':
+            case 'lineStyle':
             case 'emphasis':
-            case 'encode':
-            case 'markPoint':
-            case 'markLine':
-            case 'markArea':
-            case 'tooltip':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
-            case 'legendHoverLink':
-            case 'large':
-            case 'clip':
+            case 'realtime':
             case 'silent':
             case 'animation':
-            case 'symbolKeepAspect':
-            case 'hoverAnimation':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'largeThreshold':
+            case 'smooth':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|true,false,1|},');
+                break;
+
             case 'progressive':
             case 'progressiveThreshold':
-            case 'datasetIndex':
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
-            case 'xAxisIndex':
-            case 'yAxisIndex':
-            case 'polarIndex':
-            case 'geoIndex':
-            case 'calendarIndex':
-            case 'symbolRotate':
+            case 'parallelIndex':
+            case 'inactiveOpacity':
+            case 'activeOpacity':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
                 break;
 
-            case 'seriesLayoutBy':
+            case 'progressiveChunkMode':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|sequential,mod|}\',');
                 break;
 
             case 'animationDelay':
@@ -117,26 +88,14 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
 
-            case 'symbol':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
-                break;
-
-            case 'symbolSize':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|10,[],function (value, params) {}|},');
-                break;
-    
-            case 'dimensions':
             case 'data':
-            case 'symbolOffset':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
                 break;
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: \'cartesian2d\',`);
+                insertText = new SnippetString(`${item}: \'parallel\',`);
                 break;
     
             default:
@@ -150,4 +109,4 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getScatterOptions;
+export default getParallelOptions;

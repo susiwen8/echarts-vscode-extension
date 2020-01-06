@@ -1,5 +1,5 @@
 /**
- * @file Series-Line component
+ * @file Series-PictorialBar component
  */
 
 import {
@@ -10,39 +10,37 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesLineOptionsName: string[] = [
+const seriesPictorialBarOptionsName: string[] = [
     'id',
     'name',
+    'legendHoverLink',
     'coordinateSystem',
     'xAxisIndex',
     'yAxisIndex',
-    'polarIndex',
-    'symbol',
-    'symbolSize',
-    'symbolRotate',
-    'symbolKeepAspect',
-    'symbolOffset',
-    'showSymbol',
-    'showAllSymbol',
-    'hoverAnimation',
-    'legendHoverLink',
-    'stack',
     'cursor',
-    'connectNulls',
-    'clip',
-    'step',
     'label',
     'itemStyle',
-    'lineStyle',
-    'areaStyle',
     'emphasis',
-    'smooth',
-    'smoothMonotone',
-    'sampling',
+    'barWidth',
+    'barMaxWidth',
+    'barMinWidth',
+    'barMinHeight',
+    'barGap',
+    'barCategoryGap',
+    'symbol',
+    'symbolSize',
+    'symbolPosition',
+    'symbolOffset',
+    'symbolRotate',
+    'symbolRepeat',
+    'symbolRepeatDirection',
+    'symbolMargin',
+    'symbolClip',
+    'symbolBoundingData',
+    'symbolPatternSize',
+    'hoverAnimation',
     'dimensions',
     'encode',
-    'seriesLayoutBy',
-    'datasetIndex',
     'data',
     'markPoint',
     'markLine',
@@ -54,106 +52,91 @@ const seriesLineOptionsName: string[] = [
     'animationThreshold',
     'animationDuration',
     'animationEasing',
-    'animationDelay',
     'animationDurationUpdate',
     'animationEasingUpdate',
-    'animationDelayUpdate',
     'tooltip'
 ];
 
-async function getLineOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_LINE_URL);
-    return seriesLineOptionsName.map((item: string) => {
+async function getPictorialBarOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_PICTORIALBAR_URL);
+    return seriesPictorialBarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
         switch (item) {
             case 'label':
             case 'itemStyle':
-            case 'lineStyle':
-            case 'areaStyle':
             case 'emphasis':
             case 'encode':
             case 'markPoint':
             case 'markLine':
             case 'markArea':
             case 'tooltip':
+            case 'hoverAnimation':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
             case 'legendHoverLink':
-            case 'clip':
             case 'silent':
             case 'animation':
-            case 'symbolKeepAspect':
-            case 'showSymbol':
-            case 'hoverAnimation':
-            case 'connectNulls':
+            case 'symbolClip':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'showAllSymbol':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'auto\',true,false|},');
+            case 'barWidth':
+            case 'barMaxWidth':
+            case 'barMinWidth':
+            case 'symbolMargin':
+                completionItem = new CompletionItem(item, CompletionItemKind.Enum);
+                insertText = new SnippetString(`${item}: ` + '${1|5,\'\'|},');
                 break;
 
-            case 'smooth':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|0.5,true,false|},');
+            case 'symbolRepeat':
+                completionItem = new CompletionItem(item, CompletionItemKind.Enum);
+                insertText = new SnippetString(`${item}: ` + '${1|5,\'fixed\',true,false,null,undefined|},');
                 break;
 
-            case 'step':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '${1|\'start\',\'middle\',\'end\'true,false|},');
-                break;
-
-            case 'smoothMonotone':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|x,y|}\',');
-                break;
-
-            case 'sampling':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|average,max,min,sum|}\',');
-                break;
-
-            case 'datasetIndex':
+            case 'barMinHeight':
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
+            case 'symbolRotate':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
                 break;
 
-            case 'seriesLayoutBy':
+            case 'symbolPosition':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|start,end,center|}\',');
                 break;
 
-            case 'animationDelay':
-            case 'animationDurationUpdate':
-            case 'animationDelayUpdate':
-            case 'animationDuration':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
+            case 'symbolRepeatDirection':
+                completionItem = new CompletionItem(item, CompletionItemKind.Text);
+                insertText = new SnippetString(`${item}: ` + '\'${1|start,end|}\',');
                 break;
 
             case 'symbol':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'emptyCircle\',\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
+                insertText = new SnippetString(`${item}: ` + '\'${1|circle,rect,roundRect,triangle,diamond,pin,arrow,none,image://|}\',');
                 break;
 
             case 'symbolSize':
+            case 'symbolBoundingData':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|4,[],function (value, params) {}|},');
+                insertText = new SnippetString(`${item}: ` + '${1|10,[ , ]|},');
+                break;
+
+            case 'animationDurationUpdate':
+            case 'animationDuration':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
     
             case 'xAxisIndex':
             case 'yAxisIndex':
-            case 'polarIndex':
-            case 'symbolRotate':
+            case 'symbolPatternSize':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: $0,`);
                 break;
@@ -167,7 +150,7 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar|}\',');
+                insertText = new SnippetString(`${item}: \'cartesian2d\',`);
                 break;
     
             default:
@@ -181,4 +164,4 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getLineOptions;
+export default getPictorialBarOptions;

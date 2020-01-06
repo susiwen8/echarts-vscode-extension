@@ -1,5 +1,5 @@
 /**
- * @file Series-Line component
+ * @file Series-Lines component
  */
 
 import {
@@ -10,43 +10,29 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesLineOptionsName: string[] = [
+const seriesLinesOptionsName: string[] = [
     'id',
     'name',
     'coordinateSystem',
     'xAxisIndex',
     'yAxisIndex',
-    'polarIndex',
+    'geoIndex',
+    'polyline',
+    'effect',
+    'large',
+    'largeThreshold',
     'symbol',
     'symbolSize',
-    'symbolRotate',
-    'symbolKeepAspect',
-    'symbolOffset',
-    'showSymbol',
-    'showAllSymbol',
-    'hoverAnimation',
-    'legendHoverLink',
-    'stack',
-    'cursor',
-    'connectNulls',
-    'clip',
-    'step',
-    'label',
-    'itemStyle',
     'lineStyle',
-    'areaStyle',
+    'label',
     'emphasis',
-    'smooth',
-    'smoothMonotone',
-    'sampling',
-    'dimensions',
-    'encode',
-    'seriesLayoutBy',
-    'datasetIndex',
+    'progressive',
+    'progressiveThreshold',
     'data',
     'markPoint',
     'markLine',
     'markArea',
+    'clip',
     'zlevel',
     'z',
     'silent',
@@ -57,79 +43,44 @@ const seriesLineOptionsName: string[] = [
     'animationDelay',
     'animationDurationUpdate',
     'animationEasingUpdate',
-    'animationDelayUpdate',
-    'tooltip'
+    'animationDelayUpdate'
 ];
 
-async function getLineOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_LINE_URL);
-    return seriesLineOptionsName.map((item: string) => {
+async function getLinesOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_LINES_URL);
+    return seriesLinesOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
         switch (item) {
             case 'label':
-            case 'itemStyle':
             case 'lineStyle':
-            case 'areaStyle':
             case 'emphasis':
-            case 'encode':
             case 'markPoint':
             case 'markLine':
             case 'markArea':
-            case 'tooltip':
+            case 'effect':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
-            case 'legendHoverLink':
+            case 'polyline':
+            case 'large':
             case 'clip':
             case 'silent':
             case 'animation':
-            case 'symbolKeepAspect':
-            case 'showSymbol':
-            case 'hoverAnimation':
-            case 'connectNulls':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'showAllSymbol':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'auto\',true,false|},');
-                break;
-
-            case 'smooth':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|0.5,true,false|},');
-                break;
-
-            case 'step':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '${1|\'start\',\'middle\',\'end\'true,false|},');
-                break;
-
-            case 'smoothMonotone':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|x,y|}\',');
-                break;
-
-            case 'sampling':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|average,max,min,sum|}\',');
-                break;
-
-            case 'datasetIndex':
+            case 'largeThreshold':
+            case 'progressive':
+            case 'progressiveThreshold':
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
-                break;
-
-            case 'seriesLayoutBy':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
                 break;
 
             case 'animationDelay':
@@ -147,27 +98,24 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
 
             case 'symbolSize':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|4,[],function (value, params) {}|},');
+                insertText = new SnippetString(`${item}: ` + '${1|4,[]|},');
                 break;
     
             case 'xAxisIndex':
             case 'yAxisIndex':
-            case 'polarIndex':
-            case 'symbolRotate':
+            case 'geoIndex':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: $0,`);
                 break;
 
-            case 'dimensions':
             case 'data':
-            case 'symbolOffset':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
                 break;
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,geo|}\',');
                 break;
     
             default:
@@ -181,4 +129,4 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getLineOptions;
+export default getLinesOptions;

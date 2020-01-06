@@ -142,7 +142,7 @@ async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> 
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: \'cartesian2d\',`);
+                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar,geo|}\',');
                 break;
     
             default:

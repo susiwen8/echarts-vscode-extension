@@ -1,5 +1,5 @@
 /**
- * @file Series-Line component
+ * @file Series-Graph component
  */
 
 import {
@@ -10,45 +10,53 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesLineOptionsName: string[] = [
+const seriesGraphOptionsName: string[] = [
     'id',
     'name',
+    'legendHoverLink',
     'coordinateSystem',
     'xAxisIndex',
     'yAxisIndex',
     'polarIndex',
+    'geoIndex',
+    'calendarIndex',
+    'hoverAnimation',
+    'layout',
+    'circular',
+    'force',
+    'roam',
+    'nodeScaleRatio',
+    'draggable',
+    'focusNodeAdjacency',
     'symbol',
     'symbolSize',
     'symbolRotate',
     'symbolKeepAspect',
     'symbolOffset',
-    'showSymbol',
-    'showAllSymbol',
-    'hoverAnimation',
-    'legendHoverLink',
-    'stack',
+    'edgeSymbol',
+    'edgeSymbolSize',
     'cursor',
-    'connectNulls',
-    'clip',
-    'step',
-    'label',
     'itemStyle',
     'lineStyle',
-    'areaStyle',
+    'label',
+    'edgeLabel',
     'emphasis',
-    'smooth',
-    'smoothMonotone',
-    'sampling',
-    'dimensions',
-    'encode',
-    'seriesLayoutBy',
-    'datasetIndex',
+    'categories',
     'data',
+    'nodes',
+    'links',
+    'edges',
     'markPoint',
     'markLine',
     'markArea',
     'zlevel',
     'z',
+    'left',
+    'top',
+    'right',
+    'bottom',
+    'width',
+    'height',
     'silent',
     'animation',
     'animationThreshold',
@@ -61,9 +69,9 @@ const seriesLineOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getLineOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_LINE_URL);
-    return seriesLineOptionsName.map((item: string) => {
+async function getGraphOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_GRAPH_URL);
+    return seriesGraphOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -71,65 +79,45 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
             case 'label':
             case 'itemStyle':
             case 'lineStyle':
-            case 'areaStyle':
             case 'emphasis':
-            case 'encode':
             case 'markPoint':
             case 'markLine':
             case 'markArea':
             case 'tooltip':
+            case 'circular':
+            case 'force':
+            case 'edgeLabel':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
             case 'legendHoverLink':
-            case 'clip':
             case 'silent':
             case 'animation':
             case 'symbolKeepAspect':
-            case 'showSymbol':
             case 'hoverAnimation':
-            case 'connectNulls':
+            case 'draggable':
+            case 'focusNodeAdjacency':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'showAllSymbol':
+            case 'roam':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'auto\',true,false|},');
+                insertText = new SnippetString(`${item}: ` + '${1|true,false,\'scale\',\'move\'|},');
                 break;
 
-            case 'smooth':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|0.5,true,false|},');
-                break;
-
-            case 'step':
+            case 'layout':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '${1|\'start\',\'middle\',\'end\'true,false|},');
+                insertText = new SnippetString(`${item}: ` + '\'${1|none,circular,force|}\',');
                 break;
 
-            case 'smoothMonotone':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|x,y|}\',');
-                break;
-
-            case 'sampling':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|average,max,min,sum|}\',');
-                break;
-
-            case 'datasetIndex':
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
+            case 'nodeScaleRatio':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
-                break;
-
-            case 'seriesLayoutBy':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
                 break;
 
             case 'animationDelay':
@@ -138,6 +126,26 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
             case 'animationDuration':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
+                break;
+
+            case 'left':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|80,\'left\',\'center\',\'right\',\'%\'|},');
+                break;
+            case 'top':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|60,\'top\',\'middle\',\'bottom\',\'%\'|},');
+                break;
+            case 'right':
+            case 'bottom':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '${1|20,\'auto\',\'%\'|},');
+                break;
+
+            case 'width':
+            case 'height':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}:` + '${1|\'auto\',10|},');
                 break;
 
             case 'symbol':
@@ -149,25 +157,36 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|4,[],function (value, params) {}|},');
                 break;
+
+            case 'edgeSymbol':
+            case 'edgeSymbolSize':
+                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
+                insertText = new SnippetString(`${item}: ` + '${1|\'\',[ , ]|},');
+                break;
     
             case 'xAxisIndex':
             case 'yAxisIndex':
             case 'polarIndex':
+            case 'geoIndex':
+            case 'calendarIndex':
             case 'symbolRotate':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: $0,`);
                 break;
 
-            case 'dimensions':
             case 'data':
             case 'symbolOffset':
+            case 'categories':
+            case 'nodes':
+            case 'links':
+            case 'edges':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
                 break;
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar,geo,none|}\',');
                 break;
     
             default:
@@ -181,4 +200,4 @@ async function getLineOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getLineOptions;
+export default getGraphOptions;

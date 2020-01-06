@@ -1,5 +1,5 @@
 /**
- * @file Series-Scatter component
+ * @file Series-Custom component
  */
 
 import {
@@ -10,38 +10,24 @@ import {
 import {urls} from '../urls';
 import {utils, Options} from '../utils';
 
-const seriesScatterOptionsName: string[] = [
+const seriesCustomOptionsName: string[] = [
     'id',
     'name',
+    'legendHoverLink',
     'coordinateSystem',
     'xAxisIndex',
     'yAxisIndex',
     'polarIndex',
     'geoIndex',
     'calendarIndex',
-    'hoverAnimation',
-    'legendHoverLink',
-    'symbol',
-    'symbolSize',
-    'symbolRotate',
-    'symbolKeepAspect',
-    'symbolOffset',
-    'large',
-    'largeThreshold',
-    'cursor',
-    'label',
+    'renderItem',
     'itemStyle',
     'emphasis',
-    'progressive',
-    'progressiveThreshold',
     'dimensions',
     'encode',
     'seriesLayoutBy',
     'datasetIndex',
     'data',
-    'markPoint',
-    'markLine',
-    'markArea',
     'clip',
     'zlevel',
     'z',
@@ -57,56 +43,35 @@ const seriesScatterOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_SCATTER_URL);
-    return seriesScatterOptionsName.map((item: string) => {
+async function getCustomOptions(lang: string): Promise<CompletionItem[]> {
+    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_CUSTOM_URL);
+    return seriesCustomOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
         switch (item) {
-            case 'label':
             case 'itemStyle':
             case 'emphasis':
-            case 'encode':
-            case 'markPoint':
-            case 'markLine':
-            case 'markArea':
             case 'tooltip':
+            case 'encode':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
 
             case 'legendHoverLink':
-            case 'large':
-            case 'clip':
             case 'silent':
             case 'animation':
-            case 'symbolKeepAspect':
-            case 'hoverAnimation':
+            case 'clip':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
-            case 'largeThreshold':
-            case 'progressive':
-            case 'progressiveThreshold':
-            case 'datasetIndex':
             case 'zlevel':
             case 'z':
             case 'animationThreshold':
-            case 'xAxisIndex':
-            case 'yAxisIndex':
-            case 'polarIndex':
-            case 'geoIndex':
-            case 'calendarIndex':
-            case 'symbolRotate':
+            case 'datasetIndex':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: $0`);
-                break;
-
-            case 'seriesLayoutBy':
-                completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
                 break;
 
             case 'animationDelay':
@@ -117,26 +82,34 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
 
-            case 'symbol':
+            case 'renderItem':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|\'circle\',\'rect\',\'roundRect\',\'triangle\',\'diamond\',\'pin\',\'arrow\',\'none\',\'image://\',function (value, params) {}|},');
+                insertText = new SnippetString(`${item}: function (idx) {},`);
                 break;
 
-            case 'symbolSize':
-                completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
-                insertText = new SnippetString(`${item}: ` + '${1|10,[],function (value, params) {}|},');
+            case 'xAxisIndex':
+            case 'yAxisIndex':
+            case 'polarIndex':
+            case 'geoIndex':
+            case 'calendarIndex':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: $0,`);
                 break;
-    
-            case 'dimensions':
+
             case 'data':
-            case 'symbolOffset':
+            case 'dimensions':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
                 break;
 
+            case 'seriesLayoutBy':
+                completionItem = new CompletionItem(item, CompletionItemKind.Value);
+                insertText = new SnippetString(`${item}: ` + '\'${1|column,row|}\',');
+                break;
+
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: \'cartesian2d\',`);
+                insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar,geo,none|}\',');
                 break;
     
             default:
@@ -150,4 +123,4 @@ async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
     });
 }
 
-export default getScatterOptions;
+export default getCustomOptions;
