@@ -54,7 +54,7 @@ async function getTitleOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0\n},`);
                 break;
-    
+
             // TODO: open color picker
             case 'backgroundColor':
             case 'borderColor':
@@ -74,7 +74,7 @@ async function getTitleOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: ` + '${1|5,[]|},');
                 break;
-            
+
             case 'left':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: ` + '${1|\'auto\',\'left\',\'center\',\'right\',20,\'%\'|},');
@@ -88,7 +88,7 @@ async function getTitleOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: ` + '${1|\'auto\',20,\'%\'|},');
                 break;
-    
+
             case 'itemGap':
             case 'zlevel':
             case 'z':
@@ -115,12 +115,12 @@ async function getTitleOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = new SnippetString(`${item}: ` + '\'${1|auto,top,bottom,middle|}\',');
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

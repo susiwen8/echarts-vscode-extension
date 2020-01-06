@@ -58,7 +58,7 @@ const visualMapOptionsName: string[] = [
 ];
 
 async function getVisualMapOptions(lang: string, type: string): Promise<CompletionItem[]> {
-    let url: string = type === VisualMapType.Piecewise
+    const url: string = type === VisualMapType.Piecewise
         ? urls[lang].VISUALMAP_PIECEWISE_URL
         : urls[lang].VISUALMAP_CONTINUOUS_URL;
 
@@ -76,7 +76,7 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                     insertText = new SnippetString(`${item}: {$0\n},`);
                     break;
-        
+
                 // TODO: open color picker
                 case 'backgroundColor':
                 case 'borderColor':
@@ -84,7 +84,7 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Color);
                     insertText = new SnippetString(`${item}: ` + '\'${1|#,rgba(),rgb()|}\',');
                     break;
-    
+
                 case 'minOpen':
                 case 'maxOpen':
                 case 'inverse':
@@ -94,13 +94,13 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                     insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                     break;
-    
+
                 case 'seriesIndex':
                 case 'padding':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '${1|5,[]|},');
                     break;
-                
+
                 case 'left':
                     completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                     insertText = new SnippetString(`${item}: ` + '${1|\'auto\',\'left\',\'center\',\'right\',20,\'%\'|},');
@@ -119,7 +119,7 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|horizontal,vertical|}\',');
                     break;
-        
+
                 case 'splitNumber':
                 case 'min':
                 case 'max':
@@ -135,7 +135,7 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Value);
                     insertText = new SnippetString(`${item}: $0,`);
                     break;
-        
+
                 case 'pieces':
                 case 'categories':
                 case 'text':
@@ -152,25 +152,25 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|circle,rect,roundRect,triangle,diamond,pin,arrow,none|}\',');
                     break;
-                    
+
                 case 'align':
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|auto,left,right|}\',');
                     break;
-    
+
                 case 'textAlign':
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|auto,left,right,center|}\',');
                     break;
-    
+
                 case 'formatter':
                     completionItem = new CompletionItem(item, CompletionItemKind.Method);
                     insertText = new SnippetString(`${item}: ` + '${1|\'\',function (name) {}|},');
                     break;
-        
+
                 default:
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                    insertText = new SnippetString(`${item}: \'$0\',`);
+                    insertText = new SnippetString(`${item}: '$0',`);
             }
 
         } else {
@@ -213,7 +213,7 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|auto,left,right|}\',');
                     break;
-        
+
                 // TODO: open color picker
                 case 'backgroundColor':
                 case 'borderColor':
@@ -221,7 +221,7 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Color);
                     insertText = new SnippetString(`${item}: ` + '\'${1|#,rgba(),rgb()|}\',');
                     break;
-    
+
                 case 'show':
                 case 'calculable':
                 case 'realtime':
@@ -230,13 +230,13 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                     insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                     break;
-    
+
                 case 'padding':
                 case 'seriesIndex':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '${1|5,[]|},');
                     break;
-                
+
                 case 'left':
                     completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                     insertText = new SnippetString(`${item}: ` + '${1|\'auto\',\'left\',\'center\',\'right\',20,\'%\'|},');
@@ -255,18 +255,18 @@ async function getVisualMapOptions(lang: string, type: string): Promise<Completi
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|auto,left,right,center|}\',');
                     break;
-    
+
                 case 'formatter':
                     completionItem = new CompletionItem(item, CompletionItemKind.Method);
                     insertText = new SnippetString(`${item}: ` + '${1|\'\',function (name) {}|},');
                     break;
-        
+
                 default:
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                    insertText = new SnippetString(`${item}: \'$0\',`);
+                    insertText = new SnippetString(`${item}: '$0',`);
             }
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

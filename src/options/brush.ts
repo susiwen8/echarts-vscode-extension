@@ -53,7 +53,7 @@ async function getBrushOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: ` + '${1|[],\'all\',\'none\',null,undefined|}');
                 break;
-    
+
             case 'transformable':
             case 'showTitle':
             case 'removeOnClick':
@@ -96,9 +96,9 @@ async function getBrushOptions(lang: string): Promise<CompletionItem[]> {
 
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

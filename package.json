@@ -1,6 +1,6 @@
 {
-	"name": "echarts",
-	"displayName": "ECharts",
+	"name": "vscode-echarts-extension",
+	"displayName": "Vscode extension for ECharts",
 	"description": "Autocomplete for ECharts",
 	"version": "0.0.1",
 	"engines": {
@@ -44,17 +44,24 @@
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
+		"lint": "eslint ./src --ext .ts",
+		"lint-fix": "eslint ./src/**/*.ts --fix"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.41.0",
+		"@typescript-eslint/eslint-plugin": "^2.14.0",
+		"@typescript-eslint/parser": "^2.14.0",
+		"eslint": "^6.8.0",
+		"eslint-config-airbnb-typescript": "^6.3.1",
+		"eslint-config-prettier": "^6.9.0",
 		"glob": "^7.1.5",
 		"mocha": "^6.2.2",
-		"typescript": "^3.6.4",
+		"prettier": "^1.19.1",
 		"tslint": "^5.20.0",
+		"typescript": "^3.6.4",
 		"vscode-test": "^1.2.2"
 	},
 	"dependencies": {

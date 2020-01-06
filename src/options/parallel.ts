@@ -40,7 +40,7 @@ async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0\n},`);
                 break;
-    
+
             case 'axisExpandable':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
@@ -68,7 +68,7 @@ async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}:` + '${1|\'auto\',10|},');
                 break;
-    
+
             case 'zlevel':
             case 'z':
             case 'axisExpandCenter':
@@ -82,7 +82,7 @@ async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|horizontal,vertical|},');
                 break;
-                
+
             case 'axisExpandTriggerOn':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|click,mousemove|},');
@@ -90,9 +90,9 @@ async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
 
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

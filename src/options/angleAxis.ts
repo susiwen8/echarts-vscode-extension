@@ -84,12 +84,12 @@ async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
-                
+
             case 'boundaryGap':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false,[]|},');
                 break;
-                
+
             case 'min':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMin\',function (value) {}|},');
@@ -98,7 +98,7 @@ async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,\'dataMax\',function (value) {}|},');
                 break;
-                
+
             case 'polarIndex':
             case 'nameGap':
             case 'nameRotate':
@@ -122,12 +122,12 @@ async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: ` + '\'${1|start,middle,center,end|}\',');
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

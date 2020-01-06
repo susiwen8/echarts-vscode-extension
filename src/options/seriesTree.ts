@@ -100,7 +100,7 @@ async function getTreeOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|10,[],function (value, params) {}|},');
                 break;
-    
+
             case 'symbolOffset':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [$0],`);
@@ -108,7 +108,7 @@ async function getTreeOptions(lang: string): Promise<CompletionItem[]> {
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: \'cartesian2d\',`);
+                insertText = new SnippetString(`${item}: 'cartesian2d',`);
                 break;
 
             case 'left':
@@ -130,12 +130,12 @@ async function getTreeOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}:` + '${1|\'\',10|},');
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

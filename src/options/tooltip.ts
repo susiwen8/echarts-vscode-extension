@@ -45,7 +45,7 @@ async function getTooltipOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0\n},`);
                 break;
-    
+
             // TODO: open color picker
             case 'backgroundColor':
             case 'borderColor':
@@ -66,7 +66,7 @@ async function getTooltipOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: ` + '${1|5,[]|},');
                 break;
-            
+
             case 'borderWidth':
             case 'showDelay':
             case 'hideDelay':
@@ -94,17 +94,17 @@ async function getTooltipOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = new SnippetString(`${item}: ` + '\'${1|html,richText|}\',');
                 break;
-    
+
             case 'triggerOn':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = new SnippetString(`${item}: ` + '\'${1|mousemove,click,none|}\',');
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

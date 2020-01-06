@@ -69,7 +69,7 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
     return legendOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
-    
+
         switch (item) {
             case 'selected':
             case 'textStyle':
@@ -112,7 +112,7 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: ` + '${1|15,[]|},');
                 break;
-    
+
             case 'backgroundColor':
             case 'borderColor':
             case 'shadowColor':
@@ -143,14 +143,13 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: ` + '${1|\'auto\',20,\'%\'|},');
                 break;
-        
+
             case 'itemGap':
             case 'zlevel':
             case 'z':
             case 'borderWidth':
             case 'width':
             case 'height':
-            case 'itemGap':
             case 'itemWidth':
             case 'itemHeight':
             case 'shadowBlur':
@@ -175,7 +174,7 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = new SnippetString(`${item}: ` + '\'${1|end,start|}\',');
                 break;
-            
+
             case 'align':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = new SnippetString(`${item}: ` + '\'${1|auto,left,right|}\',');
@@ -185,12 +184,12 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = new SnippetString(`${item}: ` + '\'${1|horizontal,vertical|}\',');
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

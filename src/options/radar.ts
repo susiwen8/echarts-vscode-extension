@@ -48,12 +48,12 @@ async function getRadarOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0\n},`);
                 break;
-                
+
             case 'indicator':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: [$0\n],`);
                 break;
-            
+
             case 'center':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: [ $0, ],`);
@@ -70,7 +70,7 @@ async function getRadarOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
-                
+
             case 'nameGap':
             case 'zlevel':
             case 'z':
@@ -87,9 +87,9 @@ async function getRadarOptions(lang: string): Promise<CompletionItem[]> {
 
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

@@ -36,32 +36,32 @@ async function getGridOptions(lang: string): Promise<CompletionItem[]> {
     return gridOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: string;
-    
+
         switch (item) {
             case 'toopTip':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = '{\n}';
                 break;
-    
+
             case 'backgroundColor':
             case 'borderColor':
             case 'shadowColor':
                 completionItem = new CompletionItem(item, CompletionItemKind.Color);
                 insertText = '\'\'';
                 break;
-    
+
             case 'zlevel':
             case 'z':
             case 'borderWidth':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = '';
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
                 insertText = '\'\'';
         }
-    
+
         completionItem.insertText = `${item}: ${insertText},`;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

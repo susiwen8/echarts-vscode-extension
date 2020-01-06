@@ -52,7 +52,7 @@ async function getData(url: string): Promise<Options|undefined> {
         const res = await axios.get(url);
         return res.data;
     } catch (error) {
-        console.log(error);
+        console.log(`${error.code}, ${url}: `);
     }
 }
 
@@ -61,7 +61,7 @@ async function getData(url: string): Promise<Options|undefined> {
  */
 function generateAToZArray(): string[] {
     const arr: string[] = [];
-    for (var i = 65; i <= 122; i++) {
+    for (let i = 65; i <= 122; i++) {
         if (i > 90 && i < 97) {
             continue;
         }

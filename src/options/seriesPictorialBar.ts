@@ -133,7 +133,7 @@ async function getPictorialBarOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|1,function (idx) {}|},');
                 break;
-    
+
             case 'xAxisIndex':
             case 'yAxisIndex':
             case 'symbolPatternSize':
@@ -150,14 +150,14 @@ async function getPictorialBarOptions(lang: string): Promise<CompletionItem[]> {
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: \'cartesian2d\',`);
+                insertText = new SnippetString(`${item}: 'cartesian2d',`);
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

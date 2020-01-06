@@ -35,7 +35,7 @@ import getLineOptions from './options/seriesLine';
 import getPieOptions from './options/seriesPie';
 
 const actionArray: string[] = utils.generateAToZArray();
-let lang: string = 'zh';
+let lang = 'zh';
 let titleOption: vscode.CompletionItem[],
 	legendOption: vscode.CompletionItem[],
 	gridOption: vscode.CompletionItem[],
@@ -155,23 +155,23 @@ async function getAllOptions(lang: string): Promise<void> {
 
 getAllOptions(lang);
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
 
 	console.log('Congratulations, your extension "echarts" is now active!');
 
-	let active = vscode.commands.registerCommand('extension.echarts', () => {
+	const active = vscode.commands.registerCommand('extension.echarts', () => {
 		vscode.window.showInformationMessage('ECharts 中文版补全已开启!');
 		lang = 'zh';
 		getAllOptions(lang);
 	});
 
-	let activeEn = vscode.commands.registerCommand('extension.echarts.en', () => {
+	const activeEn = vscode.commands.registerCommand('extension.echarts.en', () => {
 		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
 		lang = 'en';
 		getAllOptions(lang);
 	});
 
-	let activeZh = vscode.commands.registerCommand('extension.echarts.zh', () => {
+	const activeZh = vscode.commands.registerCommand('extension.echarts.zh', () => {
 		vscode.window.showInformationMessage('ECharts 中文版补全已开启!');
 		lang = 'zh';
 		getAllOptions(lang);
@@ -182,7 +182,7 @@ export function activate(context: vscode.ExtensionContext) {
 		language: 'javascript'
 	};
 
-	let prevLine: number = -1;
+	let prevLine = -1;
 	let prevOption: vscode.CompletionItem[];
 
 	const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
@@ -460,4 +460,4 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(active, activeEn, activeZh, completion);
 }
 
-export function deactivate() {}
+// export function deactivate() {}

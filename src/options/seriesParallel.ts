@@ -95,14 +95,14 @@ async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
 
             case 'coordinateSystem':
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: \'parallel\',`);
+                insertText = new SnippetString(`${item}: 'parallel',`);
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

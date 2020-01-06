@@ -58,7 +58,7 @@ const dataZoomOptionsName: string[] = [
 ];
 
 async function getDataZoomOptions(lang: string, type: string): Promise<CompletionItem[]> {
-    let url: string = type === DataZoomType.Inside
+    const url: string = type === DataZoomType.Inside
         ? urls[lang].DATAZOOM_INSIDE_URL
         : urls[lang].DATAZOOM_SLIDER_URL;
 
@@ -75,7 +75,7 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                     insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                     break;
-    
+
                 case 'xAxisIndex':
                 case 'yAxisIndex':
                 case 'radiusAxisIndex':
@@ -102,7 +102,7 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: ` + '\'${1|horizontal,vertical|}\',');
                     break;
-        
+
                 case 'start':
                 case 'end':
                 case 'minSpan':
@@ -116,10 +116,10 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.Value);
                     insertText = new SnippetString(`${item}: [$0],`);
                     break;
-        
+
                 default:
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                    insertText = new SnippetString(`${item}: \'$0\',`);
+                    insertText = new SnippetString(`${item}: '$0',`);
             }
 
         } else {
@@ -174,7 +174,7 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.Value);
                     insertText = new SnippetString(`${item}: [$0],`);
                     break;
-        
+
                 // TODO: open color picker
                 case 'backgroundColor':
                 case 'fillerColor':
@@ -182,7 +182,7 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.Color);
                     insertText = new SnippetString(`${item}: ` + '\'${1|#,rgba(),rgb()|}\',');
                     break;
-    
+
                 case 'show':
                 case 'showDetail':
                 case 'realtime':
@@ -213,7 +213,7 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '${1|\'\',function (name) {}|},');
                     break;
-                
+
                 case 'left':
                     completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                     insertText = new SnippetString(`${item}: ` + '${1|\'auto\',\'left\',\'center\',\'right\',20,\'%\'|},');
@@ -232,18 +232,18 @@ async function getDataZoomOptions(lang: string, type: string): Promise<Completio
                     completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                     insertText = new SnippetString(`${item}: ` + '${1|100,\'100%\'|},');
                     break;
-        
+
                 case 'handleIcon':
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                    insertText = new SnippetString(`${item}: \'image://$0\',`);
+                    insertText = new SnippetString(`${item}: 'image://$0',`);
                     break;
-        
+
                 default:
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                    insertText = new SnippetString(`${item}: \'$0\',`);
+                    insertText = new SnippetString(`${item}: '$0',`);
             }
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;

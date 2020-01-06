@@ -102,7 +102,7 @@ async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> 
 
             case 'effectType':
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'ripple\',`);
+                insertText = new SnippetString(`${item}: 'ripple',`);
                 break;
 
             case 'animationDelay':
@@ -122,7 +122,7 @@ async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> 
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|10,[]|},');
                 break;
-    
+
             case 'xAxisIndex':
             case 'yAxisIndex':
             case 'polarIndex':
@@ -144,12 +144,12 @@ async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> 
                 completionItem = new CompletionItem(item, CompletionItemKind.Value);
                 insertText = new SnippetString(`${item}: ` + '\'${1|cartesian2d,polar,geo|}\',');
                 break;
-    
+
             default:
                 completionItem = new CompletionItem(item, CompletionItemKind.Text);
-                insertText = new SnippetString(`${item}: \'$0\',`);
+                insertText = new SnippetString(`${item}: '$0',`);
         }
-    
+
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;
