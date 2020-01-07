@@ -197,9 +197,8 @@ export function activate(context: vscode.ExtensionContext): void {
 				// TODO: update return option by block not line
 				if (line === prevLine) {
 					return prevOption;
-				} else {
-					prevLine = line;
 				}
+				prevLine = line;
 
 				while (line >= 0 && linePrefix.indexOf('}') === -1) {
 					linePrefix = document.lineAt(line).text;

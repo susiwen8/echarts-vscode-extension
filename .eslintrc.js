@@ -11,6 +11,20 @@ module.exports = {
         'prettier/@typescript-eslint',
     ],
     rules: {
-        'no-trailing-spaces': 2
+        'no-trailing-spaces': 'error',
+        'default-case': 'error',
+        'eqeqeq': 'error',
+        'no-debugger': 'error',
+        'no-extra-semi': 'error',
+        'no-irregular-whitespace': 'error',
+        'no-unreachable': 'error',
+        'no-else-return': 'error',
+        'no-fallthrough': 'error',
+        'no-multi-spaces': 'error',
+        'space-infix-ops': 'error',
+        'quotes': [2, 'single'],
+        'camelcase': 'error',
+        'indent': 'error',
+        'no-var': 'error',
     }
   };
