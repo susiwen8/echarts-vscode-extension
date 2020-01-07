@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import {
-	utils,
+	generateAToZArray,
 	VisualMapType,
 	DataZoomType,
 	ChartType
@@ -34,7 +34,7 @@ import getBarOptions from './options/seriesBar';
 import getLineOptions from './options/seriesLine';
 import getPieOptions from './options/seriesPie';
 
-const actionArray: string[] = utils.generateAToZArray();
+const actionArray: string[] = generateAToZArray();
 let lang = 'zh';
 let titleOption: vscode.CompletionItem[],
 	legendOption: vscode.CompletionItem[],

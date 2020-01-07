@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import {urls} from '../urls';
-import {utils, Options} from '../utils';
+import {getData, Options} from '../utils';
 
 const seriesPieOptionsName: string[] = [
     'id',
@@ -63,7 +63,7 @@ const seriesPieOptionsName: string[] = [
 ];
 
 async function getPieOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_PIE_URL);
+    const jsonData: Options|undefined = await getData(urls[lang].SERIES_PIE_URL);
     return seriesPieOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

@@ -47,7 +47,7 @@ export enum ChartType {
  * Axios request
  * @param url request url
  */
-async function getData(url: string): Promise<Options|undefined> {
+export async function getData(url: string): Promise<Options|undefined> {
     try {
         const res = await axios.get(url);
         return res.data;
@@ -59,7 +59,7 @@ async function getData(url: string): Promise<Options|undefined> {
 /**
  * Generate an arry from a-z
  */
-function generateAToZArray(): string[] {
+export function generateAToZArray(): string[] {
     const arr: string[] = [];
     for (let i = 65; i <= 122; i++) {
         if (i > 90 && i < 97) {
@@ -70,8 +70,3 @@ function generateAToZArray(): string[] {
 
     return arr;
 }
-
-export const utils = {
-    getData,
-    generateAToZArray
-};

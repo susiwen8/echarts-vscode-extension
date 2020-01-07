@@ -24,7 +24,6 @@ module.exports = {
         'space-infix-ops': 'error',
         'quotes': [2, 'single'],
         'camelcase': 'error',
-        'indent': 'error',
         'no-var': 'error',
     }
   };

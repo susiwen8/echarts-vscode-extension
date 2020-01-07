@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import {urls} from '../urls';
-import {utils, Options} from '../utils';
+import {getData, Options} from '../utils';
 
 const seriesScatterOptionsName: string[] = [
     'id',
@@ -58,7 +58,7 @@ const seriesScatterOptionsName: string[] = [
 ];
 
 async function getScatterOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_SCATTER_URL);
+    const jsonData: Options|undefined = await getData(urls[lang].SERIES_SCATTER_URL);
     return seriesScatterOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import {urls} from '../urls';
-import {utils, Options} from '../utils';
+import {getData, Options} from '../utils';
 
 const seriesRadarOptionsName: string[] = [
     'id',
@@ -40,7 +40,7 @@ const seriesRadarOptionsName: string[] = [
 ];
 
 async function getRadarOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_RADAR_URL);
+    const jsonData: Options|undefined = await getData(urls[lang].SERIES_RADAR_URL);
     return seriesRadarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

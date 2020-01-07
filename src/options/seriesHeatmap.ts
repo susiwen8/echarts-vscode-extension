@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import {urls} from '../urls';
-import {utils, Options} from '../utils';
+import {getData, Options} from '../utils';
 
 const seriesHeatmapOptionsName: string[] = [
     'id',
@@ -38,7 +38,7 @@ const seriesHeatmapOptionsName: string[] = [
 ];
 
 async function getHeatmapOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await utils.getData(urls[lang].SERIES_HEATMAP_URL);
+    const jsonData: Options|undefined = await getData(urls[lang].SERIES_HEATMAP_URL);
     return seriesHeatmapOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
