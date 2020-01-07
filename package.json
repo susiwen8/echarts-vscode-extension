@@ -9,6 +9,8 @@
 	"categories": [
 		"Other"
 	],
+	"publisher": "susiwen8",
+	"repository": "https://github.com/susiwen8/echarts-vscode-extension.git",
 	"activationEvents": [
 		"onLanguage:typescript",
 		"onLanguage:javascript",
@@ -45,7 +47,9 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
 		"lint": "eslint ./src --ext .ts",
-		"lint-fix": "eslint ./src/**/*.ts --fix"
+		"lint-fix": "eslint ./src/**/*.ts --fix",
+		"pack": "vsce package",
+		"publish": "vsce publish"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
