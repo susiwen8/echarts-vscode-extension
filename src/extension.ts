@@ -146,9 +146,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
 		{
-			provideCompletionItems(document: vscode.TextDocument) {
-				const {activeTextEditor} = vscode.window;
-				let line: number = activeTextEditor?.selection.active.line || 0;
+			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+				let line: number = position.line;
 				// console.log(document.getText().replace(/\s/g, ''));
 				let linePrefix: string = document.lineAt(line).text;
 
@@ -286,13 +285,11 @@ export function activate(context: vscode.ExtensionContext): void {
 						return visualMapPiecewiseOption;
 					}
 
-					// TODO: same with slider
 					if (linePrefix.indexOf(DataZoomType.Inside) !== -1) {
 						prevOption = dataZoomInsideOption;
 						return dataZoomInsideOption;
 					}
 
-					// TODO: this affect timeline option
 					if (linePrefix.indexOf(DataZoomType.Slider) !== -1) {
 						prevOption = dataZoomSliderOption;
 						return dataZoomSliderOption;
