@@ -72,11 +72,6 @@ async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
                 insertText = new SnippetString(`${item}: [ $0, ],`);
                 break;
 
-            case 'angles':
-                completionItem = new CompletionItem(item, CompletionItemKind.Value);
-                insertText = new SnippetString(`${item}: ,` + '${1|5,\'\',[ , ]|},');
-                break;
-
             case 'inverse':
             case 'scale':
             case 'silent':
