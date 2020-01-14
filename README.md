@@ -3,6 +3,9 @@ This is unofficial vscode extension for ECharts
 ## Install
 * `ext install vscode-echarts-extension`
 * Marketplace
+
+## Example
+![img](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
 ## Command
 This extension is automatically activate in JavaScript files
 You can also activate by command line in vscode
