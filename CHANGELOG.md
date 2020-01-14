@@ -7,3 +7,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+
+## [0.0.2] - 2020-01-14
+### Added
+- Set axios timeout
+
+### Fixed
+- Snippets for `option`

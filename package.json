@@ -1,13 +1,13 @@
 {
 	"name": "vscode-echarts-extension",
-	"displayName": "Vscode extension for ECharts",
+	"displayName": "vscode extension for ECharts",
 	"description": "Autocomplete for ECharts",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.41.0"
 	},
 	"categories": [
-		"Other"
+		"Snippets"
 	],
 	"publisher": "susiwen8",
 	"repository": "https://github.com/susiwen8/echarts-vscode-extension.git",
