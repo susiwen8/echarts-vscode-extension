@@ -1,7 +1,7 @@
 {
     "option": {
         "prefix": ["option"],
-        "body": ["option: {", "\t$0", "},"],
+        "body": ["option = {", "\t$0", "},"],
         "description": "Options for ECharts"
     },
     "title": {
