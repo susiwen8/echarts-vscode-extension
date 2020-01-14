@@ -3,6 +3,7 @@
  */
 
 import axios from 'axios';
+import {urls} from './urls';
 
 export interface Options {
     [propName: string]: string;
@@ -43,16 +44,27 @@ export enum ChartType {
     Custom = 'custom',
 }
 
+type GetDataParams = {
+    lang: string,
+    option: string
+};
+
 /**
  * Axios request
  * @param url request url
  */
-export async function getData(url: string): Promise<Options|undefined> {
+export async function getData({lang, option}: GetDataParams): Promise<Options|undefined> {
+    const api = urls[lang][option];
     try {
-        const res = await axios.get(url);
+        const res = await axios.get(api, {
+            timeout: 2000
+        });
+        for (const key in res.data) {
+            res.data[key] = res.data[key].replace(/<[^>]+>/g, '').trim();
+        }
         return res.data;
     } catch (error) {
-        console.log(`${error.code}, ${url}: `);
+        console.log(`${error.code}, ${api}: `);
     }
 }
 

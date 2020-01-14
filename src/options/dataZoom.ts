@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options, DataZoomType} from '../utils';
 
 const dataZoomOptionsName: string[] = [
@@ -58,11 +57,9 @@ const dataZoomOptionsName: string[] = [
 ];
 
 async function getDataZoomOptions(lang: string, type: string): Promise<CompletionItem[]> {
-    const url: string = type === DataZoomType.Inside
-        ? urls[lang].DATAZOOM_INSIDE_URL
-        : urls[lang].DATAZOOM_SLIDER_URL;
+    const option = type === DataZoomType.Inside ? 'DATAZOOM_INSIDE_URL' : 'DATAZOOM_SLIDER_URL';
 
-    const jsonData: Options|undefined = await getData(url);
+    const jsonData: Options|undefined = await getData({lang, option});
     return dataZoomOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

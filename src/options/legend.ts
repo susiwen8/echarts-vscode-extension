@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const legendOptionsName: string[] = [
@@ -65,7 +64,7 @@ const legendOptionsName: string[] = [
 ];
 
 async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].LEGEND_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'LEGEND_URL'});
     return legendOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesBoxplotOptionsName: string[] = [
@@ -38,7 +37,7 @@ const seriesBoxplotOptionsName: string[] = [
 ];
 
 async function getBoxplotOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_BOXPLOT_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_BOXPLOT_URL'});
     return seriesBoxplotOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

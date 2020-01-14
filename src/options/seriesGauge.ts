@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesGaugeOptionsName: string[] = [
@@ -48,7 +47,7 @@ const seriesGaugeOptionsName: string[] = [
 ];
 
 async function getGaugeOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_GAUGE_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_GAUGE_URL'});
     return seriesGaugeOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const datasetOptionsName: string[] = [
@@ -18,7 +17,7 @@ const datasetOptionsName: string[] = [
 ];
 
 async function getDatasetOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].DATASET_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'DATASET_URL'});
     return datasetOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

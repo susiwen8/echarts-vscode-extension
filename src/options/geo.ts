@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const geoOptionsName: string[] = [
@@ -37,7 +36,7 @@ const geoOptionsName: string[] = [
 ];
 
 async function getGeoOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].GEO_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'GEO_URL'});
     return geoOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

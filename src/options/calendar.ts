@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const calendarOptionsName: string[] = [
@@ -32,7 +31,7 @@ const calendarOptionsName: string[] = [
 ];
 
 async function getCalendarOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].CALENDAR_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'CALENDAR_URL'});
     return calendarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

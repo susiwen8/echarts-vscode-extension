@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesParallelOptionsName: string[] = [
@@ -39,7 +38,7 @@ const seriesParallelOptionsName: string[] = [
 ];
 
 async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_PARALLEL_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_PARALLEL_URL'});
     return seriesParallelOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

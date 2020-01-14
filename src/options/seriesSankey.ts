@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesSankeyOptionsName: string[] = [
@@ -51,7 +50,7 @@ const seriesSankeyOptionsName: string[] = [
 ];
 
 async function getSankyOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_SANKEY_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_SANKEY_URL'});
     return seriesSankeyOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

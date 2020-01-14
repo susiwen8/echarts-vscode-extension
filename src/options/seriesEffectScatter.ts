@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesEffectScatterOptionsName: string[] = [
@@ -55,7 +54,7 @@ const seriesEffectScatterOptionsName: string[] = [
 ];
 
 async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_EFFECTSCATTER_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_EFFECTSCATTER_URL'});
     return seriesEffectScatterOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

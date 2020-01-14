@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesTreemapOptionsName: string[] = [
@@ -50,7 +49,7 @@ const seriesTreemapOptionsName: string[] = [
 ];
 
 async function getTreemapOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_TREEMAP_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_TREEMAP_URL'});
     return seriesTreemapOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

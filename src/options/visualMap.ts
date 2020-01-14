@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options, VisualMapType} from '../utils';
 
 const visualMapOptionsName: string[] = [
@@ -58,11 +57,9 @@ const visualMapOptionsName: string[] = [
 ];
 
 async function getVisualMapOptions(lang: string, type: string): Promise<CompletionItem[]> {
-    const url: string = type === VisualMapType.Piecewise
-        ? urls[lang].VISUALMAP_PIECEWISE_URL
-        : urls[lang].VISUALMAP_CONTINUOUS_URL;
+    const option = VisualMapType.Piecewise ? 'VISUALMAP_PIECEWISE_URL' : 'VISUALMAP_CONTINUOUS_URL';
 
-    const jsonData: Options|undefined = await getData(url);
+    const jsonData: Options|undefined = await getData({lang, option});
     return visualMapOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

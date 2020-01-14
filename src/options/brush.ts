@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const brushOptionsName: string[] = [
@@ -31,7 +30,7 @@ const brushOptionsName: string[] = [
 ];
 
 async function getBrushOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].BRUSH_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'BRUSH_URL'});
     return brushOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const polarOptionsName: string[] = [
@@ -20,7 +19,7 @@ const polarOptionsName: string[] = [
 ];
 
 async function getPolarOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].POLAR_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'POLAR_URL'});
     return polarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

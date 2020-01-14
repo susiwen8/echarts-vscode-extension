@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const graphicOptionsName: string[] = [
@@ -16,7 +15,7 @@ const graphicOptionsName: string[] = [
 ];
 
 async function getGraphicOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].GRAPHIC_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'GRAPHIC_URL'});
     return graphicOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

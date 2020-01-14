@@ -7,7 +7,6 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {urls} from '../urls';
 import {getData, Options} from '../utils';
 
 const seriesPictorialBarOptionsName: string[] = [
@@ -58,7 +57,7 @@ const seriesPictorialBarOptionsName: string[] = [
 ];
 
 async function getPictorialBarOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData(urls[lang].SERIES_PICTORIALBAR_URL);
+    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_PICTORIALBAR_URL'});
     return seriesPictorialBarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
