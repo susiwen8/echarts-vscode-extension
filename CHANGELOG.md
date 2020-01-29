@@ -14,3 +14,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Fixed
 - Snippets for `option`
+
+## [0.0.3] - 2020-01-29
+### Added
+- Add rich text option
