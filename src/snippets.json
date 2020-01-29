@@ -143,5 +143,10 @@
         "prefix": ["textStyle"],
         "body": ["textStyle: {", "\t$0", "},"],
         "description": "TextStyle option"
+    },
+    "rich": {
+        "prefix": ["rich"],
+        "body": ["rich: {", "\t$0", "},"],
+        "description": "Rich option"
     }
 }

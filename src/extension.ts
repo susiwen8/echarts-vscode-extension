@@ -52,6 +52,7 @@ import getGaugeOptions from './options/seriesGauge';
 import getPictorialBarOptions from './options/seriesPictorialBar';
 import getThemeRiverOptions from './options/seriesThemeRiver';
 import getCustomOptions from './options/seriesCustom';
+import getRichOptions from './options/rich';
 
 const actionArray: string[] = generateAToZArray();
 let lang = 'zh';
@@ -79,7 +80,7 @@ let titleOption: vscode.CompletionItem[], legendOption: vscode.CompletionItem[],
 	seriesGraphOption: vscode.CompletionItem[], seriesSankeyOption: vscode.CompletionItem[],
 	seriesFunnelOption: vscode.CompletionItem[], seriesGaugeOption: vscode.CompletionItem[],
 	seriesPictorialBarOption: vscode.CompletionItem[], seriesThemeRiverOption: vscode.CompletionItem[],
-	seriesCustomOption: vscode.CompletionItem[];
+	seriesCustomOption: vscode.CompletionItem[], richOption: vscode.CompletionItem[];
 
 // TODO: no internet connection
 async function getAllOptions(lang: string): Promise<void> {
@@ -94,7 +95,7 @@ async function getAllOptions(lang: string): Promise<void> {
 		seriesBoxplotOption, seriesCandlestickOption, seriesHeatmapOption, seriesMapOption,
 		seriesParallelOption, seriesLinesOption, seriesGraphOption, seriesSankeyOption,
 		seriesFunnelOption, seriesGaugeOption, seriesPictorialBarOption, seriesThemeRiverOption,
-		seriesCustomOption
+		seriesCustomOption, richOption
 	] = await Promise.all([
 		getTitleOptions(lang), getLegendOptions(lang), getGridOptions(lang), getxAxisOptions(lang),
 		getyAxisOptions(lang), getPolarOptions(lang), getRadiusAxisOptions(lang), getAnglesAxisOptions(lang),
@@ -108,7 +109,8 @@ async function getAllOptions(lang: string): Promise<void> {
 		getTreeOptions(lang), getTreemapOptions(lang), getSunburstOptions(lang), getBoxplotOptions(lang),
 		getCandlestickOptions(lang), getHeatmapOptions(lang), getMapOptions(lang), getParallelChartOptions(lang),
 		getLinesOptions(lang), getGraphOptions(lang), getSankeyOptions(lang), getFunnelOptions(lang),
-		getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang)
+		getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang),
+		getRichOptions()
 	]);
 }
 
@@ -273,6 +275,11 @@ export function activate(context: vscode.ExtensionContext): void {
 					if (linePrefix.indexOf('textStyle: {') !== -1) {
 						prevOption = textStyleOption;
 						return textStyleOption;
+					}
+
+					if (linePrefix.indexOf('rich: {') !== -1) {
+						prevOption = richOption;
+						return richOption;
 					}
 
 					if (linePrefix.indexOf(VisualMapType.Continuous) !== -1) {

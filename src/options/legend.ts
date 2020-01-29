@@ -107,6 +107,7 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: ` + '${1|5,[]|},');
                 break;
+
             case 'pageIconSize':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                 insertText = new SnippetString(`${item}: ` + '${1|15,[]|},');
