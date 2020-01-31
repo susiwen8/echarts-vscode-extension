@@ -41,7 +41,7 @@ function getRichOptions(): Promise<CompletionItem[]> {
         const richOptions = richOptionsName.map((item: string) => {
             let completionItem: CompletionItem;
             let insertText: SnippetString;
-    
+
             switch (item) {
                 case 'color':
                 case 'borderColor':
@@ -51,33 +51,33 @@ function getRichOptions(): Promise<CompletionItem[]> {
                     completionItem = new CompletionItem(item, CompletionItemKind.Color);
                     insertText = new SnippetString(`${item}: ` + '\'#$0\'');
                     break;
-    
+
                 case 'fontStyle':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '\'${1|normal,bold,bolder,lighter}\',');
                     break;
-    
+
                 case 'align':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '\'${1|left,center,right}\',');
                     break;
-    
+
                 case 'verticalAlign':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '\'${1|top,middle,bottom}\',');
                     break;
-    
+
                 case 'backgroundColor':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '\'${1|#,\'\',rgba(),{image: \'\'}}\',');
                     break;
-    
+
                 case 'borderRadius':
                 case 'padding':
                     completionItem = new CompletionItem(item, CompletionItemKind.Enum);
                     insertText = new SnippetString(`${item}: ` + '${1|5,[]|},');
                     break;
-    
+
                 case 'fontSize':
                 case 'lineHeight':
                 case 'borderWidth':
@@ -91,12 +91,12 @@ function getRichOptions(): Promise<CompletionItem[]> {
                     completionItem = new CompletionItem(item, CompletionItemKind.Value);
                     insertText = new SnippetString(`${item}: $0,`);
                     break;
-    
+
                 default:
                     completionItem = new CompletionItem(item, CompletionItemKind.Text);
                     insertText = new SnippetString(`${item}: '$0',`);
             }
-    
+
             completionItem.insertText = insertText;
             return completionItem;
         });
