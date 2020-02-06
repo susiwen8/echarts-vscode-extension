@@ -5,136 +5,34 @@ import {
 	DataZoomType,
 	ChartType
 } from './utils';
-import getTitleOptions from './options/title';
-import getLegendOptions from './options/legend';
-import getGridOptions from './options/grid';
-import getxAxisOptions from './options/xAxis';
-import getyAxisOptions from './options/yAxis';
-import getPolarOptions from './options/polar';
-import getRadiusAxisOptions from './options/radiusAxis';
-import getAnglesAxisOptions from './options/angleAxis';
-import getRadarOptions from './options/radar';
-import getTooltipOptions from './options/tooltip';
-import getAxisPointerOptions from './options/axisPointer';
-import getToolboxOptions from './options/toolbox';
-import getBrushOptions from './options/brush';
-import getGeoOptions from './options/geo';
-import getParallelOptions from './options/parallel';
-import getParallelAxisOptions from './options/parallelAxis';
-import getSingleAxisOption from './options/singleAxis';
-import getTimelineOption from './options/timeline';
-import getGraphicOptions from './options/graphic';
-import getCalendarOptions from './options/calendar';
-import getDatasetOptions from './options/dataset';
-import getAriaOptions from './options/aria';
-import getTextStyleOptions from './options/textStyle';
-import getVisualMapOptions from './options/visualMap';
-import getDataZoomOptions from './options/dataZoom';
-import getBarOptions from './options/seriesBar';
-import getLineOptions from './options/seriesLine';
-import getPieOptions from './options/seriesPie';
-import getScatterOptions from './options/seriesScatter';
-import getEffectScatterOptions from './options/seriesEffectScatter';
-import getRadarChartOptions from './options/seriesRadar';
-import getTreeOptions from './options/seriesTree';
-import getTreemapOptions from './options/seriesTreemap';
-import getSunburstOptions from './options/seriesSunburst';
-import getBoxplotOptions from './options/seriesBoxplot';
-import getCandlestickOptions from './options/seriesCandlestick';
-import getHeatmapOptions from './options/seriesHeatmap';
-import getMapOptions from './options/seriesMap';
-import getParallelChartOptions from './options/seriesParallel';
-import getLinesOptions from './options/seriesLines';
-import getGraphOptions from './options/seriesGraph';
-import getSankeyOptions from './options/seriesSankey';
-import getFunnelOptions from './options/seriesFunnel';
-import getGaugeOptions from './options/seriesGauge';
-import getPictorialBarOptions from './options/seriesPictorialBar';
-import getThemeRiverOptions from './options/seriesThemeRiver';
-import getCustomOptions from './options/seriesCustom';
-import getRichOptions from './options/rich';
+import getAllOptions from './options/index';
 
-const actionArray: string[] = generateAToZArray();
-let lang = 'zh';
-let titleOption: vscode.CompletionItem[], legendOption: vscode.CompletionItem[],
-	gridOption: vscode.CompletionItem[], xAxisOption: vscode.CompletionItem[],
-	yAxisOption: vscode.CompletionItem[], polarOption: vscode.CompletionItem[],
-	radiusAxisOption: vscode.CompletionItem[], angleAxisOption: vscode.CompletionItem[],
-	radarOption: vscode.CompletionItem[], tooltipOption: vscode.CompletionItem[],
-	axisPointerOption: vscode.CompletionItem[], toolboxOption: vscode.CompletionItem[],
-	brushOption: vscode.CompletionItem[], geoOption: vscode.CompletionItem[],
-	parallelOption: vscode.CompletionItem[], parallelAxisOption: vscode.CompletionItem[],
-	singleAxisOption: vscode.CompletionItem[], timelineOption: vscode.CompletionItem[],
-	graphicOption: vscode.CompletionItem[], calendarOption: vscode.CompletionItem[],
-	datasetOption: vscode.CompletionItem[], ariaOption: vscode.CompletionItem[],
-	textStyleOption: vscode.CompletionItem[], visualMapContinuousOption: vscode.CompletionItem[],
-	visualMapPiecewiseOption: vscode.CompletionItem[], dataZoomSliderOption: vscode.CompletionItem[],
-	dataZoomInsideOption: vscode.CompletionItem[], seriesBarOption: vscode.CompletionItem[],
-	seriesLineOption: vscode.CompletionItem[], seriesPieOption: vscode.CompletionItem[],
-	seriesScatterOption: vscode.CompletionItem[], seriesEffectScatterOption: vscode.CompletionItem[],
-	seriesRadarOption: vscode.CompletionItem[], seriesTreeOption: vscode.CompletionItem[],
-	seriesTreemapOption: vscode.CompletionItem[], seriesSunburstOption: vscode.CompletionItem[],
-	seriesBoxplotOption: vscode.CompletionItem[], seriesCandlestickOption: vscode.CompletionItem[],
-	seriesHeatmapOption: vscode.CompletionItem[], seriesMapOption: vscode.CompletionItem[],
-	seriesParallelOption: vscode.CompletionItem[], seriesLinesOption: vscode.CompletionItem[],
-	seriesGraphOption: vscode.CompletionItem[], seriesSankeyOption: vscode.CompletionItem[],
-	seriesFunnelOption: vscode.CompletionItem[], seriesGaugeOption: vscode.CompletionItem[],
-	seriesPictorialBarOption: vscode.CompletionItem[], seriesThemeRiverOption: vscode.CompletionItem[],
-	seriesCustomOption: vscode.CompletionItem[], richOption: vscode.CompletionItem[];
-
-// TODO: no internet connection
-async function getAllOptions(lang: string): Promise<void> {
-	[
-		titleOption, legendOption, gridOption, xAxisOption, yAxisOption, polarOption, radiusAxisOption,
-		angleAxisOption, tooltipOption, radarOption, axisPointerOption, toolboxOption, brushOption,
-		geoOption, parallelOption, parallelAxisOption, singleAxisOption, timelineOption, graphicOption,
-		calendarOption, datasetOption, ariaOption, textStyleOption, visualMapContinuousOption,
-		visualMapPiecewiseOption, dataZoomInsideOption, dataZoomSliderOption, seriesBarOption,
-		seriesLineOption, seriesPieOption, seriesScatterOption, seriesEffectScatterOption,
-		seriesRadarOption, seriesTreeOption, seriesTreemapOption, seriesSunburstOption,
-		seriesBoxplotOption, seriesCandlestickOption, seriesHeatmapOption, seriesMapOption,
-		seriesParallelOption, seriesLinesOption, seriesGraphOption, seriesSankeyOption,
-		seriesFunnelOption, seriesGaugeOption, seriesPictorialBarOption, seriesThemeRiverOption,
-		seriesCustomOption, richOption
-	] = await Promise.all([
-		getTitleOptions(lang), getLegendOptions(lang), getGridOptions(lang), getxAxisOptions(lang),
-		getyAxisOptions(lang), getPolarOptions(lang), getRadiusAxisOptions(lang), getAnglesAxisOptions(lang),
-		getTooltipOptions(lang), getRadarOptions(lang), getAxisPointerOptions(lang), getToolboxOptions(lang),
-		getBrushOptions(lang), getGeoOptions(lang), getParallelOptions(lang), getParallelAxisOptions(lang),
-		getSingleAxisOption(lang), getTimelineOption(lang), getGraphicOptions(lang), getCalendarOptions(lang),
-		getDatasetOptions(lang), getAriaOptions(lang), getTextStyleOptions(lang), getVisualMapOptions(lang, VisualMapType.Continuous),
-		getVisualMapOptions(lang, VisualMapType.Piecewise), getDataZoomOptions(lang, DataZoomType.Inside),
-		getDataZoomOptions(lang, DataZoomType.Slider), getBarOptions(lang), getLineOptions(lang),
-		getPieOptions(lang), getScatterOptions(lang), getEffectScatterOptions(lang), getRadarChartOptions(lang),
-		getTreeOptions(lang), getTreemapOptions(lang), getSunburstOptions(lang), getBoxplotOptions(lang),
-		getCandlestickOptions(lang), getHeatmapOptions(lang), getMapOptions(lang), getParallelChartOptions(lang),
-		getLinesOptions(lang), getGraphOptions(lang), getSankeyOptions(lang), getFunnelOptions(lang),
-		getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang),
-		getRichOptions()
-	]);
-}
-
-getAllOptions(lang);
-
-export function activate(context: vscode.ExtensionContext): void {
-
-	console.log('Congratulations, your extension "echarts" is now active!');
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+	const [titleOption, legendOption, gridOption, xAxisOption, yAxisOption, polarOption,
+	radiusAxisOption, angleAxisOption, radarOption, tooltipOption, axisPointerOption,
+	toolboxOption, brushOption, geoOption, parallelOption, parallelAxisOption,
+	singleAxisOption, timelineOption, graphicOption, calendarOption, datasetOption,
+	ariaOption, textStyleOption, visualMapContinuousOption, visualMapPiecewiseOption,
+	dataZoomSliderOption, dataZoomInsideOption, seriesBarOption, seriesLineOption,
+	seriesPieOption, seriesScatterOption, seriesEffectScatterOption, seriesRadarOption,
+	seriesTreeOption, seriesTreemapOption, seriesSunburstOption, seriesBoxplotOption,
+	seriesCandlestickOption, seriesHeatmapOption, seriesMapOption, seriesParallelOption,
+	seriesLinesOption, seriesGraphOption, seriesSankeyOption, seriesFunnelOption,
+	seriesGaugeOption, seriesPictorialBarOption, seriesThemeRiverOption, seriesCustomOption,
+	richOption] = await getAllOptions();
 
 	const active = vscode.commands.registerCommand('extension.echarts', () => {
-		lang = 'zh';
-		getAllOptions(lang);
+		getAllOptions();
 		vscode.window.showInformationMessage('ECharts 中文版补全已开启!');
 	});
 
 	const activeEn = vscode.commands.registerCommand('extension.echarts.en', () => {
-		lang = 'en';
-		getAllOptions(lang);
+		getAllOptions('en');
 		vscode.window.showInformationMessage('ECharts english autocomplete is up!');
 	});
 
 	const activeZh = vscode.commands.registerCommand('extension.echarts.zh', () => {
-		lang = 'zh';
-		getAllOptions(lang);
+		getAllOptions();
 		vscode.window.showInformationMessage('ECharts 中文版补全已开启!');
 	});
 
@@ -150,7 +48,6 @@ export function activate(context: vscode.ExtensionContext): void {
 		{
 			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 				let line: number = position.line;
-				// console.log(document.getText().replace(/\s/g, ''));
 				let linePrefix: string = document.lineAt(line).text;
 
 				// Optimization
@@ -416,7 +313,7 @@ export function activate(context: vscode.ExtensionContext): void {
 				}
 			}
 		},
-		...actionArray
+		...generateAToZArray()
 	);
 
 	context.subscriptions.push(active, activeEn, activeZh, completion);
