@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const tooltipOptionsName: string[] = [
     'show',
@@ -34,7 +34,7 @@ const tooltipOptionsName: string[] = [
 ];
 
 async function getTooltipOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'TOOLTIP_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'TOOLTIP_URL' });
     return tooltipOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

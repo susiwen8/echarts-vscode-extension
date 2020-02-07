@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const textStyleOptionsName: string[] = [
     'color',
@@ -28,7 +28,7 @@ const textStyleOptionsName: string[] = [
 ];
 
 async function getTextStyleOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'TEXTSTYLE_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'TEXTSTYLE_URL' });
     return textStyleOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

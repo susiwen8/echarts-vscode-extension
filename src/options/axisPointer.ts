@@ -8,8 +8,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const axisPointerOptionsName: string[] = [
     'id',
@@ -29,7 +29,7 @@ const axisPointerOptionsName: string[] = [
 ];
 
 async function getAxisPointerOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'AXISPOINTER_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'AXISPOINTER_URL' });
     return axisPointerOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

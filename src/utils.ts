@@ -13,7 +13,7 @@ import {
  * Axios request
  * @param url request url
  */
-export async function getData({lang, option}: GetDataParams): Promise<Options | undefined> {
+export async function getData({ lang, option }: GetDataParams): Promise<Options | undefined> {
     const api = urls[lang][option];
     try {
         const res = await axios.get(api, {

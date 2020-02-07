@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const seriesLinesOptionsName: string[] = [
     'id',
@@ -47,7 +47,7 @@ const seriesLinesOptionsName: string[] = [
 ];
 
 async function getLinesOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_LINES_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_LINES_URL' });
     return seriesLinesOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

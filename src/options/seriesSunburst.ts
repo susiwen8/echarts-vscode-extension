@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const seriesSunburstOptionsName: string[] = [
     'id',
@@ -39,7 +39,7 @@ const seriesSunburstOptionsName: string[] = [
 ];
 
 async function getSunburstOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_SUNBURST_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_SUNBURST_URL' });
     return seriesSunburstOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

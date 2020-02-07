@@ -6,8 +6,8 @@ import {
     CompletionItem,
     CompletionItemKind
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const gridOptionsName: string[] = [
     'id',
@@ -32,7 +32,7 @@ const gridOptionsName: string[] = [
 ];
 
 async function getGridOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'GRID_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'GRID_URL' });
     return gridOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: string;

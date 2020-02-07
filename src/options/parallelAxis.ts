@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const parallelAxisOptionsName: string[] = [
     'id',
@@ -42,7 +42,7 @@ const parallelAxisOptionsName: string[] = [
 ];
 
 async function getParallelAxisOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'PARALLELAXIS_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'PARALLELAXIS_URL' });
     return parallelAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

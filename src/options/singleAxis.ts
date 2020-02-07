@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const singleAxisOptionsName: string[] = [
     'id',
@@ -52,7 +52,7 @@ const singleAxisOptionsName: string[] = [
 ];
 
 async function getSingleAxisOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'SINGLEAXIS_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'SINGLEAXIS_URL' });
     return singleAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

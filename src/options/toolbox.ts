@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const toolboxOptionsName: string[] = [
     'id',
@@ -32,7 +32,7 @@ const toolboxOptionsName: string[] = [
 ];
 
 async function getToolboxOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'TOOLBOX_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'TOOLBOX_URL' });
     return toolboxOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

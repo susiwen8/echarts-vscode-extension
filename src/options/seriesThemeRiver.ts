@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const seriesThemeRiverOptionsName: string[] = [
     'id',
@@ -31,7 +31,7 @@ const seriesThemeRiverOptionsName: string[] = [
 ];
 
 async function getThemeRiverOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'SERIES_THEMERIVER_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_THEMERIVER_URL' });
     return seriesThemeRiverOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

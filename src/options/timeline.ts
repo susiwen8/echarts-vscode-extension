@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const timelineOptionsName: string[] = [
     'show',
@@ -45,7 +45,7 @@ const timelineOptionsName: string[] = [
 ];
 
 async function getTimelineOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'TIMELINE_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'TIMELINE_URL' });
     return timelineOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

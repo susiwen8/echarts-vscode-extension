@@ -25,5 +25,6 @@ module.exports = {
         'quotes': [2, 'single'],
         'camelcase': 'error',
         'no-var': 'error',
+        'object-curly-spacing': ['error', 'always']
     }
   };

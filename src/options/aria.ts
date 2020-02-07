@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const ariaOptionsName: string[] = [
     'show',
@@ -19,7 +19,7 @@ const ariaOptionsName: string[] = [
 ];
 
 async function getAriaOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'ARIA_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'ARIA_URL' });
     return ariaOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;

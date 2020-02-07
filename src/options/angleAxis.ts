@@ -7,8 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData} from '../utils';
-import {Options} from '../type';
+import { getData } from '../utils';
+import { Options } from '../type';
 
 const anglesAxisOptionsName: string[] = [
     'id',
@@ -43,7 +43,7 @@ const anglesAxisOptionsName: string[] = [
 ];
 
 async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
-    const jsonData: Options|undefined = await getData({lang, option: 'ANGLEAXIS_URL'});
+    const jsonData: Options | undefined = await getData({ lang, option: 'ANGLEAXIS_URL' });
     return anglesAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
