@@ -7,7 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData, Options, DataZoomType} from '../utils';
+import {getData} from '../utils';
+import {Options, DataZoomType} from '../type';
 
 const dataZoomOptionsName: string[] = [
     'type',

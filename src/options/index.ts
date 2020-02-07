@@ -2,7 +2,7 @@ import { CompletionItem } from 'vscode';
 import {
 	VisualMapType,
 	DataZoomType,
-} from '../utils';
+} from '../type';
 import getTitleOptions from './title';
 import getLegendOptions from './legend';
 import getGridOptions from './grid';

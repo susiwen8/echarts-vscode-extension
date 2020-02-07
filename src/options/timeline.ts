@@ -7,7 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData, Options} from '../utils';
+import {getData} from '../utils';
+import {Options} from '../type';
 
 const timelineOptionsName: string[] = [
     'show',

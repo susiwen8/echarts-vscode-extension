@@ -7,7 +7,8 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
-import {getData, Options, VisualMapType} from '../utils';
+import {getData} from '../utils';
+import {Options, VisualMapType} from '../type';
 
 const visualMapOptionsName: string[] = [
     'type',

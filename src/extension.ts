@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import {
-	generateAToZArray,
+	generateAToZArray
+} from './utils';
+import {
 	VisualMapType,
 	DataZoomType,
 	ChartType
-} from './utils';
+} from './type';
 import getAllOptions from './options/index';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
