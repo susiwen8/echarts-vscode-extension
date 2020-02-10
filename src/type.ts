@@ -1,3 +1,5 @@
+import * as ESTree from 'estree';
+
 export interface Options {
     [propName: string]: string;
 }
@@ -41,3 +43,13 @@ export type GetDataParams = {
     lang: string,
     option: string
 };
+
+export type Node = ESTree.Node;
+
+export function isProperty(node: ESTree.Node): node is ESTree.Property {
+    return node.type === 'Property';
+}
+
+export function isIdentifier(node: ESTree.Node): node is ESTree.Identifier {
+    return node.type === 'Identifier';
+}

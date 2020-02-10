@@ -5,9 +5,14 @@ import {
 import {
 	VisualMapType,
 	DataZoomType,
-	ChartType
+	ChartType,
+	Node,
+	isProperty,
+	isIdentifier
 } from './type';
 import getAllOptions from './options/index';
+import * as acorn from 'acorn';
+import * as walk from 'acorn-walk';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
 	const [titleOption, legendOption, gridOption, xAxisOption, yAxisOption, polarOption,
@@ -49,8 +54,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
 		{
 			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-				let line: number = position.line;
-				let linePrefix: string = document.lineAt(line).text;
+				let line = position.line;
+				let linePrefix = document.lineAt(line).text;
 
 				// Optimization
 				// TODO: update return option by block not line
@@ -317,6 +322,31 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 		},
 		...generateAToZArray()
 	);
+
+    vscode.workspace.onDidChangeTextDocument(event => {
+		const text = event.document.getText();
+		try {
+			walk.ancestor(acorn.parse(text), {
+				Property(node: Node, ancestors: Node[]) {
+					const arr: string[] = [];
+					if (node.type === 'Property') {
+						ancestors.map(item => {
+							if (isProperty(item) && isIdentifier(item.key) ) {
+								arr.push(item.key.name);
+							}
+							if (item.type === 'Program') {
+								arr.push('option');
+							}
+						})
+						console.log(arr)
+					}
+				}
+			});
+
+		} catch (error) {
+			console.log(error);
+		}
+    });
 
 	context.subscriptions.push(active, activeEn, activeZh, completion);
 }
