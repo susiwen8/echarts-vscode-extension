@@ -1,7 +1,7 @@
 import {
-	VisualMapType,
-	DataZoomType,
-	OptionsItem
+    VisualMapType,
+    DataZoomType,
+    OptionsItem
 } from '../type';
 import getTitleOptions from './title';
 import getLegendOptions from './legend';
@@ -53,28 +53,28 @@ import getCustomOptions from './seriesCustom';
 import getRichOptions from './rich';
 
 export default async function getAllOptions(lang = 'zh'): Promise<OptionsItem> {
-	const optionsArr = await Promise.all([
-		getTitleOptions(lang), getLegendOptions(lang), getGridOptions(lang), getxAxisOptions(lang),
-		getyAxisOptions(lang), getPolarOptions(lang), getRadiusAxisOptions(lang), getAnglesAxisOptions(lang),
-		getTooltipOptions(lang), getRadarOptions(lang), getAxisPointerOptions(lang), getToolboxOptions(lang),
-		getBrushOptions(lang), getGeoOptions(lang), getParallelOptions(lang), getParallelAxisOptions(lang),
-		getSingleAxisOption(lang), getTimelineOption(lang), getGraphicOptions(lang), getCalendarOptions(lang),
-		getDatasetOptions(lang), getAriaOptions(lang), getTextStyleOptions(lang), getVisualMapOptions(lang, VisualMapType.Continuous),
-		getVisualMapOptions(lang, VisualMapType.Piecewise), getDataZoomOptions(lang, DataZoomType.Inside),
-		getDataZoomOptions(lang, DataZoomType.Slider), getBarOptions(lang), getLineOptions(lang),
-		getPieOptions(lang), getScatterOptions(lang), getEffectScatterOptions(lang), getRadarChartOptions(lang),
-		getTreeOptions(lang), getTreemapOptions(lang), getSunburstOptions(lang), getBoxplotOptions(lang),
-		getCandlestickOptions(lang), getHeatmapOptions(lang), getMapOptions(lang), getParallelChartOptions(lang),
-		getLinesOptions(lang), getGraphOptions(lang), getSankeyOptions(lang), getFunnelOptions(lang),
-		getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang),
-		getRichOptions()
-	]);
+    const optionsArr = await Promise.all([
+        getTitleOptions(lang), getLegendOptions(lang), getGridOptions(lang), getxAxisOptions(lang),
+        getyAxisOptions(lang), getPolarOptions(lang), getRadiusAxisOptions(lang), getAnglesAxisOptions(lang),
+        getTooltipOptions(lang), getRadarOptions(lang), getAxisPointerOptions(lang), getToolboxOptions(lang),
+        getBrushOptions(lang), getGeoOptions(lang), getParallelOptions(lang), getParallelAxisOptions(lang),
+        getSingleAxisOption(lang), getTimelineOption(lang), getGraphicOptions(lang), getCalendarOptions(lang),
+        getDatasetOptions(lang), getAriaOptions(lang), getTextStyleOptions(lang), getVisualMapOptions(lang, VisualMapType.Continuous),
+        getVisualMapOptions(lang, VisualMapType.Piecewise), getDataZoomOptions(lang, DataZoomType.Inside),
+        getDataZoomOptions(lang, DataZoomType.Slider), getBarOptions(lang), getLineOptions(lang),
+        getPieOptions(lang), getScatterOptions(lang), getEffectScatterOptions(lang), getRadarChartOptions(lang),
+        getTreeOptions(lang), getTreemapOptions(lang), getSunburstOptions(lang), getBoxplotOptions(lang),
+        getCandlestickOptions(lang), getHeatmapOptions(lang), getMapOptions(lang), getParallelChartOptions(lang),
+        getLinesOptions(lang), getGraphOptions(lang), getSankeyOptions(lang), getFunnelOptions(lang),
+        getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang),
+        getRichOptions()
+    ]);
 
-	const optionsObj: OptionsItem = {};
+    const optionsObj: OptionsItem = {};
 
-	for (let i = 0, len = optionsArr.length; i < len; i++) {
-		optionsObj[optionsArr[i].id] = optionsArr[i].item;
-	}
+    for (let i = 0, len = optionsArr.length; i < len; i++) {
+        optionsObj[optionsArr[i].id] = optionsArr[i].item;
+    }
 
-	return optionsObj;
+    return optionsObj;
 }
