@@ -136,7 +136,7 @@
     },
     "series": {
         "prefix": ["series"],
-        "body": ["series: [", "\t$0", "],"],
+        "body": ["series: [", "\t{", "\t\ttype: '$0'", "\t}", "],"],
         "description": "Series option"
     },
     "textStyle": {
