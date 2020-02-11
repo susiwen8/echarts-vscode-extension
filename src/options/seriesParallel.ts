@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesParallelOptionsName: string[] = [
     'id',
@@ -38,9 +38,9 @@ const seriesParallelOptionsName: string[] = [
     'animationDelayUpdate'
 ];
 
-async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
+async function getParallelOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_PARALLEL_URL' });
-    return seriesParallelOptionsName.map((item: string) => {
+    const item = seriesParallelOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -105,8 +105,14 @@ async function getParallelOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesParallel';
         return completionItem;
     });
+
+    return {
+        id: 'typeparallel',
+        item
+    };
 }
 
 export default getParallelOptions;

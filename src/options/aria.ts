@@ -8,7 +8,10 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import {
+    Options,
+    Item
+} from '../type';
 
 const ariaOptionsName: string[] = [
     'show',
@@ -18,9 +21,9 @@ const ariaOptionsName: string[] = [
     'data'
 ];
 
-async function getAriaOptions(lang: string): Promise<CompletionItem[]> {
+async function getAriaOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'ARIA_URL' });
-    return ariaOptionsName.map((item: string) => {
+    const item = ariaOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -44,8 +47,14 @@ async function getAriaOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'aria';
         return completionItem;
     });
+
+    return {
+        id: 'aria',
+        item
+    };
 }
 
 export default getAriaOptions;

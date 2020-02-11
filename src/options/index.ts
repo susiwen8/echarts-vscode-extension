@@ -1,7 +1,7 @@
-import { CompletionItem } from 'vscode';
 import {
 	VisualMapType,
 	DataZoomType,
+	OptionsItem
 } from '../type';
 import getTitleOptions from './title';
 import getLegendOptions from './legend';
@@ -52,8 +52,8 @@ import getThemeRiverOptions from './seriesThemeRiver';
 import getCustomOptions from './seriesCustom';
 import getRichOptions from './rich';
 
-export default async function getAllOptions(lang = 'zh'): Promise<CompletionItem[][]> {
-	return await Promise.all([
+export default async function getAllOptions(lang = 'zh'): Promise<OptionsItem> {
+	const optionsArr = await Promise.all([
 		getTitleOptions(lang), getLegendOptions(lang), getGridOptions(lang), getxAxisOptions(lang),
 		getyAxisOptions(lang), getPolarOptions(lang), getRadiusAxisOptions(lang), getAnglesAxisOptions(lang),
 		getTooltipOptions(lang), getRadarOptions(lang), getAxisPointerOptions(lang), getToolboxOptions(lang),
@@ -69,4 +69,12 @@ export default async function getAllOptions(lang = 'zh'): Promise<CompletionItem
 		getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang),
 		getRichOptions()
 	]);
+
+	const optionsObj: OptionsItem = {};
+
+	for (let i = 0, len = optionsArr.length; i < len; i++) {
+		optionsObj[optionsArr[i].id] = optionsArr[i].item;
+	}
+
+	return optionsObj;
 }

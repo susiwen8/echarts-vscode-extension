@@ -7,6 +7,7 @@ import {
     CompletionItemKind,
     SnippetString
 } from 'vscode';
+import { Item } from '../type';
 
 const richOptionsName: string[] = [
     'color',
@@ -36,7 +37,7 @@ const richOptionsName: string[] = [
     'textShadowOffsetY'
 ];
 
-function getRichOptions(): Promise<CompletionItem[]> {
+function getRichOptions(): Promise<Item> {
     return new Promise(resolve => {
         const richOptions = richOptionsName.map((item: string) => {
             let completionItem: CompletionItem;
@@ -98,9 +99,14 @@ function getRichOptions(): Promise<CompletionItem[]> {
             }
 
             completionItem.insertText = insertText;
+            // completionItem.label = 'rich';
             return completionItem;
         });
-        resolve(richOptions);
+
+        resolve({
+            id: 'rich',
+            item: richOptions
+        });
     });
 }
 

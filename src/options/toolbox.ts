@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const toolboxOptionsName: string[] = [
     'id',
@@ -31,9 +31,9 @@ const toolboxOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getToolboxOptions(lang: string): Promise<CompletionItem[]> {
+async function getToolboxOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'TOOLBOX_URL' });
-    return toolboxOptionsName.map((item: string) => {
+    const item = toolboxOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -88,8 +88,14 @@ async function getToolboxOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'toolbox';
         return completionItem;
     });
+
+    return {
+        id: 'toolbox',
+        item
+    };
 }
 
 export default getToolboxOptions;

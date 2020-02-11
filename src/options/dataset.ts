@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const datasetOptionsName: string[] = [
     'id',
@@ -17,9 +17,9 @@ const datasetOptionsName: string[] = [
     'sourceHeader'
 ];
 
-async function getDatasetOptions(lang: string): Promise<CompletionItem[]> {
+async function getDatasetOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'DATASET_URL' });
-    return datasetOptionsName.map((item: string) => {
+    const item = datasetOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -46,8 +46,14 @@ async function getDatasetOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'dataset';
         return completionItem;
     });
+
+    return {
+        id: 'dataset',
+        item
+    };
 }
 
 export default getDatasetOptions;

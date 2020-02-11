@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesLinesOptionsName: string[] = [
     'id',
@@ -46,9 +46,9 @@ const seriesLinesOptionsName: string[] = [
     'animationDelayUpdate'
 ];
 
-async function getLinesOptions(lang: string): Promise<CompletionItem[]> {
+async function getLinesOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_LINES_URL' });
-    return seriesLinesOptionsName.map((item: string) => {
+    const item = seriesLinesOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -125,8 +125,14 @@ async function getLinesOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesLines';
         return completionItem;
     });
+
+    return {
+        id: 'typelines',
+        item
+    };
 }
 
 export default getLinesOptions;

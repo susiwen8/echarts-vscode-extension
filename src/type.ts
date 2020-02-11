@@ -1,4 +1,5 @@
 import * as ESTree from 'estree';
+import { CompletionItem } from 'vscode';
 
 export interface Options {
     [propName: string]: string;
@@ -45,6 +46,15 @@ export type GetDataParams = {
 };
 
 export type Node = ESTree.Node;
+
+export interface Item {
+    id: string;
+    item: CompletionItem[];
+}
+
+export interface OptionsItem {
+    [propName: string]: CompletionItem[];
+}
 
 export function isProperty(node: ESTree.Node): node is ESTree.Property {
     return node.type === 'Property';

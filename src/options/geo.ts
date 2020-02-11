@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const geoOptionsName: string[] = [
     'id',
@@ -36,9 +36,9 @@ const geoOptionsName: string[] = [
     'silent'
 ];
 
-async function getGeoOptions(lang: string): Promise<CompletionItem[]> {
+async function getGeoOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'GEO_URL' });
-    return geoOptionsName.map((item: string) => {
+    const item = geoOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -96,8 +96,14 @@ async function getGeoOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'geo';
         return completionItem;
     });
+
+    return {
+        id: 'geo',
+        item
+    };
 }
 
 export default getGeoOptions;

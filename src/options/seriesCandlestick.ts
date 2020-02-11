@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesCandlestickOptionsName: string[] = [
     'id',
@@ -45,9 +45,9 @@ const seriesCandlestickOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getCandlestickOptions(lang: string): Promise<CompletionItem[]> {
+async function getCandlestickOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_CANDLESTICK_URL' });
-    return seriesCandlestickOptionsName.map((item: string) => {
+    const item = seriesCandlestickOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -124,8 +124,14 @@ async function getCandlestickOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesCandlestick';
         return completionItem;
     });
+
+    return {
+        id: 'typecandlestick',
+        item
+    };
 }
 
 export default getCandlestickOptions;

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const legendOptionsName: string[] = [
     'type',
@@ -64,9 +64,9 @@ const legendOptionsName: string[] = [
     'selectorButtonGap'
 ];
 
-async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
+async function getLegendOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'LEGEND_URL' });
-    return legendOptionsName.map(item => {
+    const item = legendOptionsName.map(item => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -193,8 +193,14 @@ async function getLegendOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'legend';
         return completionItem;
     });
+
+    return {
+        id: 'legend',
+        item
+    };
 }
 
 export default getLegendOptions;

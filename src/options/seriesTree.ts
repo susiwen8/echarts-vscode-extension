@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesTreeOptionsName: string[] = [
     'id',
@@ -40,9 +40,9 @@ const seriesTreeOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getTreeOptions(lang: string): Promise<CompletionItem[]> {
+async function getTreeOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_TREE_URL' });
-    return seriesTreeOptionsName.map((item: string) => {
+    const item = seriesTreeOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -138,8 +138,14 @@ async function getTreeOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesTree';
         return completionItem;
     });
+
+    return {
+        id: 'typetree',
+        item
+    };
 }
 
 export default getTreeOptions;

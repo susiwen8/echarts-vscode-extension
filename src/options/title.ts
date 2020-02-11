@@ -8,7 +8,10 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import {
+    Options,
+    Item
+} from '../type';
 
 const titleOptionsName: string[] = [
     'id',
@@ -42,9 +45,9 @@ const titleOptionsName: string[] = [
     'shadowOffsetY'
 ];
 
-async function getTitleOptions(lang: string): Promise<CompletionItem[]> {
+async function getTitleOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'TITLE_URL' });
-    return titleOptionsName.map((item: string) => {
+    const item = titleOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -125,6 +128,11 @@ async function getTitleOptions(lang: string): Promise<CompletionItem[]> {
         completionItem.documentation = jsonData && jsonData[item];
         return completionItem;
     });
+
+    return{
+        id: 'title',
+        item
+    };
 }
 
 export default getTitleOptions;

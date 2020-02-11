@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const radarOptionsName: string[] = [
     'id',
@@ -32,9 +32,9 @@ const radarOptionsName: string[] = [
     'indicator'
 ];
 
-async function getRadarOptions(lang: string): Promise<CompletionItem[]> {
+async function getRadarOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'RADAR_URL' });
-    return radarOptionsName.map((item: string) => {
+    const item = radarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -92,8 +92,14 @@ async function getRadarOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'radar';
         return completionItem;
     });
+
+    return {
+        id: 'radar',
+        item
+    };
 }
 
 export default getRadarOptions;

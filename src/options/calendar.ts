@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const calendarOptionsName: string[] = [
     'id',
@@ -31,9 +31,9 @@ const calendarOptionsName: string[] = [
     'silent'
 ];
 
-async function getCalendarOptions(lang: string): Promise<CompletionItem[]> {
+async function getCalendarOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'CALENDAR_URL' });
-    return calendarOptionsName.map((item: string) => {
+    const item = calendarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -95,8 +95,14 @@ async function getCalendarOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'calendar';
         return completionItem;
     });
+
+    return {
+        id: 'calendar',
+        item
+    };
 }
 
 export default getCalendarOptions;

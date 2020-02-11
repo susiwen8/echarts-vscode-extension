@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesFunnelOptionsName: string[] = [
     'id',
@@ -53,9 +53,9 @@ const seriesFunnelOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getFunnelOptions(lang: string): Promise<CompletionItem[]> {
+async function getFunnelOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_FUNNEL_URL' });
-    return seriesFunnelOptionsName.map((item: string) => {
+    const item = seriesFunnelOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -153,8 +153,14 @@ async function getFunnelOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesFunnel';
         return completionItem;
     });
+
+    return {
+        id: 'typefunnel',
+        item
+    };
 }
 
 export default getFunnelOptions;

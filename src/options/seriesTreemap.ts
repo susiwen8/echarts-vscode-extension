@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesTreemapOptionsName: string[] = [
     'id',
@@ -49,9 +49,9 @@ const seriesTreemapOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getTreemapOptions(lang: string): Promise<CompletionItem[]> {
+async function getTreemapOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_TREEMAP_URL' });
-    return seriesTreemapOptionsName.map((item: string) => {
+    const item = seriesTreemapOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -141,8 +141,14 @@ async function getTreemapOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesTreemap';
         return completionItem;
     });
+
+    return {
+        id: 'typetreemap',
+        item
+    };
 }
 
 export default getTreemapOptions;

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesSunburstOptionsName: string[] = [
     'id',
@@ -38,9 +38,9 @@ const seriesSunburstOptionsName: string[] = [
     'animationDelayUpdate'
 ];
 
-async function getSunburstOptions(lang: string): Promise<CompletionItem[]> {
+async function getSunburstOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_SUNBURST_URL' });
-    return seriesSunburstOptionsName.map((item: string) => {
+    const item = seriesSunburstOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -100,8 +100,14 @@ async function getSunburstOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesSunburst';
         return completionItem;
     });
+
+    return {
+        id: 'typesunburst',
+        item
+    };
 }
 
 export default getSunburstOptions;

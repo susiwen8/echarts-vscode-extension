@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const timelineOptionsName: string[] = [
     'show',
@@ -44,9 +44,9 @@ const timelineOptionsName: string[] = [
     'data'
 ];
 
-async function getTimelineOptions(lang: string): Promise<CompletionItem[]> {
+async function getTimelineOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'TIMELINE_URL' });
-    return timelineOptionsName.map((item: string) => {
+    const item = timelineOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -142,8 +142,14 @@ async function getTimelineOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'timeline';
         return completionItem;
     });
+
+    return {
+        id: 'timeline',
+        item
+    };
 }
 
 export default getTimelineOptions;

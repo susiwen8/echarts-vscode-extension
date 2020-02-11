@@ -8,7 +8,10 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import {
+    Options,
+    Item
+} from '../type';
 
 const anglesAxisOptionsName: string[] = [
     'id',
@@ -42,9 +45,9 @@ const anglesAxisOptionsName: string[] = [
     'axisPointer'
 ];
 
-async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
+async function getAnglesAxisOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'ANGLEAXIS_URL' });
-    return anglesAxisOptionsName.map((item: string) => {
+    const item = anglesAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -125,8 +128,14 @@ async function getAnglesAxisOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'angleAxis';
         return completionItem;
     });
+
+    return {
+        id: 'angleAxis',
+        item
+    };
 }
 
 export default getAnglesAxisOptions;

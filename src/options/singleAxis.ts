@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const singleAxisOptionsName: string[] = [
     'id',
@@ -51,9 +51,9 @@ const singleAxisOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getSingleAxisOptions(lang: string): Promise<CompletionItem[]> {
+async function getSingleAxisOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SINGLEAXIS_URL' });
-    return singleAxisOptionsName.map((item: string) => {
+    const item = singleAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -154,8 +154,14 @@ async function getSingleAxisOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'singleAxis';
         return completionItem;
     });
+
+    return {
+        id: 'singleAxis',
+        item
+    };
 }
 
 export default getSingleAxisOptions;

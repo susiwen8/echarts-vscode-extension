@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const radiusAxisOptionsName: string[] = [
     'id',
@@ -42,9 +42,9 @@ const radiusAxisOptionsName: string[] = [
     'axisPointer'
 ];
 
-async function getRadiusAxisOptions(lang: string): Promise<CompletionItem[]> {
+async function getRadiusAxisOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'RADIUSAXIS_URL' });
-    return radiusAxisOptionsName.map((item: string) => {
+    const item = radiusAxisOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -130,8 +130,14 @@ async function getRadiusAxisOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'radiusAxis';
         return completionItem;
     });
+
+    return {
+        id: 'radiusAxis',
+        item
+    };
 }
 
 export default getRadiusAxisOptions;

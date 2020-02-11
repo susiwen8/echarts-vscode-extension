@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesBarOptionsName: string[] = [
     'id',
@@ -57,9 +57,9 @@ const seriesBarOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getBarOptions(lang: string): Promise<CompletionItem[]> {
+async function getBarOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_BAR_URL' });
-    return seriesBarOptionsName.map((item: string) => {
+    const item = seriesBarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -147,8 +147,14 @@ async function getBarOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesBar';
         return completionItem;
     });
+
+    return {
+        id: 'typebar',
+        item
+    };
 }
 
 export default getBarOptions;

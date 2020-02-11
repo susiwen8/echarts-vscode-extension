@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const seriesEffectScatterOptionsName: string[] = [
     'id',
@@ -54,9 +54,9 @@ const seriesEffectScatterOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> {
+async function getEffectScatterOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_EFFECTSCATTER_URL' });
-    return seriesEffectScatterOptionsName.map((item: string) => {
+    const item = seriesEffectScatterOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -152,8 +152,14 @@ async function getEffectScatterOptions(lang: string): Promise<CompletionItem[]> 
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'seriesEffectScatter';
         return completionItem;
     });
+
+    return {
+        id: 'typeeffectScatter',
+        item
+    };
 }
 
 export default getEffectScatterOptions;

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const brushOptionsName: string[] = [
     'id',
@@ -30,9 +30,9 @@ const brushOptionsName: string[] = [
     'z'
 ];
 
-async function getBrushOptions(lang: string): Promise<CompletionItem[]> {
+async function getBrushOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'BRUSH_URL' });
-    return brushOptionsName.map((item: string) => {
+    const item = brushOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -101,8 +101,14 @@ async function getBrushOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'brush';
         return completionItem;
     });
+
+    return {
+        id: 'brush',
+        item
+    };
 }
 
 export default getBrushOptions;

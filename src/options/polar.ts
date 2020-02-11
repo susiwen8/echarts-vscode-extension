@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options } from '../type';
+import { Options, Item } from '../type';
 
 const polarOptionsName: string[] = [
     'id',
@@ -19,9 +19,9 @@ const polarOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getPolarOptions(lang: string): Promise<CompletionItem[]> {
+async function getPolarOptions(lang: string): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'POLAR_URL' });
-    return polarOptionsName.map((item: string) => {
+    const item = polarOptionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
@@ -54,8 +54,14 @@ async function getPolarOptions(lang: string): Promise<CompletionItem[]> {
 
         completionItem.insertText = insertText;
         completionItem.documentation = jsonData && jsonData[item];
+        // completionItem.label = 'polar';
         return completionItem;
     });
+
+    return {
+        id: 'polar',
+        item
+    };
 }
 
 export default getPolarOptions;
