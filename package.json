@@ -68,7 +68,6 @@
 		"vscode-test": "^1.2.2"
 	},
 	"dependencies": {
-		"@types/estree": "0.0.42",
 		"acorn": "^7.1.0",
 		"acorn-walk": "^7.0.0",
 		"axios": "^0.19.0"
