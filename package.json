@@ -62,7 +62,7 @@
 		"eslint-config-airbnb-typescript": "^6.3.1",
 		"eslint-config-prettier": "^6.9.0",
 		"glob": "^7.1.5",
-		"mocha": "^6.2.2",
+		"mocha": "^7.0.1",
 		"prettier": "^1.19.1",
 		"typescript": "^3.6.4",
 		"vscode-test": "^1.2.2"
