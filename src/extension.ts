@@ -22,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     let prevLine = -1;
     let prevOption: vscode.CompletionItem[];
 
-    const completion: vscode.Disposable = vscode.languages.registerCompletionItemProvider(selector,
+    const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
                 let line = position.line;
@@ -52,6 +52,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     vscode.workspace.onDidChangeTextDocument(event => {
         const text = event.document.getText();
+        const position = event.contentChanges[0].rangeOffset;
+
         try {
             walk.ancestor(acorn.parse(text), {
                 Property(node: Node, ancestors: Node[]) {
@@ -69,6 +71,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     }
                 }
             });
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+            const node = walk.findNodeAround(acorn.parse(text), position, 'Property');
+            console.log(node);
         } catch (error) {
             console.log(error);
         }

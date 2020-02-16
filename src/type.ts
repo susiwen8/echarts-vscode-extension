@@ -1,4 +1,4 @@
-import * as ESTree from 'estree';
+import * as acorn from 'acorn';
 import { CompletionItem } from 'vscode';
 
 export interface Options {
@@ -45,7 +45,15 @@ export type GetDataParams = {
     option: string
 };
 
-export type Node = ESTree.Node;
+export type Node = acorn.Node;
+interface Property extends Node {
+    type: 'Property';
+    key: Node
+}
+interface Identifier extends Node {
+    type: 'Identifier';
+    name: string
+}
 
 export interface Item {
     id: string;
@@ -56,10 +64,10 @@ export interface OptionsItem {
     [propName: string]: CompletionItem[];
 }
 
-export function isProperty(node: ESTree.Node): node is ESTree.Property {
+export function isProperty(node: Node): node is Property {
     return node.type === 'Property';
 }
 
-export function isIdentifier(node: ESTree.Node): node is ESTree.Identifier {
+export function isIdentifier(node: Node): node is Identifier {
     return node.type === 'Identifier';
 }
