@@ -3,9 +3,7 @@ import {
     generateAToZArray
 } from './utils';
 import {
-    Node,
-    isProperty,
-    isIdentifier
+    isProperty
 } from './type';
 import getAllOptions from './options/index';
 import * as acorn from 'acorn';
@@ -21,10 +19,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     let prevLine = -1;
     let prevOption: vscode.CompletionItem[];
+    let property = '';
 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+                if (property && optionsObj[property]) {
+                    console.log(`provide: ${property}`)
+                    prevOption = optionsObj[property];
+                    return prevOption;
+                }
+
                 let line = position.line;
                 let linePrefix = document.lineAt(line).text;
 
@@ -37,7 +42,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
                 while (line >= 0 && (linePrefix = document.lineAt(line).text, linePrefix.indexOf('}') === -1)) {
                     linePrefix = linePrefix.replace(/[^a-zA-Z]/g,'');
-                    console.log(linePrefix)
                     if (optionsObj[linePrefix]) {
                         prevOption = optionsObj[linePrefix];
                         return prevOption;
@@ -51,36 +55,20 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     vscode.workspace.onDidChangeTextDocument(event => {
-        const text = event.document.getText();
-        const position = event.contentChanges[0].rangeOffset;
-
-        try {
-            walk.ancestor(acorn.parse(text), {
-                Property(node: Node, ancestors: Node[]) {
-                    const arr: string[] = [];
-                    if (node.type === 'Property') {
-                        ancestors.map(item => {
-                            if (isProperty(item) && isIdentifier(item.key) ) {
-                                arr.push(item.key.name);
-                            }
-                            if (item.type === 'Program') {
-                                arr.push('option');
-                            }
-                        })
-                        console.log(arr)
-                    }
+        if (event.contentChanges[0].text.includes('\n')) {
+            const text = event.document.getText();
+            const position = event.contentChanges[0].rangeOffset;
+            try {
+                const node = walk.findNodeAround(acorn.parse(text), position, 'Property');
+                if (node && isProperty(node.node)) {
+                    property = node?.node?.key?.name;
+                    console.log(property);
                 }
-            });
-        } catch (error) {
-            console.log(error);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
-        try {
-            const node = walk.findNodeAround(acorn.parse(text), position, 'Property');
-            console.log(node);
-        } catch (error) {
-            console.log(error);
-        }
     });
 
     context.subscriptions.push(completion);

@@ -48,11 +48,11 @@ export type GetDataParams = {
 export type Node = acorn.Node;
 interface Property extends Node {
     type: 'Property';
-    key: Node
+    key: Identifier;
 }
 interface Identifier extends Node {
     type: 'Identifier';
-    name: string
+    name: string;
 }
 
 export interface Item {
