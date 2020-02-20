@@ -17,8 +17,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         language: 'javascript'
     };
 
-    let prevLine = -1;
-    let prevOption: vscode.CompletionItem[];
     let property = '';
 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
@@ -26,25 +24,20 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
                 if (property && optionsObj[property]) {
                     console.log(`provide: ${property}`)
-                    prevOption = optionsObj[property];
-                    return prevOption;
+                    return optionsObj[property];
+                }
+
+                if (!property) {
+                    return;
                 }
 
                 let line = position.line;
                 let linePrefix = document.lineAt(line).text;
 
-                // Optimization
-                // TODO: update return option by block not line
-                if (line === prevLine) {
-                    return prevOption;
-                }
-                prevLine = line;
-
                 while (line >= 0 && (linePrefix = document.lineAt(line).text, linePrefix.indexOf('}') === -1)) {
                     linePrefix = linePrefix.replace(/[^a-zA-Z]/g,'');
                     if (optionsObj[linePrefix]) {
-                        prevOption = optionsObj[linePrefix];
-                        return prevOption;
+                        return optionsObj[linePrefix];
                     }
 
                     line -= 1;
@@ -55,20 +48,29 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     vscode.workspace.onDidChangeTextDocument(event => {
-        if (event.contentChanges[0].text.includes('\n')) {
-            const text = event.document.getText();
-            const position = event.contentChanges[0].rangeOffset;
-            try {
-                const node = walk.findNodeAround(acorn.parse(text), position, 'Property');
+        const text = event.document.getText();
+        const position = event.contentChanges[0].rangeOffset;
+        try {
+            const ast = acorn.parse(text)
+
+            // input at 'Literal', which shouldn't give CompletionItem
+            let node = walk.findNodeAround(ast, position, 'Literal');
+            if (node) {
+                property = '';
+                return;
+            }
+
+            if (event.contentChanges[0].text.includes('\n')) {
+                // input at 'Property', which should give CompletionItem
+                node = walk.findNodeAround(ast, position, 'Property');
                 if (node && isProperty(node.node)) {
                     property = node?.node?.key?.name;
                     console.log(property);
                 }
-            } catch (error) {
-                console.log(error);
             }
+        } catch (error) {
+            console.error('Parse error');
         }
-
     });
 
     context.subscriptions.push(completion);
