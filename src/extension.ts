@@ -3,7 +3,9 @@ import {
     generateAToZArray
 } from './utils';
 import {
-    isProperty
+    isProperty,
+    isLiteral,
+    CHART_TYPE
 } from './type';
 import getAllOptions from './options/index';
 import * as acorn from 'acorn';
@@ -17,17 +19,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         language: 'javascript'
     };
 
-    let property = '';
+    let option = '';
 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-                if (property && optionsObj[property]) {
-                    console.log(`provide: ${property}`)
-                    return optionsObj[property];
+                if (option && optionsObj[option]) {
+                    console.log(`provide: ${option}`)
+                    return optionsObj[option];
                 }
 
-                if (!property) {
+                if (!option) {
                     return;
                 }
 
@@ -48,26 +50,50 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     );
 
     vscode.workspace.onDidChangeTextDocument(event => {
-        const text = event.document.getText();
-        const position = event.contentChanges[0].rangeOffset;
         try {
+            const text = event.document.getText();
+            const position = event.contentChanges[0].rangeOffset;
             const ast = acorn.parse(text)
+            const literal = walk.findNodeAround(ast, position, 'Literal');
+            const property = walk.findNodeAround(ast, position, 'Property');
 
-            // input at 'Literal', which shouldn't give CompletionItem
-            let node = walk.findNodeAround(ast, position, 'Literal');
-            if (node) {
-                property = '';
+            // Literal value is one of chart types and Property is series
+            // Then we know right now input is in series option
+            if (literal && isLiteral(literal.node)
+                && CHART_TYPE.includes(literal.node.value)
+                && property && isProperty(property.node)
+                && property.node.key.name === 'type') {
+                console.log(literal.node.value);
+                option = `type${literal.node.value}`;
                 return;
             }
 
-            if (event.contentChanges[0].text.includes('\n')) {
-                // input at 'Property', which should give CompletionItem
-                node = walk.findNodeAround(ast, position, 'Property');
-                if (node && isProperty(node.node)) {
-                    property = node?.node?.key?.name;
-                    console.log(property);
-                }
+            // input is in Literal, then don't show completion
+            if (literal && isLiteral(literal.node)) {
+                option = '';
+                return;
             }
+
+            // Hit enter and input is in series
+            if (event.contentChanges[0].text.includes('\n')
+                && property && isProperty(property.node)
+                && property.node.key.name === 'series') {
+                // input at 'Property', which should give CompletionItem
+                option = property?.node?.key?.name;
+                console.log(option);
+                return;
+            }
+
+            // Hit enter and input is not in series
+            if (event.contentChanges[0].text.includes('\n')
+                && property && isProperty(property.node)
+                && property.node.key.name !== 'series') {
+                // input at 'Property', which should give CompletionItem
+                option = property?.node?.key?.name;
+                console.log(option);
+                return;
+            }
+
         } catch (error) {
             console.error('Parse error');
         }

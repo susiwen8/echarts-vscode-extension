@@ -1,4 +1,5 @@
 import * as acorn from 'acorn';
+import { Found } from 'acorn-walk';
 import { CompletionItem } from 'vscode';
 
 export interface Options {
@@ -15,30 +16,30 @@ export enum DataZoomType {
     Slider = 'slider'
 }
 
-export enum ChartType {
-    Bar = 'bar',
-    Line = 'line',
-    Pie = 'pie',
-    Scatter = 'scatter',
-    EffectScatter = 'effectScatter',
-    Radar = 'radar',
-    Tree = 'tree',
-    TreeMap = 'treemap',
-    SunBurst = 'sunburst',
-    BoxPlot = 'boxplot',
-    CandleStick = 'candlestick',
-    HeatMap = 'heatmap',
-    Map = 'map',
-    Parallel = 'parallel',
-    Lines = 'lines',
-    Graph = 'graph',
-    Sankey = 'sankey',
-    Funnel = 'funnel',
-    Gauge = 'gauge',
-    PictorialBar = 'pictorialBar',
-    ThemeRiver = 'themeRiver',
-    Custom = 'custom',
-}
+export const CHART_TYPE = [
+    'bar',
+    'line',
+    'pie',
+    'scatter',
+    'effectScatter',
+    'radar',
+    'tree',
+    'treemap',
+    'sunburst',
+    'boxplot',
+    'candlestick',
+    'heatmap',
+    'map',
+    'parallel',
+    'lines',
+    'graph',
+    'sankey',
+    'funnel',
+    'gauge',
+    'pictorialBar',
+    'themeRiver',
+    'custom'
+];
 
 export type GetDataParams = {
     lang: string,
@@ -53,6 +54,14 @@ interface Property extends Node {
 interface Identifier extends Node {
     type: 'Identifier';
     name: string;
+}
+
+interface Literal extends Found<Node> {
+    type: 'Literal';
+    value: string;
+    raw: string;
+    start: number;
+    end: number;
 }
 
 export interface Item {
@@ -70,4 +79,8 @@ export function isProperty(node: Node): node is Property {
 
 export function isIdentifier(node: Node): node is Identifier {
     return node.type === 'Identifier';
+}
+
+export function isLiteral(node: Node): node is Literal {
+    return node.type === 'Literal';
 }
