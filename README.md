@@ -13,17 +13,16 @@ You can also activate by command line in vscode
 List of commands
 
     Echarts
-    ECharts autocomplete english version
-    ECharts 自动补全中文版
 
-PS: `Echarts` and `ECharts 自动补全中文版` will active chinese version.
+PS: `Echarts` now support chinese version. (Will support english version in future)
 
 ## Problems
-* All options information were received by ajax, useless when there were no Internet.
-* Due to Apache server response speed, sometime connection timeout.
-* Use closest node to determine CompletionItem which sometime is inaccurate.
+* ~~All options information were received by ajax, useless when there were no Internet.~~
+* ~~Due to Apache server response speed, sometime connection timeout.~~
+* ~~Use closest node to determine CompletionItem which sometime is inaccurate.~~ Solution: Use [acorn](https://github.com/acornjs/acorn) to generate AST and find closest node by using [acorn-walk](https://github.com/acornjs/acorn/tree/master/acorn-walk)
 
 ## TODO
-- [ ] Downgrade
-- [ ] Optimization
+- [x] Downgrade
+- [x] Optimization
 - [ ] HoverProvider
+- [ ] Support english

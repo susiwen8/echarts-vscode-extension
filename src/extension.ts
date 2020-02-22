@@ -57,13 +57,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             const literal = walk.findNodeAround(ast, position, 'Literal');
             const property = walk.findNodeAround(ast, position, 'Property');
 
-            // Literal value is one of chart types and Property is series
+            // Literal value is one of chart types and Property is type
             // Then we know right now input is in series option
             if (literal && isLiteral(literal.node)
                 && CHART_TYPE.includes(literal.node.value)
                 && property && isProperty(property.node)
                 && property.node.key.name === 'type') {
-                console.log(literal.node.value);
+                console.log(`type: ${literal.node.value}`);
                 option = `type${literal.node.value}`;
                 return;
             }
@@ -80,7 +80,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && property.node.key.name === 'series') {
                 // input at 'Property', which should give CompletionItem
                 option = property?.node?.key?.name;
-                console.log(option);
+                console.log(`in: ${option}`);
                 return;
             }
 
@@ -90,11 +90,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && property.node.key.name !== 'series') {
                 // input at 'Property', which should give CompletionItem
                 option = property?.node?.key?.name;
-                console.log(option);
+                console.log(`out: ${option}`);
                 return;
             }
 
         } catch (error) {
+            // In the case of parse error
+            // downgrade to use position line
+            option = 'error';
             console.error('Parse error');
         }
     });
