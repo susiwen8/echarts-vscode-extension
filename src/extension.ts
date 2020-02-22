@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import {
-    generateAToZArray
+    generateAToZArray,
+    walkNodeRecursive
 } from './utils';
 import {
     isProperty,
@@ -9,7 +10,7 @@ import {
 } from './type';
 import getAllOptions from './options/index';
 import * as acorn from 'acorn';
-import * as walk from 'acorn-walk';
+import { findNodeAround } from 'acorn-walk';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     const optionsObj = await getAllOptions();
@@ -25,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
                 if (option && optionsObj[option]) {
-                    console.log(`provide: ${option}`)
+                    // console.log(`provide: ${option}`)
                     return optionsObj[option];
                 }
 
@@ -54,8 +55,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             const text = event.document.getText();
             const position = event.contentChanges[0].rangeOffset;
             const ast = acorn.parse(text)
-            const literal = walk.findNodeAround(ast, position, 'Literal');
-            const property = walk.findNodeAround(ast, position, 'Property');
+            const literal = findNodeAround(ast, position, 'Literal');
+            const property = findNodeAround(ast, position, 'Property');
+
+            if (property && isProperty(property.node)) {
+                console.log(walkNodeRecursive(ast, property.node) + property?.node?.key?.name);
+            }
 
             // Literal value is one of chart types and Property is type
             // Then we know right now input is in series option
@@ -63,7 +68,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && CHART_TYPE.includes(literal.node.value)
                 && property && isProperty(property.node)
                 && property.node.key.name === 'type') {
-                console.log(`type: ${literal.node.value}`);
+                // console.log(`type: ${literal.node.value}`);
                 option = `type${literal.node.value}`;
                 return;
             }
@@ -80,7 +85,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && property.node.key.name === 'series') {
                 // input at 'Property', which should give CompletionItem
                 option = property?.node?.key?.name;
-                console.log(`in: ${option}`);
+                // console.log(`in: ${option}`);
                 return;
             }
 
@@ -90,7 +95,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && property.node.key.name !== 'series') {
                 // input at 'Property', which should give CompletionItem
                 option = property?.node?.key?.name;
-                console.log(`out: ${option}`);
+                // console.log(`out: ${option}`);
                 return;
             }
 

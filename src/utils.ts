@@ -4,9 +4,12 @@
 
 import axios from 'axios';
 import { urls } from './urls';
+import { findNodeAround } from 'acorn-walk';
 import {
     GetDataParams,
-    Options
+    Options,
+    Node,
+    isProperty
 } from './type';
 
 /**
@@ -41,4 +44,15 @@ export function generateAToZArray(): string[] {
     }
 
     return arr;
+}
+
+export function walkNodeRecursive(ast: Node, node: Node): string | undefined {
+    let nodes = '';
+    if (isProperty(node)) {
+        const prevNode = findNodeAround(ast, node.end + 1, 'Property')
+        if (prevNode && isProperty(prevNode.node)) {
+            nodes += prevNode.node.key.name;
+            return `${nodes}.${walkNodeRecursive(ast, prevNode.node) || ''}`;
+        }
+    }
 }
