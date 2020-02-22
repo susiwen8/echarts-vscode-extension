@@ -20,9 +20,12 @@ PS: `Echarts` now support chinese version. (Will support english version in futu
 * ~~All options information were received by ajax, useless when there were no Internet.~~
 * ~~Due to Apache server response speed, sometime connection timeout.~~
 * ~~Use closest node to determine CompletionItem which sometime is inaccurate.~~ Solution: Use [acorn](https://github.com/acornjs/acorn) to generate AST and find closest node by using [acorn-walk](https://github.com/acornjs/acorn/tree/master/acorn-walk)
+* Don't support completion when object inside object
 
 ## TODO
 - [x] Downgrade
 - [x] Optimization
-- [ ] HoverProvider
+- [ ] Object inside Object ex. title.textStyle
+- [ ] Check if there were wrong or inappropriate value.
 - [ ] Support english
+- [ ] HoverProvider
