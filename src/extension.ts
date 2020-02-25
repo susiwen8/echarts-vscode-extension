@@ -27,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
                 if (option && optionsObj[option]) {
-                    console.log(`provide: ${option}`)
+                    // console.log(`provide: ${option}`)
                     return optionsObj[option];
                 }
 
@@ -55,7 +55,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         try {
             const text = event.document.getText();
             const position = event.contentChanges[0].rangeOffset;
-            const ast = acorn.parse(text)
+            const ast = acorn.parse(text);
             const literal = findNodeAround(ast, position, 'Literal');
             const property = findNodeAround(ast, position, 'Property');
 

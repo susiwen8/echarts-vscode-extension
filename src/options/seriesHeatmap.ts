@@ -100,7 +100,7 @@ async function getHeatmapOptions(lang: string): Promise<Item> {
     return {
         id: 'typeheatmap',
         item
-    }
+    };
 }
 
 export default getHeatmapOptions;

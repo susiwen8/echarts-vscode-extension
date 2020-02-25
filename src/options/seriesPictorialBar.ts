@@ -167,7 +167,7 @@ async function getPictorialBarOptions(lang: string): Promise<Item> {
     return {
         id: 'typepictorialBar',
         item
-    }
+    };
 }
 
 export default getPictorialBarOptions;

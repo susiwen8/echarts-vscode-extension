@@ -26,6 +26,7 @@ module.exports = {
         'camelcase': 'error',
         'no-var': 'error',
         'object-curly-spacing': ['error', 'always'],
-        'no-tabs': 'error'
+        'no-tabs': 'error',
+        'semi': ['error', 'always']
     }
   };

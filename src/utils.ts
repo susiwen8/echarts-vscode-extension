@@ -49,11 +49,11 @@ function findChartTypeInArray(elements: Node[], position: number): string {
             && position < element.end
             && isObjectExpression(element)
         ) {
-            return findChartTypeInObject(element.properties)
+            return findChartTypeInObject(element.properties);
         }
     }
 
-    return ''
+    return '';
 }
 
 /**
@@ -98,7 +98,7 @@ export function generateAToZArray(): string[] {
 export function walkNodeRecursive(ast: Node, node: Node): string {
     let nodes = '';
     if (isProperty(node)) {
-        const prevNode = findNodeAround(ast, node.end + 1, 'Property')
+        const prevNode = findNodeAround(ast, node.end + 1, 'Property');
         if (prevNode && isProperty(prevNode.node)) {
             nodes += prevNode.node.key.name;
             return `${nodes}.${walkNodeRecursive(ast, prevNode.node) || ''}`;

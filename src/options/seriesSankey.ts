@@ -150,7 +150,7 @@ async function getSankyOptions(lang: string): Promise<Item> {
     return {
         id: 'typesankey',
         item
-    }
+    };
 }
 
 export default getSankyOptions;
