@@ -1,5 +1,4 @@
 import * as acorn from 'acorn';
-import { Found } from 'acorn-walk';
 import { CompletionItem } from 'vscode';
 
 export interface Options {
@@ -47,21 +46,36 @@ export type GetDataParams = {
 };
 
 export type Node = acorn.Node;
-interface Property extends Node {
+export interface Property extends Node {
     type: 'Property';
     key: Identifier;
+    value: Literal | ObjectExpression | ArrayExpression;
 }
-interface Identifier extends Node {
+export interface Identifier extends Node {
     type: 'Identifier';
     name: string;
 }
 
-interface Literal extends Found<Node> {
+export interface ArrayExpression extends Node {
+    type: 'ArrayExpression';
+    elements: Node[];
+}
+
+export interface ObjectExpression extends Node {
+    type: 'ObjectExpression';
+    properties: Node[];
+}
+
+export interface Element {
+    key: Identifier;
+    value: Literal;
+    properties: Node[];
+}
+
+interface Literal extends Node {
     type: 'Literal';
     value: string;
     raw: string;
-    start: number;
-    end: number;
 }
 
 export interface Item {
@@ -83,4 +97,12 @@ export function isIdentifier(node: Node): node is Identifier {
 
 export function isLiteral(node: Node): node is Literal {
     return node.type === 'Literal';
+}
+
+export function isArrayExpression(node: Node): node is ArrayExpression {
+    return node.type === 'ArrayExpression';
+}
+
+export function isObjectExpression(node: Node): node is ObjectExpression {
+    return node.type === 'ObjectExpression';
 }

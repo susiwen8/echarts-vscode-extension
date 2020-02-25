@@ -9,8 +9,52 @@ import {
     GetDataParams,
     Options,
     Node,
-    isProperty
+    Property,
+    isProperty,
+    isLiteral,
+    isArrayExpression,
+    isObjectExpression
 } from './type';
+
+/**
+ * series option is object, find which chart type it is
+ * @param properties Object's properties
+ */
+function findChartTypeInObject(properties: Node[]): string {
+    let chartType = '';
+    for (let i = 0, len = properties.length; i < len; i++) {
+        const property = properties[i];
+        if (
+            isProperty(property)
+            && property.key.name === 'type'
+            && isLiteral(property.value)
+        ) {
+            chartType = property.value.value;
+        }
+    }
+
+    return chartType;
+}
+
+/**
+ * series option is array, find input at which chart type
+ * @param elements Array elements
+ * @param position input postion
+ */
+function findChartTypeInArray(elements: Node[], position: number): string {
+    for (let i = 0, len = elements.length; i < len; i++) {
+        const element = elements[i];
+        if (
+            position >= element.start
+            && position < element.end
+            && isObjectExpression(element)
+        ) {
+            return findChartTypeInObject(element.properties)
+        }
+    }
+
+    return ''
+}
 
 /**
  * Axios request
@@ -46,7 +90,12 @@ export function generateAToZArray(): string[] {
     return arr;
 }
 
-export function walkNodeRecursive(ast: Node, node: Node): string | undefined {
+/**
+ * find current node's ancestor nodes
+ * @param ast AST tree
+ * @param node current node
+ */
+export function walkNodeRecursive(ast: Node, node: Node): string {
     let nodes = '';
     if (isProperty(node)) {
         const prevNode = findNodeAround(ast, node.end + 1, 'Property')
@@ -55,4 +104,23 @@ export function walkNodeRecursive(ast: Node, node: Node): string | undefined {
             return `${nodes}.${walkNodeRecursive(ast, prevNode.node) || ''}`;
         }
     }
+
+    return nodes;
+}
+
+/**
+ * find out input at which chart type
+ * @param values series option value
+ * @param position input position
+ */
+export function findChartType(values: Property['value'], position: number): string {
+    if (isObjectExpression(values)) {
+        return findChartTypeInObject(values.properties);
+    }
+
+    if (isArrayExpression(values)) {
+        return findChartTypeInArray(values.elements, position);
+    }
+
+    return '';
 }

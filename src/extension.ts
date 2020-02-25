@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import {
     generateAToZArray,
-    walkNodeRecursive
+    walkNodeRecursive,
+    findChartType
 } from './utils';
 import {
     isProperty,
@@ -26,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
                 if (option && optionsObj[option]) {
-                    // console.log(`provide: ${option}`)
+                    console.log(`provide: ${option}`)
                     return optionsObj[option];
                 }
 
@@ -64,11 +65,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
             // Literal value is one of chart types and Property is type
             // Then we know right now input is in series option
-            if (literal && isLiteral(literal.node)
+            if (
+                literal && isLiteral(literal.node)
                 && CHART_TYPE.includes(literal.node.value)
                 && property && isProperty(property.node)
-                && property.node.key.name === 'type') {
-                // console.log(`type: ${literal.node.value}`);
+                && property.node.key.name === 'type'
+            ) {
                 option = `type${literal.node.value}`;
                 return;
             }
@@ -80,22 +82,25 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
 
             // Hit enter and input is in series
-            if (event.contentChanges[0].text.includes('\n')
+            if (
+                event.contentChanges[0].text.includes('\n')
                 && property && isProperty(property.node)
-                && property.node.key.name === 'series') {
+                && property.node.key.name === 'series'
+            ) {
                 // input at 'Property', which should give CompletionItem
-                option = property?.node?.key?.name;
-                // console.log(`in: ${option}`);
+                // option = property?.node?.key?.name;
+                option = `type${findChartType(property?.node.value, position)}`;
                 return;
             }
 
             // Hit enter and input is not in series
-            if (event.contentChanges[0].text.includes('\n')
+            if (
+                event.contentChanges[0].text.includes('\n')
                 && property && isProperty(property.node)
-                && property.node.key.name !== 'series') {
+                && property.node.key.name !== 'series'
+            ) {
                 // input at 'Property', which should give CompletionItem
                 option = property?.node?.key?.name;
-                // console.log(`out: ${option}`);
                 return;
             }
 
