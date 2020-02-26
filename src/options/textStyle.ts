@@ -43,12 +43,12 @@ async function getTextStyleOptions({ lang, optionsName }: Params): Promise<Item>
 
             case 'fontStyle':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
-                insertText = new SnippetString(`${item}: ` + '\'{$1|normal,italic,oblique|}\',');
+                insertText = new SnippetString(`${item}: ` + '\'${1|normal,italic,oblique|}\',');
                 break;
 
             case 'fontWeight':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
-                insertText = new SnippetString(`${item}: ` + '{$1|\'normal\',\'bold\',\'bolder\',\'lighter\', 900|},');
+                insertText = new SnippetString(`${item}: ` + '${1|\'normal\',\'bold\',\'bolder\',\'lighter\',900|},');
                 break;
 
             case 'fontSize':
@@ -64,7 +64,7 @@ async function getTextStyleOptions({ lang, optionsName }: Params): Promise<Item>
             case 'width':
             case 'height':
                 completionItem = new CompletionItem(item, CompletionItemKind.Enum);
-                insertText = new SnippetString(`${item}: ` + '{$1|10,\'\'|},');
+                insertText = new SnippetString(`${item}: ` + '${1|10,\'\'|},');
                 break;
 
             default:

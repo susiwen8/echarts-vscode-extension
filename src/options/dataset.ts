@@ -26,7 +26,7 @@ async function getDatasetOptions({ lang, optionsName }: Params): Promise<Item> {
         switch (item) {
             case 'source':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
-                insertText = new SnippetString(`${item}: ` + '{$1|{},[]|},');
+                insertText = new SnippetString(`${item}: ` + '${1|{},[]|},');
                 break;
 
             case 'dimensions':

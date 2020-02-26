@@ -31,7 +31,7 @@ async function getAriaOptions({ lang, optionsName }: Params): Promise<Item> {
         switch (item) {
             case 'show':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
-                insertText = new SnippetString(`${item}: ` + '{$1|true,false|},');
+                insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
 
             case 'general':
