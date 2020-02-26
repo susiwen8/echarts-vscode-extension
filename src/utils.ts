@@ -78,7 +78,24 @@ export async function getData({ lang, option }: GetDataParams): Promise<Options 
 }
 
 /**
- * get all option names
+ * Flatten object
+ * @param optionChain chain of option names
+ * @param children child options
+ * @param optionsNames final result
+ */
+function flatObject(optionChain: string, children: OptionsNameItem[], optionsNames: OptionsName): void {
+    children.map(item => {
+        if (item.children) {
+            flatObject(`${optionChain}.${item.prop || item.arrayItemType || ''}`, item.children, optionsNames);
+        }
+
+        optionsNames[optionChain] ? optionsNames[optionChain].push(item.prop || item.arrayItemType || '')
+            : optionsNames[optionChain] = [];
+    });
+}
+
+/**
+ * get option structure
  */
 export async function getOptionsNames(): Promise<OptionsName | undefined> {
     try {
@@ -89,22 +106,13 @@ export async function getOptionsNames(): Promise<OptionsName | undefined> {
 
         res.data.children.map((item: OptionsNameItem) => {
             if (item.children) {
-                if (['series', 'dataZoom', 'visualMap'].includes(item.prop || '')) {
-                    item.children.map(child => {
-                        if (child.arrayItemType && child.children) {
-                            if (child.arrayItemType === 'parallel') child.arrayItemType = 'seriesParallel';
-                            optionsNames[child.arrayItemType] = child.children.map(i => i.prop || '');
-                        }
-                    });
-                } else if (item.prop) {
-                    optionsNames[item.prop] = item.children.map(item => item.prop || item.arrayItemType || '');
-                }
+                flatObject(item.prop || item.arrayItemType || '', item.children, optionsNames);
             }
         });
 
         return optionsNames;
     } catch (error) {
-        console.error(`${error.code}, option name`);
+        console.error(`${error.code || error.message}, option name`);
     }
 
 }
