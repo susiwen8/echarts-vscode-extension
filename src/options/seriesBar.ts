@@ -54,7 +54,9 @@ const seriesBarOptionsName: string[] = [
     'animationDurationUpdate',
     'animationEasingUpdate',
     'animationDelayUpdate',
-    'tooltip'
+    'tooltip',
+    'showBackground',
+    'backgroundStyle'
 ];
 
 async function getBarOptions(lang: string): Promise<Item> {
@@ -72,6 +74,7 @@ async function getBarOptions(lang: string): Promise<Item> {
             case 'markLine':
             case 'markArea':
             case 'tooltip':
+            case 'backgroundStyle':
                 completionItem = new CompletionItem(item, CompletionItemKind.Struct);
                 insertText = new SnippetString(`${item}: {$0}`);
                 break;
@@ -82,6 +85,7 @@ async function getBarOptions(lang: string): Promise<Item> {
             case 'clip':
             case 'silent':
             case 'animation':
+            case 'showBackground':
                 completionItem = new CompletionItem(item, CompletionItemKind.EnumMember);
                 insertText = new SnippetString(`${item}: ` + '${1|true,false|},');
                 break;
