@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesCandlestickOptionsName: string[] = [
     'id',
@@ -45,9 +45,9 @@ const seriesCandlestickOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getCandlestickOptions(lang: string): Promise<Item> {
+async function getCandlestickOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_CANDLESTICK_URL' });
-    const item = seriesCandlestickOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

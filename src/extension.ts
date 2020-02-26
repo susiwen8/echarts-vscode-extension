@@ -16,6 +16,11 @@ import { findNodeAround } from 'acorn-walk';
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     const optionsObj = await getAllOptions();
 
+    if (!optionsObj) {
+        vscode.window.showErrorMessage('Echarts extension failed');
+        return;
+    }
+
     const selector: vscode.DocumentSelector = {
         scheme: 'file',
         language: 'javascript'

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesGaugeOptionsName: string[] = [
     'id',
@@ -47,9 +47,9 @@ const seriesGaugeOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getGaugeOptions(lang: string): Promise<Item> {
+async function getGaugeOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_GAUGE_URL' });
-    const item = seriesGaugeOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

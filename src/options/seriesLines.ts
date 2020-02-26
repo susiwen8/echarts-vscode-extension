@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesLinesOptionsName: string[] = [
     'id',
@@ -46,9 +46,9 @@ const seriesLinesOptionsName: string[] = [
     'animationDelayUpdate'
 ];
 
-async function getLinesOptions(lang: string): Promise<Item> {
+async function getLinesOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_LINES_URL' });
-    const item = seriesLinesOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

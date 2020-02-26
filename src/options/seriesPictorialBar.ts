@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesPictorialBarOptionsName: string[] = [
     'id',
@@ -57,9 +57,9 @@ const seriesPictorialBarOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getPictorialBarOptions(lang: string): Promise<Item> {
+async function getPictorialBarOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_PICTORIALBAR_URL' });
-    const item = seriesPictorialBarOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

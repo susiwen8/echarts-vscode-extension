@@ -10,7 +10,8 @@ import {
 import { getData } from '../utils';
 import {
     Options,
-    Item
+    Item,
+    Params
 } from '../type';
 
 const ariaOptionsName: string[] = [
@@ -21,9 +22,9 @@ const ariaOptionsName: string[] = [
     'data'
 ];
 
-async function getAriaOptions(lang: string): Promise<Item> {
+async function getAriaOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'ARIA_URL' });
-    const item = ariaOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

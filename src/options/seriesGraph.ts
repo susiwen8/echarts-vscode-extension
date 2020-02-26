@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesGraphOptionsName: string[] = [
     'id',
@@ -69,9 +69,9 @@ const seriesGraphOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getGraphOptions(lang: string): Promise<Item> {
+async function getGraphOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_GRAPH_URL' });
-    const item = seriesGraphOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

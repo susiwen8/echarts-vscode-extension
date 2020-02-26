@@ -3,6 +3,7 @@ import {
     DataZoomType,
     OptionsItem
 } from '../type';
+import { getOptionsNames } from '../utils';
 import getTitleOptions from './title';
 import getLegendOptions from './legend';
 import getGridOptions from './grid';
@@ -52,21 +53,63 @@ import getThemeRiverOptions from './seriesThemeRiver';
 import getCustomOptions from './seriesCustom';
 import getRichOptions from './rich';
 
-export default async function getAllOptions(lang = 'zh'): Promise<OptionsItem> {
+export default async function getAllOptions(lang = 'zh'): Promise<OptionsItem | null> {
+    const optionsNames = await getOptionsNames();
+    // console.log(optionsNames);
+    if (!optionsNames) {
+        return null;
+    }
+
     const optionsArr = await Promise.all([
-        getTitleOptions(lang), getLegendOptions(lang), getGridOptions(lang), getxAxisOptions(lang),
-        getyAxisOptions(lang), getPolarOptions(lang), getRadiusAxisOptions(lang), getAnglesAxisOptions(lang),
-        getTooltipOptions(lang), getRadarOptions(lang), getAxisPointerOptions(lang), getToolboxOptions(lang),
-        getBrushOptions(lang), getGeoOptions(lang), getParallelOptions(lang), getParallelAxisOptions(lang),
-        getSingleAxisOption(lang), getTimelineOption(lang), getGraphicOptions(lang), getCalendarOptions(lang),
-        getDatasetOptions(lang), getAriaOptions(lang), getTextStyleOptions(lang), getVisualMapOptions(lang, VisualMapType.Continuous),
-        getVisualMapOptions(lang, VisualMapType.Piecewise), getDataZoomOptions(lang, DataZoomType.Inside),
-        getDataZoomOptions(lang, DataZoomType.Slider), getBarOptions(lang), getLineOptions(lang),
-        getPieOptions(lang), getScatterOptions(lang), getEffectScatterOptions(lang), getRadarChartOptions(lang),
-        getTreeOptions(lang), getTreemapOptions(lang), getSunburstOptions(lang), getBoxplotOptions(lang),
-        getCandlestickOptions(lang), getHeatmapOptions(lang), getMapOptions(lang), getParallelChartOptions(lang),
-        getLinesOptions(lang), getGraphOptions(lang), getSankeyOptions(lang), getFunnelOptions(lang),
-        getGaugeOptions(lang), getPictorialBarOptions(lang), getThemeRiverOptions(lang), getCustomOptions(lang),
+        getTitleOptions({ lang, optionsName: optionsNames.title }),
+        getLegendOptions({ lang, optionsName: optionsNames.legend }),
+        getGridOptions({ lang, optionsName: optionsNames.grid }),
+        getxAxisOptions({ lang, optionsName: optionsNames.xAxis }),
+        getyAxisOptions({ lang, optionsName: optionsNames.yAxis }),
+        getPolarOptions({ lang, optionsName: optionsNames.polar }),
+        getRadiusAxisOptions({ lang, optionsName: optionsNames.radiusAxis }),
+        getAnglesAxisOptions({ lang, optionsName: optionsNames.angleAxis }),
+        getTooltipOptions({ lang, optionsName: optionsNames.tooltip }),
+        getRadarOptions({ lang, optionsName: optionsNames.radar }),
+        getAxisPointerOptions({ lang, optionsName: optionsNames.axisPointer }),
+        getToolboxOptions({ lang, optionsName: optionsNames.toolbox }),
+        getBrushOptions({ lang, optionsName: optionsNames.brush }),
+        getGeoOptions({ lang, optionsName: optionsNames.geo }),
+        getParallelOptions({ lang, optionsName: optionsNames.parallel }),
+        getParallelAxisOptions({ lang, optionsName: optionsNames.parallelAxis }),
+        getSingleAxisOption({ lang, optionsName: optionsNames.singleAxis }),
+        getTimelineOption({ lang, optionsName: optionsNames.timeline }),
+        getGraphicOptions({ lang, optionsName: optionsNames.graphic }),
+        getCalendarOptions({ lang, optionsName: optionsNames.calendar }),
+        getDatasetOptions({ lang, optionsName: optionsNames.dataset }),
+        getAriaOptions({ lang, optionsName: optionsNames.aria }),
+        getTextStyleOptions({ lang, optionsName: optionsNames.textStyle }),
+        getVisualMapOptions({ lang, optionsName: optionsNames.continuous, type: VisualMapType.Continuous }),
+        getVisualMapOptions({ lang, optionsName: optionsNames.piecewise, type: VisualMapType.Piecewise }),
+        getDataZoomOptions({ lang, optionsName: optionsNames.inside, type: DataZoomType.Inside }),
+        getDataZoomOptions({ lang, optionsName: optionsNames.slider, type: DataZoomType.Slider }),
+        getBarOptions({ lang, optionsName: optionsNames.bar }),
+        getLineOptions({ lang, optionsName: optionsNames.line }),
+        getPieOptions({ lang, optionsName: optionsNames.pie }),
+        getScatterOptions({ lang, optionsName: optionsNames.scatter }),
+        getEffectScatterOptions({ lang, optionsName: optionsNames.effectScatter }),
+        getRadarChartOptions({ lang, optionsName: optionsNames.radar }),
+        getTreeOptions({ lang, optionsName: optionsNames.tree }),
+        getTreemapOptions({ lang, optionsName: optionsNames.treemap }),
+        getSunburstOptions({ lang, optionsName: optionsNames.sunburst }),
+        getBoxplotOptions({ lang, optionsName: optionsNames.boxplot }),
+        getCandlestickOptions({ lang, optionsName: optionsNames.candlestick }),
+        getHeatmapOptions({ lang, optionsName: optionsNames.heatmap }),
+        getMapOptions({ lang, optionsName: optionsNames.map }),
+        getParallelChartOptions({ lang, optionsName: optionsNames.seriesParallel }),
+        getLinesOptions({ lang, optionsName: optionsNames.lines }),
+        getGraphOptions({ lang, optionsName: optionsNames.graph }),
+        getSankeyOptions({ lang, optionsName: optionsNames.sankey }),
+        getFunnelOptions({ lang, optionsName: optionsNames.funnel }),
+        getGaugeOptions({ lang, optionsName: optionsNames.gauge }),
+        getPictorialBarOptions({ lang, optionsName: optionsNames.pictorialBar }),
+        getThemeRiverOptions({ lang, optionsName: optionsNames.themeRiver }),
+        getCustomOptions({ lang, optionsName: optionsNames.custom }),
         getRichOptions()
     ]);
 

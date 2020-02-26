@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const tooltipOptionsName: string[] = [
     'show',
@@ -33,9 +33,9 @@ const tooltipOptionsName: string[] = [
     'extraCssText'
 ];
 
-async function getTooltipOptions(lang: string): Promise<Item> {
+async function getTooltipOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'TOOLTIP_URL' });
-    const item = tooltipOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesBarOptionsName: string[] = [
     'id',
@@ -59,9 +59,9 @@ const seriesBarOptionsName: string[] = [
     'backgroundStyle'
 ];
 
-async function getBarOptions(lang: string): Promise<Item> {
+async function getBarOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_BAR_URL' });
-    const item = seriesBarOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

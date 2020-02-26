@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesPieOptionsName: string[] = [
     'id',
@@ -62,9 +62,9 @@ const seriesPieOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getPieOptions(lang: string): Promise<Item> {
+async function getPieOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_PIE_URL' });
-    const item = seriesPieOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

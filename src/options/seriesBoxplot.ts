@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesBoxplotOptionsName: string[] = [
     'id',
@@ -37,9 +37,9 @@ const seriesBoxplotOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getBoxplotOptions(lang: string): Promise<Item> {
+async function getBoxplotOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_BOXPLOT_URL' });
-    const item = seriesBoxplotOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

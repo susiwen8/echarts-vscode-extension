@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesThemeRiverOptionsName: string[] = [
     'id',
@@ -30,9 +30,9 @@ const seriesThemeRiverOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getThemeRiverOptions(lang: string): Promise<Item> {
+async function getThemeRiverOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_THEMERIVER_URL' });
-    const item = seriesThemeRiverOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

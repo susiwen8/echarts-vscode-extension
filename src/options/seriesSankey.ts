@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesSankeyOptionsName: string[] = [
     'id',
@@ -50,9 +50,9 @@ const seriesSankeyOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getSankyOptions(lang: string): Promise<Item> {
+async function getSankyOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_SANKEY_URL' });
-    const item = seriesSankeyOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

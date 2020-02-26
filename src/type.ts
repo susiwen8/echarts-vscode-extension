@@ -5,6 +5,24 @@ export interface Options {
     [propName: string]: string;
 }
 
+export interface OptionsName {
+    [propName: string]: string[];
+}
+
+export interface Params {
+    lang: string;
+    optionsName: string[];
+}
+
+export interface OptionsNameItem {
+    prop?: string;
+    arrayItemType?: string;
+    type?: string | string[];
+    isObject?: boolean;
+    default?: string | number | boolean;
+    children?: OptionsNameItem[];
+}
+
 export enum VisualMapType {
     Continuous = 'continuous',
     Piecewise = 'piecewise'

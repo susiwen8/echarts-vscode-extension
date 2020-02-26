@@ -8,7 +8,12 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, DataZoomType, Item } from '../type';
+import {
+    Options,
+    DataZoomType,
+    Item,
+    Params
+} from '../type';
 
 const dataZoomOptionsName: string[] = [
     'type',
@@ -57,11 +62,15 @@ const dataZoomOptionsName: string[] = [
     'bottom'
 ];
 
-async function getDataZoomOptions(lang: string, type: string): Promise<Item> {
+interface DataZoom extends Params {
+    type: string;
+}
+
+async function getDataZoomOptions({ lang, optionsName, type }: DataZoom): Promise<Item> {
     const option = type === DataZoomType.Inside ? 'DATAZOOM_INSIDE_URL' : 'DATAZOOM_SLIDER_URL';
 
     const jsonData: Options | undefined = await getData({ lang, option });
-    const item = dataZoomOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

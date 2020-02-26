@@ -8,16 +8,16 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const graphicOptionsName: string[] = [
     'id',
     'elements'
 ];
 
-async function getGraphicOptions(lang: string): Promise<Item> {
+async function getGraphicOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'GRAPHIC_URL' });
-    const item = graphicOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

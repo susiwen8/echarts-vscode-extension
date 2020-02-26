@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesParallelOptionsName: string[] = [
     'id',
@@ -38,9 +38,9 @@ const seriesParallelOptionsName: string[] = [
     'animationDelayUpdate'
 ];
 
-async function getParallelOptions(lang: string): Promise<Item> {
+async function getParallelOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_PARALLEL_URL' });
-    const item = seriesParallelOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

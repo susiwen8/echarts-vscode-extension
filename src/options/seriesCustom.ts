@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesCustomOptionsName: string[] = [
     'id',
@@ -43,9 +43,9 @@ const seriesCustomOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getCustomOptions(lang: string): Promise<Item> {
+async function getCustomOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_CUSTOM_URL' });
-    const item = seriesCustomOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

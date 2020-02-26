@@ -10,7 +10,8 @@ import {
 import { getData } from '../utils';
 import {
     Options,
-    Item
+    Item,
+    Params
 } from '../type';
 
 const anglesAxisOptionsName: string[] = [
@@ -45,9 +46,9 @@ const anglesAxisOptionsName: string[] = [
     'axisPointer'
 ];
 
-async function getAnglesAxisOptions(lang: string): Promise<Item> {
+async function getAnglesAxisOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'ANGLEAXIS_URL' });
-    const item = anglesAxisOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesSunburstOptionsName: string[] = [
     'id',
@@ -38,9 +38,9 @@ const seriesSunburstOptionsName: string[] = [
     'animationDelayUpdate'
 ];
 
-async function getSunburstOptions(lang: string): Promise<Item> {
+async function getSunburstOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_SUNBURST_URL' });
-    const item = seriesSunburstOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

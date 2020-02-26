@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const seriesScatterOptionsName: string[] = [
     'id',
@@ -57,9 +57,9 @@ const seriesScatterOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getScatterOptions(lang: string): Promise<Item> {
+async function getScatterOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'SERIES_SCATTER_URL' });
-    const item = seriesScatterOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

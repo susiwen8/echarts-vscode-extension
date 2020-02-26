@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const polarOptionsName: string[] = [
     'id',
@@ -19,9 +19,9 @@ const polarOptionsName: string[] = [
     'tooltip'
 ];
 
-async function getPolarOptions(lang: string): Promise<Item> {
+async function getPolarOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'POLAR_URL' });
-    const item = polarOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const textStyleOptionsName: string[] = [
     'color',
@@ -27,9 +27,9 @@ const textStyleOptionsName: string[] = [
     'textShadowOffsetY'
 ];
 
-async function getTextStyleOptions(lang: string): Promise<Item> {
+async function getTextStyleOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'TEXTSTYLE_URL' });
-    const item = textStyleOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

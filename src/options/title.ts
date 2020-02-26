@@ -10,7 +10,8 @@ import {
 import { getData } from '../utils';
 import {
     Options,
-    Item
+    Item,
+    Params
 } from '../type';
 
 const titleOptionsName: string[] = [
@@ -45,9 +46,9 @@ const titleOptionsName: string[] = [
     'shadowOffsetY'
 ];
 
-async function getTitleOptions(lang: string): Promise<Item> {
+async function getTitleOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'TITLE_URL' });
-    const item = titleOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

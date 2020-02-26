@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, VisualMapType, Item } from '../type';
+import { Options, VisualMapType, Item, Params } from '../type';
 
 const visualMapOptionsName: string[] = [
     'type',
@@ -57,11 +57,15 @@ const visualMapOptionsName: string[] = [
     'itemSymbol'
 ];
 
-async function getVisualMapOptions(lang: string, type: string): Promise<Item> {
+interface VisualMap extends Params {
+    type: string;
+}
+
+async function getVisualMapOptions({ lang, optionsName, type }: VisualMap): Promise<Item> {
     const option = VisualMapType.Piecewise ? 'VISUALMAP_PIECEWISE_URL' : 'VISUALMAP_CONTINUOUS_URL';
 
     const jsonData: Options | undefined = await getData({ lang, option });
-    const item = visualMapOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

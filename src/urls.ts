@@ -4,6 +4,7 @@
 
 const ZH_HOST = 'https://echarts.apache.org/zh/documents/option-parts/';
 const EN_HOST = 'https://echarts.apache.org/en/documents/option-parts/';
+export const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';
 
 interface Url {
     [propName: string]: string;

@@ -9,7 +9,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const axisPointerOptionsName: string[] = [
     'id',
@@ -28,9 +28,9 @@ const axisPointerOptionsName: string[] = [
     'triggerOn'
 ];
 
-async function getAxisPointerOptions(lang: string): Promise<Item> {
+async function getAxisPointerOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'AXISPOINTER_URL' });
-    const item = axisPointerOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 

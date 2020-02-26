@@ -3,13 +3,15 @@
  */
 
 import axios from 'axios';
-import { urls } from './urls';
+import { urls, OPTION_OUTLINE } from './urls';
 import { findNodeAround } from 'acorn-walk';
 import {
     GetDataParams,
     Options,
+    OptionsName,
     Node,
     Property,
+    OptionsNameItem,
     isProperty,
     isLiteral,
     isArrayExpression,
@@ -71,8 +73,40 @@ export async function getData({ lang, option }: GetDataParams): Promise<Options 
         }
         return res.data;
     } catch (error) {
-        console.log(`${error.code}, ${api}: `);
+        console.error(`${error.code}, ${option}: `);
     }
+}
+
+/**
+ * get all option names
+ */
+export async function getOptionsNames(): Promise<OptionsName | undefined> {
+    try {
+        const optionsNames: OptionsName = {};
+        const res = await axios.get(OPTION_OUTLINE, {
+            timeout: 10000
+        });
+
+        res.data.children.map((item: OptionsNameItem) => {
+            if (item.children) {
+                if (['series', 'dataZoom', 'visualMap'].includes(item.prop || '')) {
+                    item.children.map(child => {
+                        if (child.arrayItemType && child.children) {
+                            if (child.arrayItemType === 'parallel') child.arrayItemType = 'seriesParallel';
+                            optionsNames[child.arrayItemType] = child.children.map(i => i.prop || '');
+                        }
+                    });
+                } else if (item.prop) {
+                    optionsNames[item.prop] = item.children.map(item => item.prop || item.arrayItemType || '');
+                }
+            }
+        });
+
+        return optionsNames;
+    } catch (error) {
+        console.error(`${error.code}, option name`);
+    }
+
 }
 
 /**

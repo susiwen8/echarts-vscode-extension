@@ -8,7 +8,7 @@ import {
     SnippetString
 } from 'vscode';
 import { getData } from '../utils';
-import { Options, Item } from '../type';
+import { Options, Item, Params } from '../type';
 
 const xAxisOptionsName: string[] = [
     'id',
@@ -47,9 +47,9 @@ const xAxisOptionsName: string[] = [
     'z'
 ];
 
-async function getxAxisOptions(lang: string): Promise<Item> {
+async function getxAxisOptions({ lang, optionsName }: Params): Promise<Item> {
     const jsonData: Options | undefined = await getData({ lang, option: 'XAXIS_URL' });
-    const item = xAxisOptionsName.map((item: string) => {
+    const item = optionsName.map((item: string) => {
         let completionItem: CompletionItem;
         let insertText: SnippetString;
 
