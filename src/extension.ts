@@ -6,8 +6,7 @@ import {
 } from './utils';
 import {
     isProperty,
-    isLiteral,
-    CHART_TYPE
+    isLiteral
 } from './type';
 import getAllOptions from './options/index';
 import * as acorn from 'acorn';
@@ -21,7 +20,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         return;
     }
 
-    vscode.window.showInformationMessage('Echarts extension up');
+    // vscode.window.showInformationMessage('Echarts extension up');
 
     const selector: vscode.DocumentSelector = {
         scheme: 'file',
