@@ -59,6 +59,35 @@ function findChartTypeInArray(elements: Node[], position: number): string {
 }
 
 /**
+ * Flatten object
+ * @param optionChain chain of option names
+ * @param children child options
+ * @param optionsNames final result
+ */
+function flatObject(optionChain: string, children: OptionsNameItem[], optionsNames: OptionsStruct): void {
+    children.map(item => {
+        if (item.children) {
+            flatObject(`${optionChain}.${item.prop || item.arrayItemType || ''}`, item.children, optionsNames);
+        }
+
+        if (!optionsNames[optionChain]) {
+            optionsNames[optionChain] = [];
+        }
+
+        let type: string[] = [];
+        item.type = item.type === '*' ? 'object' : (item.type ? item.type : typeof item.default);
+        if (typeof item.type === 'string') {
+            type = [item.type];
+        }
+
+        optionsNames[optionChain].push({
+            name: item.prop || item.arrayItemType || '',
+            type
+        });
+    });
+}
+
+/**
  * find out input at which chart type
  * @param values series option value
  * @param position input position
@@ -98,26 +127,6 @@ export async function getData({ lang, option, sendRequest = false }: GetDataPara
     } catch (error) {
         console.error(`${error.code}, ${option}: `);
     }
-}
-
-/**
- * Flatten object
- * @param optionChain chain of option names
- * @param children child options
- * @param optionsNames final result
- */
-function flatObject(optionChain: string, children: OptionsNameItem[], optionsNames: OptionsStruct): void {
-    children.map(item => {
-        if (item.children) {
-            flatObject(`${optionChain}.${item.prop || item.arrayItemType || ''}`, item.children, optionsNames);
-        }
-
-        if (!optionsNames[optionChain]) {
-            optionsNames[optionChain] = [];
-        }
-
-        optionsNames[optionChain].push(item.prop || item.arrayItemType || '');
-    });
 }
 
 /**

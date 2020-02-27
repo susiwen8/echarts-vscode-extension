@@ -34,8 +34,41 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             provideCompletionItems() {
                 console.log(option);
                 const completionItems = optionsStruct[option].map(item => {
-                    const completionItem = new vscode.CompletionItem(item, vscode.CompletionItemKind.Keyword);
-                    completionItem.insertText = new vscode.SnippetString(`${item}: $0,`);
+                    const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
+                    let insertText = `${item.name}: '\${1|`;
+                    item.type.map(i => {
+                        switch (i.toLocaleLowerCase()) {
+                            case 'string':
+                                insertText += '\'\',';
+                                break;
+
+                            case 'number':
+                                insertText += '1,';
+                                break;
+
+                            case 'boolean':
+                                insertText += 'true,false,';
+                                break;
+
+                            case 'array':
+                                insertText += '[],';
+                                break;
+
+                            case 'color':
+                                insertText += '#,rgb(),rgba(),';
+                                break;
+
+                            case 'function':
+                                insertText += 'function () {},';
+                                break;
+
+                            default:
+                                insertText += '{},';
+                        }
+                    });
+                    insertText = insertText.substring(0, insertText.length - 1);
+                    insertText += '|}\',';
+                    completionItem.insertText = new vscode.SnippetString(insertText);
                     return completionItem;
                 });
 

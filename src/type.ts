@@ -6,7 +6,10 @@ export interface Options {
 }
 
 export interface OptionsStruct {
-    [propName: string]: string[];
+    [propName: string]: {
+        name: string;
+        type: string[];
+    }[];
 }
 
 export interface Params {
