@@ -35,3 +35,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## TODO
 - Add back snippet text
+
+## [0.0.6] - 2020-02-28
+## Added
+- Add back snippet text

@@ -27,7 +27,7 @@ PS: `Echarts` now support chinese version. (Will support english version in futu
 - [x] Optimization
 - [x] Object inside Object ex. title.textStyle
 - [ ] add more option
-- [ ] base on option value type to provide helpful snippet text.
+- [x] base on option value type to provide helpful snippet text.
 - [ ] Check if there were wrong or inappropriate value.
 - [ ] Support english
 - [ ] HoverProvider
