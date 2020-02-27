@@ -25,3 +25,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Bug
 - Change speaking language not working
+
+## [0.0.5] - 2020-02-27
+## Refactor
+- Provide accurate completion items
+
+## Remove
+- Remove snippet text
+
+## TODO
+- Add back snippet text
