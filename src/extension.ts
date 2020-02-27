@@ -14,12 +14,14 @@ import * as acorn from 'acorn';
 import { findNodeAround } from 'acorn-walk';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    const optionsObj = await getAllOptions();
+    const optionsStruct = await getAllOptions();
 
-    if (!optionsObj) {
+    if (!optionsStruct) {
         vscode.window.showErrorMessage('Echarts extension failed');
         return;
     }
+
+    vscode.window.showInformationMessage('Echarts extension up');
 
     const selector: vscode.DocumentSelector = {
         scheme: 'file',
@@ -30,27 +32,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
-            provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-                if (option && optionsObj[option]) {
-                    // console.log(`provide: ${option}`)
-                    return optionsObj[option];
-                }
-
-                if (!option) {
-                    return;
-                }
-
-                let line = position.line;
-                let linePrefix = document.lineAt(line).text;
-
-                while (line >= 0 && (linePrefix = document.lineAt(line).text, linePrefix.indexOf('}') === -1)) {
-                    linePrefix = linePrefix.replace(/[^a-zA-Z]/g,'');
-                    if (optionsObj[linePrefix]) {
-                        return optionsObj[linePrefix];
-                    }
-
-                    line -= 1;
-                }
+            provideCompletionItems() {
+                // TODO
+                console.log(optionsStruct[option]);
             }
         },
         ...generateAToZArray()
@@ -64,8 +48,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             const literal = findNodeAround(ast, position, 'Literal');
             const property = findNodeAround(ast, position, 'Property');
 
-            if (property && isProperty(property.node)) {
-                console.log(walkNodeRecursive(ast, property.node) + property?.node?.key?.name);
+            if (
+                property
+                && isProperty(property.node)
+                && event.contentChanges[0].text.includes('\n')
+            ) {
+                option = `${walkNodeRecursive(ast, property.node, position)}.${property?.node?.key?.name}`;
+                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                console.log(option);
+                return;
             }
 
             // Literal value is one of chart types and Property is type

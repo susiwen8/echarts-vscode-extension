@@ -5,7 +5,7 @@ export interface Options {
     [propName: string]: string;
 }
 
-export interface OptionsName {
+export interface OptionsStruct {
     [propName: string]: string[];
 }
 
@@ -58,10 +58,12 @@ export const CHART_TYPE = [
     'custom'
 ];
 
-export type GetDataParams = {
-    lang: string,
-    option: string
-};
+export interface GetDataParams {
+    lang: string;
+    option: string;
+    sendRequest?: boolean;
+
+}
 
 export type Node = acorn.Node;
 export interface Property extends Node {

@@ -8,7 +8,7 @@ import { findNodeAround } from 'acorn-walk';
 import {
     GetDataParams,
     Options,
-    OptionsName,
+    OptionsStruct,
     Node,
     Property,
     OptionsNameItem,
@@ -59,10 +59,33 @@ function findChartTypeInArray(elements: Node[], position: number): string {
 }
 
 /**
- * Axios request
- * @param url request url
+ * find out input at which chart type
+ * @param values series option value
+ * @param position input position
  */
-export async function getData({ lang, option }: GetDataParams): Promise<Options | undefined> {
+export function findChartType(values: Property['value'], position: number): string {
+    if (isObjectExpression(values)) {
+        return findChartTypeInObject(values.properties);
+    }
+
+    if (isArrayExpression(values)) {
+        return findChartTypeInArray(values.elements, position);
+    }
+
+    return '';
+}
+
+/**
+ * Axios request
+ * @param lang language
+ * @param option option name
+ * @param sendRequest send request to Apache api or not
+ */
+export async function getData({ lang, option, sendRequest = false }: GetDataParams): Promise<Options | undefined> {
+    if (!sendRequest) {
+        return;
+    }
+
     const api = urls[lang][option];
     try {
         const res = await axios.get(api, {
@@ -83,23 +106,26 @@ export async function getData({ lang, option }: GetDataParams): Promise<Options 
  * @param children child options
  * @param optionsNames final result
  */
-function flatObject(optionChain: string, children: OptionsNameItem[], optionsNames: OptionsName): void {
+function flatObject(optionChain: string, children: OptionsNameItem[], optionsNames: OptionsStruct): void {
     children.map(item => {
         if (item.children) {
             flatObject(`${optionChain}.${item.prop || item.arrayItemType || ''}`, item.children, optionsNames);
         }
 
-        optionsNames[optionChain] ? optionsNames[optionChain].push(item.prop || item.arrayItemType || '')
-            : optionsNames[optionChain] = [];
+        if (!optionsNames[optionChain]) {
+            optionsNames[optionChain] = [];
+        }
+
+        optionsNames[optionChain].push(item.prop || item.arrayItemType || '');
     });
 }
 
 /**
  * get option structure
  */
-export async function getOptionsNames(): Promise<OptionsName | undefined> {
+export async function getOptionsNames(): Promise<OptionsStruct | undefined> {
     try {
-        const optionsNames: OptionsName = {};
+        const optionsNames: OptionsStruct = {};
         const res = await axios.get(OPTION_OUTLINE, {
             timeout: 10000
         });
@@ -137,32 +163,19 @@ export function generateAToZArray(): string[] {
  * @param ast AST tree
  * @param node current node
  */
-export function walkNodeRecursive(ast: Node, node: Node): string {
+export function walkNodeRecursive(ast: Node, node: Node, position: number): string {
     let nodes = '';
     if (isProperty(node)) {
         const prevNode = findNodeAround(ast, node.end + 1, 'Property');
         if (prevNode && isProperty(prevNode.node)) {
+            if (prevNode.node.key.name === 'series') {
+                prevNode.node.key.name += `.${findChartType(prevNode.node.value, position)}`;
+            }
             nodes += prevNode.node.key.name;
-            return `${nodes}.${walkNodeRecursive(ast, prevNode.node) || ''}`;
+            const prevNodeName = walkNodeRecursive(ast, prevNode.node, position) || '';
+            return `${prevNodeName}${prevNodeName ? '.' : ''}${nodes}`;
         }
     }
 
     return nodes;
-}
-
-/**
- * find out input at which chart type
- * @param values series option value
- * @param position input position
- */
-export function findChartType(values: Property['value'], position: number): string {
-    if (isObjectExpression(values)) {
-        return findChartTypeInObject(values.properties);
-    }
-
-    if (isArrayExpression(values)) {
-        return findChartTypeInArray(values.elements, position);
-    }
-
-    return '';
 }
