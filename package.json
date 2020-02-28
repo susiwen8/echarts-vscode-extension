@@ -34,7 +34,9 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
@@ -56,8 +58,11 @@
 		"glob": "^7.1.5",
 		"mocha": "^7.0.1",
 		"prettier": "^1.19.1",
+		"ts-loader": "^6.2.1",
 		"typescript": "^3.8.2",
-		"vscode-test": "^1.2.2"
+		"vscode-test": "^1.2.2",
+		"webpack": "^4.41.6",
+		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
 		"acorn": "^7.1.0",

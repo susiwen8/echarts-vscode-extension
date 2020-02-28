@@ -1,0 +1,8 @@
+webpack.config.js
+*.json
+!node_modules/axios
+**/*.ts
+gif/
+.vscode/
+.vscode-test/
+src/
