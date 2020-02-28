@@ -3,11 +3,9 @@
  */
 
 import axios from 'axios';
-import { urls, OPTION_OUTLINE } from './urls';
+import { OPTION_OUTLINE } from './urls';
 import { findNodeAround } from 'acorn-walk';
 import {
-    GetDataParams,
-    Options,
     OptionsStruct,
     Node,
     Property,
@@ -104,31 +102,6 @@ export function findChartType(values: Property['value'], position: number): stri
     }
 
     return '';
-}
-
-/**
- * Axios request
- * @param lang language
- * @param option option name
- * @param sendRequest send request to Apache api or not
- */
-export async function getData({ lang, option, sendRequest = false }: GetDataParams): Promise<Options | undefined> {
-    if (!sendRequest) {
-        return;
-    }
-
-    const api = urls[lang][option];
-    try {
-        const res = await axios.get(api, {
-            timeout: 2000
-        });
-        for (const key in res.data) {
-            res.data[key] = res.data[key].replace(/<[^>]+>/g, '').trim();
-        }
-        return res.data;
-    } catch (error) {
-        console.error(`${error.code}, ${option}: `);
-    }
 }
 
 /**
