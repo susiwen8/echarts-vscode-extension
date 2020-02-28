@@ -3,3 +3,4 @@ out
 .vscode
 src/test
 webpack.config.js
+dist/
