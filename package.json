@@ -2,7 +2,7 @@
 	"name": "vscode-echarts-extension",
 	"displayName": "vscode extension for ECharts",
 	"description": "Autocomplete for ECharts",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"engines": {
 		"vscode": "^1.41.0"
 	},
@@ -12,13 +12,9 @@
 	"publisher": "susiwen8",
 	"repository": "https://github.com/susiwen8/echarts-vscode-extension.git",
 	"activationEvents": [
-		"onLanguage:typescript",
-		"onLanguage:javascript",
-		"onCommand:extension.echarts",
-		"onCommand:extension.echarts.en",
-		"onCommand:extension.echarts.zh"
+		"onLanguage:javascript"
 	],
-	"main": "./out/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{

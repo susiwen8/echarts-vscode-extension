@@ -6,3 +6,4 @@ gif/
 .vscode/
 .vscode-test/
 src/
+out/

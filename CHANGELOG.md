@@ -39,3 +39,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.0.6] - 2020-02-28
 ## Added
 - Add back snippet text
+
+## [0.0.7] - 2020-02-28
+## Fix
+- Fix all option insert text are string
+
+## Added
+- Use webpack to bundle extension
