@@ -1,6 +1,6 @@
 webpack.config.js
 *.json
-!node_modules/axios
+node_modules
 **/*.ts
 gif/
 .vscode/
