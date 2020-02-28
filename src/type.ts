@@ -36,31 +36,6 @@ export enum DataZoomType {
     Slider = 'slider'
 }
 
-export const CHART_TYPE = [
-    'bar',
-    'line',
-    'pie',
-    'scatter',
-    'effectScatter',
-    'radar',
-    'tree',
-    'treemap',
-    'sunburst',
-    'boxplot',
-    'candlestick',
-    'heatmap',
-    'map',
-    'parallel',
-    'lines',
-    'graph',
-    'sankey',
-    'funnel',
-    'gauge',
-    'pictorialBar',
-    'themeRiver',
-    'custom'
-];
-
 export interface GetDataParams {
     lang: string;
     option: string;

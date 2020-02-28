@@ -8,7 +8,7 @@ import {
     isProperty,
     isLiteral
 } from './type';
-import getAllOptions from './options/index';
+import getAllOptions from './index';
 import * as acorn from 'acorn';
 import { findNodeAround } from 'acorn-walk';
 
