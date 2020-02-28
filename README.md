@@ -10,10 +10,6 @@ This is unofficial vscode extension for ECharts
 This extension is automatically activate in JavaScript files
 You can also activate by command line in vscode
 
-List of commands
-
-    Echarts
-
 PS: `Echarts` now support chinese version. (Will support english version in future)
 
 ## Problems
@@ -31,3 +27,4 @@ PS: `Echarts` now support chinese version. (Will support english version in futu
 - [ ] Check if there were wrong or inappropriate value.
 - [ ] Support english
 - [ ] HoverProvider
+- [ ] More command

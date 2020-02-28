@@ -46,3 +46,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Added
 - Use webpack to bundle extension
+
+## [0.0.8] - 2020-02-28
+## Remove
+- Remove unnecessary command
