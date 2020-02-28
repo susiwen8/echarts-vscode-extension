@@ -35,39 +35,40 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 console.log(option);
                 const completionItems = optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
-                    let insertText = `${item.name}: '\${1|`;
+                    let insertText = `${item.name}: \${1|`;
+                    const type: any = [];
                     item.type.map(i => {
                         switch (i.toLocaleLowerCase()) {
                             case 'string':
-                                insertText += '\'\',';
+                                type.push('\'\'');
                                 break;
 
                             case 'number':
-                                insertText += '1,';
+                                type.push(1);
                                 break;
 
                             case 'boolean':
-                                insertText += 'true,false,';
+                                type.push(true, false);
                                 break;
 
                             case 'array':
-                                insertText += '[],';
+                                type.push('[]');
                                 break;
 
                             case 'color':
-                                insertText += '#,rgb(),rgba(),';
+                                type.push('#', 'rgb()', 'rgba()');
                                 break;
 
                             case 'function':
-                                insertText += 'function () {},';
+                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                type.push(function () {});
                                 break;
 
                             default:
-                                insertText += '{},';
+                                type.push('{}');
                         }
                     });
-                    insertText = insertText.substring(0, insertText.length - 1);
-                    insertText += '|}\',';
+                    insertText += type.join(',') + '|},';
                     completionItem.insertText = new vscode.SnippetString(insertText);
                     return completionItem;
                 });

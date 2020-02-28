@@ -78,6 +78,8 @@ function flatObject(optionChain: string, children: OptionsNameItem[], optionsNam
         item.type = item.type === '*' ? 'object' : (item.type ? item.type : typeof item.default);
         if (typeof item.type === 'string') {
             type = [item.type];
+        } else {
+            type = item.type;
         }
 
         optionsNames[optionChain].push({
