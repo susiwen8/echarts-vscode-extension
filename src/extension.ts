@@ -35,7 +35,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 const completionItems = optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
                     let insertText = `${item.name}: \${1|`;
-                    let type: any = [];
+                    let type: (boolean | number | string | Function)[] = [];
                     item.type.map(i => {
                         switch (i.toLocaleLowerCase()) {
                             case 'string':
