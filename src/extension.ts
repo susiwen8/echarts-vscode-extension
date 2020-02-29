@@ -32,11 +32,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
             provideCompletionItems() {
-                console.log(option);
                 const completionItems = optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
                     let insertText = `${item.name}: \${1|`;
-                    const type: any = [];
+                    let type: any = [];
                     item.type.map(i => {
                         switch (i.toLocaleLowerCase()) {
                             case 'string':
@@ -68,6 +67,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                                 type.push('{}');
                         }
                     });
+                    type = type.concat(item.valide);
                     insertText += type.join(',') + '|},';
                     completionItem.insertText = new vscode.SnippetString(insertText);
                     return completionItem;

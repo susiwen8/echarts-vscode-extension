@@ -73,6 +73,7 @@ function flatObject(optionChain: string, children: OptionsNameItem[], optionsNam
         }
 
         let type: string[] = [];
+        let valide: (string | number)[] = [];
         item.type = item.type === '*' ? 'object' : (item.type ? item.type : typeof item.default);
         if (typeof item.type === 'string') {
             type = [item.type];
@@ -80,9 +81,19 @@ function flatObject(optionChain: string, children: OptionsNameItem[], optionsNam
             type = item.type;
         }
 
+        if (typeof item.default === 'string' && item.default.length) {
+            item.default = item.default.replace(/,/g, '\',\'');
+            valide = item.default.split(',');
+        } else if (item.default === '') {
+            valide = [''];
+        } else if (typeof item.default === 'number') {
+            valide = [item.default];
+        }
+
         optionsNames[optionChain].push({
+            type,
+            valide,
             name: item.prop || item.arrayItemType || '',
-            type
         });
     });
 }
@@ -122,7 +133,7 @@ export async function getOptionsNames(): Promise<OptionsStruct | undefined> {
 
         return optionsNames;
     } catch (error) {
-        console.error(`${error.code || error.message}, option name`);
+        console.error(`${error}, option name`);
     }
 
 }

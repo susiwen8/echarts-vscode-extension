@@ -9,6 +9,7 @@ export interface OptionsStruct {
     [propName: string]: {
         name: string;
         type: string[];
+        valide: (string | number)[];
     }[];
 }
 
