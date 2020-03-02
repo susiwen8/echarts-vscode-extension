@@ -32,7 +32,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
             provideCompletionItems() {
-                const completionItems = optionsStruct[option].map(item => {
+                return optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
                     let insertText = `${item.name}: \${1|`;
                     let type: (boolean | number | string | Function)[] = [];
@@ -72,8 +72,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     completionItem.insertText = new vscode.SnippetString(insertText);
                     return completionItem;
                 });
-
-                return completionItems;
             }
         },
         ...generateAToZArray()

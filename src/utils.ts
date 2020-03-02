@@ -150,6 +150,7 @@ export function generateAToZArray(): string[] {
         arr.push(String.fromCharCode(i));
     }
 
+    arr.push('\n');
     return arr;
 }
 
