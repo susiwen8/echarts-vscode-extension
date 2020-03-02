@@ -118,7 +118,7 @@ export function findChartType(values: Property['value'], position: number): stri
 /**
  * get option structure
  */
-export async function getOptionsNames(): Promise<OptionsStruct | undefined> {
+export async function getOptionsStruct(): Promise<OptionsStruct | undefined> {
     try {
         const optionsNames: OptionsStruct = {};
         const res = await axios.get(OPTION_OUTLINE, {

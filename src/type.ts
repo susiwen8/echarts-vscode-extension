@@ -1,9 +1,4 @@
 import * as acorn from 'acorn';
-import { CompletionItem } from 'vscode';
-
-export interface Options {
-    [propName: string]: string;
-}
 
 export interface OptionsStruct {
     [propName: string]: {
@@ -13,11 +8,6 @@ export interface OptionsStruct {
     }[];
 }
 
-export interface Params {
-    lang: string;
-    optionsName: string[];
-}
-
 export interface OptionsNameItem {
     prop?: string;
     arrayItemType?: string;
@@ -25,23 +15,6 @@ export interface OptionsNameItem {
     isObject?: boolean;
     default?: string | number | boolean;
     children?: OptionsNameItem[];
-}
-
-export enum VisualMapType {
-    Continuous = 'continuous',
-    Piecewise = 'piecewise'
-}
-
-export enum DataZoomType {
-    Inside = 'inside',
-    Slider = 'slider'
-}
-
-export interface GetDataParams {
-    lang: string;
-    option: string;
-    sendRequest?: boolean;
-
 }
 
 export type Node = acorn.Node;
@@ -65,25 +38,10 @@ export interface ObjectExpression extends Node {
     properties: Node[];
 }
 
-export interface Element {
-    key: Identifier;
-    value: Literal;
-    properties: Node[];
-}
-
 interface Literal extends Node {
     type: 'Literal';
     value: string;
     raw: string;
-}
-
-export interface Item {
-    id: string;
-    item: CompletionItem[];
-}
-
-export interface OptionsItem {
-    [propName: string]: CompletionItem[];
 }
 
 export function isProperty(node: Node): node is Property {

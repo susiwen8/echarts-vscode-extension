@@ -2,18 +2,18 @@ import * as vscode from 'vscode';
 import {
     generateAToZArray,
     walkNodeRecursive,
-    findChartType
+    findChartType,
+    getOptionsStruct
 } from './utils';
 import {
     isProperty,
     isLiteral
 } from './type';
-import getAllOptions from './index';
 import * as acorn from 'acorn';
 import { findNodeAround } from 'acorn-walk';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    const optionsStruct = await getAllOptions();
+    const optionsStruct = await getOptionsStruct();
 
     if (!optionsStruct) {
         vscode.window.showErrorMessage('Echarts extension failed');
