@@ -50,3 +50,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.0.8] - 2020-02-28
 ## Remove
 - Remove unnecessary command
+
+## [0.0.9] - 2020-03-02
+## Added
+- Enter trigger completion
+- Provide valide value
