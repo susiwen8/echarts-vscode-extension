@@ -1,30 +1,30 @@
-# Change Log
 
-All notable changes to the "echarts" extension will be documented in this file.
+## [0.1.0] - 2020-03-02
+## Added
+- Cache response data for a week
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## Fix
+- Completion disappear when acorn parse error
 
-## [Unreleased]
+## [0.0.9] - 2020-03-02
+## Added
+- Enter trigger completion
+- Provide valide value
 
-- Initial release
+## [0.0.8] - 2020-02-28
+## Remove
+- Remove unnecessary command
 
-## [0.0.2] - 2020-01-14
-### Added
-- Set axios timeout
+## [0.0.7] - 2020-02-28
+## Fix
+- Fix all option insert text are string
 
-### Fixed
-- Snippets for `option`
+## Added
+- Use webpack to bundle extension
 
-## [0.0.3] - 2020-01-29
-### Added
-- Add rich text option
-
-## [0.0.4] - 2020-02-22
-## Refactor
-- Use acorn to generate AST then decide which option
-
-## Bug
-- Change speaking language not working
+## [0.0.6] - 2020-02-28
+## Added
+- Add back snippet text
 
 ## [0.0.5] - 2020-02-27
 ## Refactor
@@ -36,22 +36,27 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## TODO
 - Add back snippet text
 
-## [0.0.6] - 2020-02-28
-## Added
-- Add back snippet text
+## [0.0.4] - 2020-02-22
+## Refactor
+- Use acorn to generate AST then decide which option
 
-## [0.0.7] - 2020-02-28
-## Fix
-- Fix all option insert text are string
+## Bug
+- Change speaking language not working
 
-## Added
-- Use webpack to bundle extension
+## [0.0.3] - 2020-01-29
+### Added
+- Add rich text option
 
-## [0.0.8] - 2020-02-28
-## Remove
-- Remove unnecessary command
+## [0.0.2] - 2020-01-14
+### Added
+- Set axios timeout
 
-## [0.0.9] - 2020-03-02
-## Added
-- Enter trigger completion
-- Provide valide value
+### Fixed
+- Snippets for `option`
+
+
+
+
+
+
+

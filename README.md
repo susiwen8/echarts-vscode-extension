@@ -11,7 +11,7 @@ This is unofficial vscode extension for ECharts
 This extension is automatically activate in JavaScript files
 
 ## Problems
-* All options information were received by ajax, useless when there were no Internet.
+* ~~All options information were received by ajax, useless when there were no Internet.~~ Cache response data
 * ~~Due to Apache server response speed, sometime connection timeout.~~
 * ~~Use closest node to determine CompletionItem which sometime is inaccurate.~~ Solution: Use [acorn](https://github.com/acornjs/acorn) to generate AST and find closest node by using [acorn-walk](https://github.com/acornjs/acorn/tree/master/acorn-walk)
 * ~~Don't support completion when object inside object~~ Find out all ancestors option
