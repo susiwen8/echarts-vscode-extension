@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as acorn from 'acorn';
+import { findNodeAround } from 'acorn-walk';
 import {
     generateAToZArray,
     walkNodeRecursive,
@@ -7,20 +9,50 @@ import {
 } from './utils';
 import {
     isProperty,
-    isLiteral
+    isLiteral,
+    OptionsStruct
 } from './type';
-import * as acorn from 'acorn';
-import { findNodeAround } from 'acorn-walk';
+import Cache from './cache';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    const optionsStruct = await getOptionsStruct();
+    const cache = new Cache(context);
+    let optionsStruct: OptionsStruct | undefined;
+    let hasSendRequest = false;
+    const cacheValue = cache.get();
+
+    if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
+    ) {
+        cache.erase();
+    } else if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
+    ) {
+        optionsStruct = cacheValue.value;
+    }
+
+    if (!optionsStruct) {
+        optionsStruct = await getOptionsStruct();
+        hasSendRequest = true;
+    }
 
     if (!optionsStruct) {
         vscode.window.showErrorMessage('Echarts extension failed');
         return;
     }
 
-    // vscode.window.showInformationMessage('Echarts extension up');
+    if (hasSendRequest) {
+        cache.set({
+            value: {
+                saveTime: +new Date(),
+                expireTime: 7 * 60 * 60,
+                value: optionsStruct
+            }
+        });
+    }
+
+    vscode.window.showInformationMessage('Echarts extension up');
 
     const selector: vscode.DocumentSelector = {
         scheme: 'file',
@@ -32,6 +64,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const completion = vscode.languages.registerCompletionItemProvider(selector,
         {
             provideCompletionItems() {
+                if (!optionsStruct) return; // why TS warn optionsStruct might be undefined?
+
                 return optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
                     let insertText = `${item.name}: \${1|`;
