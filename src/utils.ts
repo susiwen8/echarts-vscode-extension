@@ -3,7 +3,6 @@
  */
 
 import axios from 'axios';
-import { OPTION_OUTLINE } from './urls';
 import { findNodeAround } from 'acorn-walk';
 import {
     OptionsStruct,
@@ -15,6 +14,9 @@ import {
     isArrayExpression,
     isObjectExpression
 } from './type';
+
+// const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';
+const OPTION_OUTLINE = 'https://loving-goldstine-32d8e8.netlify.com/public/en/documents/option-parts/option-outline.json';
 
 /**
  * series option is object, find which chart type it is
