@@ -89,7 +89,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                                 break;
 
                             case 'color':
-                                type.push('#', 'rgb()', 'rgba()');
+                                type.push('\'#\'', '\'rgb()\'', '\'rgba()\'');
                                 break;
 
                             case 'function':
