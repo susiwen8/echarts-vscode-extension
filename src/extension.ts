@@ -52,7 +52,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         });
     }
 
-    vscode.window.showInformationMessage('Echarts extension up');
+    // vscode.window.showInformationMessage('Echarts extension up');
 
     const selector: vscode.DocumentSelector = {
         scheme: 'file',
