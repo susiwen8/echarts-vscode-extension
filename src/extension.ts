@@ -114,8 +114,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
 
         } catch (error) {
-            option = '';
-            console.error('Parse error');
+            console.error('Acorn parse error');
         }
     });
 

@@ -133,7 +133,7 @@ export async function getOptionsStruct(): Promise<OptionsStruct | undefined> {
 
         return optionsNames;
     } catch (error) {
-        console.error(`${error}, option name`);
+        console.error(`getOptionsStruct: ${error}`);
     }
 
 }
