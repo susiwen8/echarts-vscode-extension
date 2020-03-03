@@ -27,6 +27,9 @@ module.exports = {
         'no-var': 'error',
         'object-curly-spacing': ['error', 'always'],
         'no-tabs': 'error',
-        'semi': ['error', 'always']
+        'semi': ['error', 'always'],
+        'indent': ['error', 4, {
+            'SwitchCase': 1
+        }]
     }
   };
