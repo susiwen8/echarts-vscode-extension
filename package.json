@@ -2,7 +2,7 @@
 	"name": "vscode-echarts-extension",
 	"displayName": "vscode extension for ECharts",
 	"description": "Autocomplete for ECharts",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"engines": {
 		"vscode": "^1.41.0"
 	},
@@ -16,8 +16,7 @@
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
-		"commands": [
-		],
+		"commands": [],
 		"snippets": [
 			{
 				"language": "javascript",
@@ -52,7 +51,6 @@
 		"prettier": "^1.19.1",
 		"ts-loader": "^6.2.1",
 		"typescript": "^3.8.3",
-		"vscode-test": "^1.2.2",
 		"webpack": "^4.42.0",
 		"webpack-cli": "^3.3.11"
 	},

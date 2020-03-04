@@ -1,4 +1,8 @@
 
+## [0.1.1] - 2020-03-03
+## Fix
+- color valid values are string
+
 ## [0.1.0] - 2020-03-02
 ## Added
 - Cache response data for a week

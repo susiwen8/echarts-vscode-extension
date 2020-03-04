@@ -54,7 +54,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     // vscode.window.showInformationMessage('Echarts extension up');
 
-    const selector: vscode.DocumentSelector = {
+    const selector = {
         scheme: 'file',
         language: 'javascript'
     };
