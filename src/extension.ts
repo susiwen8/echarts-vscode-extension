@@ -46,7 +46,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         cache.set({
             value: {
                 saveTime: +new Date(),
-                expireTime: 7 * 60 * 60,
+                expireTime: 7 * 24 * 60 * 60 * 1000,
                 value: optionsStruct
             }
         });
