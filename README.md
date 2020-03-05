@@ -4,10 +4,17 @@
 
 This is unofficial vscode extension for ECharts
 
-[![](https://vsmarketplacebadge.apphb.com/version/susiwen8.vscode-echarts-extension.svg)](https://marketplace.visualstudio.com/items?itemName=susiwen8.vscode-echarts-extension) [![](https://vsmarketplacebadge.apphb.com/installs/susiwen8.vscode-echarts-extension.svg)](https://marketplace.visualstudio.com/items?itemName=susiwen8.vscode-echarts-extension)
 ## Install
 * `ext install vscode-echarts-extension`
-* Marketplace
+* Marketplace [![](https://vsmarketplacebadge.apphb.com/version/susiwen8.vscode-echarts-extension.svg)](https://marketplace.visualstudio.com/items?itemName=susiwen8.vscode-echarts-extension) [![](https://vsmarketplacebadge.apphb.com/installs/susiwen8.vscode-echarts-extension.svg)](https://marketplace.visualstudio.com/items?itemName=susiwen8.vscode-echarts-extension)
+
+## Commands
+
+This extension provides 3 commands
+
+* `echarts.activate`: extension provides completion when matched case occur
+* `echarts.deactivate`: extension never show completion
+* `echarts.reload`: re-request api when request api failure
 
 ## Example
 ![example](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
@@ -25,8 +32,8 @@ This extension is automatically activate in JavaScript files
 - [x] Downgrade
 - [x] Optimization
 - [x] Object inside Object ex. title.textStyle
-- [ ] add more option
+- [ ] Replace Apache api to other api deployed on other server
 - [x] base on option value type to provide helpful snippet text.
 - [ ] Check if there were wrong or inappropriate value.
 - [ ] HoverProvider
-- [ ] More command
+- [x] More command
