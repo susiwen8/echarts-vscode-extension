@@ -16,6 +16,8 @@ This extension provides 3 commands
 * `echarts.deactivate`: extension never show completion
 * `echarts.reload`: re-request api when request api failure
 
+PS: Start from 0.1.2, extension won't provide completion at first, user need to execute `echarts.activate` at command panel.
+
 ## Example
 ![example](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
 ## Command

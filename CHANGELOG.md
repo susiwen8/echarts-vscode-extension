@@ -1,3 +1,14 @@
+## [0.1.2] - 2020-03-05
+## Fix
+- Cache time
+
+## Added
+- GL options
+- add three commands
+- Add status bar item
+
+## Changed
+- Extension won't provide completion when JS file was opened, user need to execute `echarts.activate` in command panel to activate.
 
 ## [0.1.1] - 2020-03-03
 ## Fix
