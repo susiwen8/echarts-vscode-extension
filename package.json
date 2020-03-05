@@ -3,6 +3,7 @@
 	"displayName": "vscode extension for ECharts",
 	"description": "Autocomplete for ECharts",
 	"version": "0.1.1",
+	"icon": "images/logo.png",
 	"engines": {
 		"vscode": "^1.41.0"
 	},
