@@ -12,6 +12,7 @@ export enum BarItemStatus {
     Loaded = 'Echarts',
     Loading = 'Echarts Loading',
     Failed = 'Echarts Failed, Click to reload',
+    Deactivated = 'Echarts Deactivated, Click to activate',
 }
 
 export interface OptionsNameItem {

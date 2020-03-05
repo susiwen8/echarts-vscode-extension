@@ -23,6 +23,11 @@ export default class EchartsStatusBarItem {
         color: '#db0f31',
         command: 'echarts.reload'
     }
+    #deactivated = {
+        text: BarItemStatus.Deactivated,
+        color: '#fff',
+        command: 'echarts.activate'
+    }
 
     constructor() {
         this.#statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
@@ -41,6 +46,12 @@ export default class EchartsStatusBarItem {
                 this.#statusBarItem.text = this.#failed.text;
                 this.#statusBarItem.command = this.#failed.command;
                 this.#statusBarItem.color = this.#failed.color;
+                break;
+
+            case BarItemStatus.Deactivated:
+                this.#statusBarItem.text = this.#deactivated.text;
+                this.#statusBarItem.command = this.#deactivated.command;
+                this.#statusBarItem.color = this.#deactivated.color;
                 break;
 
             default:

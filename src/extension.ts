@@ -16,17 +16,143 @@ import {
 import Cache from './cache';
 import EchartsStatusBarItem from './statusBarItem';
 
-function addCommandInContext(
+async function cacheControl(
     optionsStruct: OptionsStruct | undefined,
     statusBarItem: EchartsStatusBarItem,
     context: vscode.ExtensionContext
-): void {
+): Promise<OptionsStruct | undefined> {
+    const cache = new Cache(context);
+    let hasSendRequest = false;
+    const cacheValue = cache.get();
+
+    if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
+    ) {
+        cache.erase();
+    } else if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
+    ) {
+        optionsStruct = cacheValue.value;
+    }
+
+    if (!optionsStruct) {
+        optionsStruct = await getOptionsStruct();
+        hasSendRequest = true;
+    }
+
+    if (!optionsStruct) {
+        statusBarItem.changeStatus(BarItemStatus.Failed);
+    } else {
+        statusBarItem.changeStatus(BarItemStatus.Loaded);
+    }
+
+    if (hasSendRequest && optionsStruct) {
+        cache.set({
+            value: {
+                saveTime: +new Date(),
+                expireTime: 7 * 24 * 60 * 60 * 1000,
+                value: optionsStruct
+            }
+        });
+    }
+
+    return optionsStruct;
+}
+
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    let optionsStruct: OptionsStruct | undefined;
     let option = '';
+    let isActive = true;
+    const statusBarItem = new EchartsStatusBarItem();
+    statusBarItem.addInContext(context);
+    statusBarItem.show();
+
+    const reload = vscode.commands.registerCommand('echarts.reload', async () => {
+        statusBarItem.changeStatus(BarItemStatus.Loading);
+        if (!optionsStruct) {
+            optionsStruct = await getOptionsStruct();
+        }
+
+        if (!optionsStruct) {
+            statusBarItem.changeStatus(BarItemStatus.Failed);
+        } else {
+            statusBarItem.changeStatus(BarItemStatus.Loaded);
+        }
+    });
+
+    const deactivateEcharts = vscode.commands.registerCommand('echarts.deactivate', () => {
+        isActive = false;
+    });
+
+    const activateEcharts = vscode.commands.registerCommand('echarts.activate', async () => {
+        isActive = true;
+        statusBarItem.changeStatus(BarItemStatus.Loading);
+        if (!optionsStruct) {
+            optionsStruct = await getOptionsStruct();
+        }
+
+        if (!optionsStruct) {
+            statusBarItem.changeStatus(BarItemStatus.Failed);
+        } else {
+            statusBarItem.changeStatus(BarItemStatus.Loaded);
+        }
+    });
+
+    const onDidChangeTextDocumentEvent = vscode.workspace.onDidChangeTextDocument(event => {
+        if (!isActive) {
+            return;
+        }
+
+        try {
+            const text = event.document.getText();
+            const position = event.contentChanges[0].rangeOffset;
+            const ast = acorn.parse(text);
+            const literal = findNodeAround(ast, position, 'Literal');
+            const property = findNodeAround(ast, position, 'Property');
+
+            // input is in Literal, then don't show completion
+            if (literal && isLiteral(literal.node)) {
+                option = '';
+                return;
+            }
+
+            // Hit enter and input is in series
+            if (
+                event.contentChanges[0].text.includes('\n')
+                && property && isProperty(property.node)
+                && property.node.key.name === 'series'
+            ) {
+                option = `series.${findChartType(property?.node.value, position)}`;
+                return;
+            }
+
+            // input at somewhere other than series
+            if (
+                property
+                && isProperty(property.node)
+                && event.contentChanges[0].text.includes('\n')
+            ) {
+                const recursiveName = walkNodeRecursive(ast, property.node, position);
+                option = `${recursiveName}${recursiveName ? '.' : ''}${property?.node?.key?.name}`;
+                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                return;
+            }
+
+        } catch (error) {
+            console.error('Acorn parse error');
+        }
+    });
+
+    context.subscriptions.push(reload, deactivateEcharts, activateEcharts, onDidChangeTextDocumentEvent);
+
+    optionsStruct = await cacheControl(optionsStruct, statusBarItem, context);
 
     const completion = vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
         {
             provideCompletionItems() {
-                if (!optionsStruct) return;
+                if (!optionsStruct || !isActive) return;
 
                 return optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
@@ -73,125 +199,7 @@ function addCommandInContext(
         ...generateAToZArray()
     );
 
-    const onDidChangeTextDocumentEvent = vscode.workspace.onDidChangeTextDocument(event => {
-        try {
-            const text = event.document.getText();
-            const position = event.contentChanges[0].rangeOffset;
-            const ast = acorn.parse(text);
-            const literal = findNodeAround(ast, position, 'Literal');
-            const property = findNodeAround(ast, position, 'Property');
-
-            // input is in Literal, then don't show completion
-            if (literal && isLiteral(literal.node)) {
-                option = '';
-                return;
-            }
-
-            // Hit enter and input is in series
-            if (
-                event.contentChanges[0].text.includes('\n')
-                && property && isProperty(property.node)
-                && property.node.key.name === 'series'
-            ) {
-                option = `series.${findChartType(property?.node.value, position)}`;
-                return;
-            }
-
-            // input at somewhere other than series
-            if (
-                property
-                && isProperty(property.node)
-                && event.contentChanges[0].text.includes('\n')
-            ) {
-                const recursiveName = walkNodeRecursive(ast, property.node, position);
-                option = `${recursiveName}${recursiveName ? '.' : ''}${property?.node?.key?.name}`;
-                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                return;
-            }
-
-        } catch (error) {
-            console.error('Acorn parse error');
-        }
-    });
-
-    const reload = vscode.commands.registerCommand('echarts.reload', async () => {
-        statusBarItem.changeStatus(BarItemStatus.Loading);
-        optionsStruct = await getOptionsStruct();
-        if (!optionsStruct) {
-            statusBarItem.changeStatus(BarItemStatus.Failed);
-        } else {
-            statusBarItem.changeStatus(BarItemStatus.Loaded);
-        }
-    });
-
-    const deactivateEcharts = vscode.commands.registerCommand('echarts.deactivate', () => {
-        for (let i = 0, len = context.subscriptions.length; i < len; i++) {
-            context.subscriptions.pop();
-        }
-        console.log('done');
-        // statusBarItem.hide();
-    });
-
-    const activateEcharts = vscode.commands.registerCommand('echarts.activate', () => {
-        context.subscriptions.push(reload, deactivateEcharts, activateEcharts, completion, onDidChangeTextDocumentEvent);
-        statusBarItem.changeStatus(BarItemStatus.Loaded);
-    });
-
-    context.subscriptions.push(reload, deactivateEcharts, activateEcharts, completion, onDidChangeTextDocumentEvent);
-}
-
-async function cacheControl(
-    optionsStruct: OptionsStruct | undefined,
-    statusBarItem: EchartsStatusBarItem,
-    context: vscode.ExtensionContext
-): Promise<void> {
-    const cache = new Cache(context);
-    let hasSendRequest = false;
-    const cacheValue = cache.get();
-
-    if (
-        cacheValue
-        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
-    ) {
-        cache.erase();
-    } else if (
-        cacheValue
-        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
-    ) {
-        optionsStruct = cacheValue.value;
-    }
-
-    if (!optionsStruct) {
-        optionsStruct = await getOptionsStruct();
-        hasSendRequest = true;
-    }
-
-    if (!optionsStruct) {
-        statusBarItem.changeStatus(BarItemStatus.Failed);
-        return;
-    }
-
-    if (hasSendRequest) {
-        cache.set({
-            value: {
-                saveTime: +new Date(),
-                expireTime: 7 * 24 * 60 * 60 * 1000,
-                value: optionsStruct
-            }
-        });
-    }
-
-    statusBarItem.changeStatus(BarItemStatus.Loaded);
-}
-
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    let optionsStruct: OptionsStruct | undefined;
-    const statusBarItem = new EchartsStatusBarItem();
-    statusBarItem.addInContext(context);
-    statusBarItem.show();
-
-    addCommandInContext(optionsStruct, statusBarItem, context);
-    cacheControl(optionsStruct, statusBarItem, context);
+    context.subscriptions.push(completion);
 }
 
 // export function deactivate() {}
