@@ -1,12 +1,16 @@
 # echarts-vscode-extension
+
+![logo](https://github.com/susiwen8/echarts-vscode-extension/blob/master/images/logo.png)
+
 This is unofficial vscode extension for ECharts
+
 [![](https://vsmarketplacebadge.apphb.com/version/susiwen8.vscode-echarts-extension.svg)](https://marketplace.visualstudio.com/items?itemName=susiwen8.vscode-echarts-extension) [![](https://vsmarketplacebadge.apphb.com/installs/susiwen8.vscode-echarts-extension.svg)](https://marketplace.visualstudio.com/items?itemName=susiwen8.vscode-echarts-extension)
 ## Install
 * `ext install vscode-echarts-extension`
 * Marketplace
 
 ## Example
-![img](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
+![example](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
 ## Command
 This extension is automatically activate in JavaScript files
 
