@@ -10,61 +10,23 @@ import {
 import {
     isProperty,
     isLiteral,
-    OptionsStruct
+    OptionsStruct,
+    BarItemStatus
 } from './type';
 import Cache from './cache';
+import EchartsStatusBarItem from './statusBarItem';
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    const cache = new Cache(context);
-    let optionsStruct: OptionsStruct | undefined;
-    let hasSendRequest = false;
-    const cacheValue = cache.get();
-
-    if (
-        cacheValue
-        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
-    ) {
-        cache.erase();
-    } else if (
-        cacheValue
-        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
-    ) {
-        optionsStruct = cacheValue.value;
-    }
-
-    if (!optionsStruct) {
-        optionsStruct = await getOptionsStruct();
-        hasSendRequest = true;
-    }
-
-    if (!optionsStruct) {
-        vscode.window.showErrorMessage('Echarts extension failed');
-        return;
-    }
-
-    if (hasSendRequest) {
-        cache.set({
-            value: {
-                saveTime: +new Date(),
-                expireTime: 7 * 24 * 60 * 60 * 1000,
-                value: optionsStruct
-            }
-        });
-    }
-
-    // vscode.window.showInformationMessage('Echarts extension up');
-
-    const selector = {
-        scheme: 'file',
-        language: 'javascript'
-    };
-
+function addCommandInContext(
+    optionsStruct: OptionsStruct | undefined,
+    statusBarItem: EchartsStatusBarItem,
+    context: vscode.ExtensionContext
+): void {
     let option = '';
 
-    const completion = vscode.languages.registerCompletionItemProvider(selector,
+    const completion = vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
         {
             provideCompletionItems() {
-                if (!optionsStruct) return; // why TS warn optionsStruct might be undefined?
+                if (!optionsStruct) return;
 
                 return optionsStruct[option].map(item => {
                     const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
@@ -111,7 +73,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         ...generateAToZArray()
     );
 
-    vscode.workspace.onDidChangeTextDocument(event => {
+    const onDidChangeTextDocumentEvent = vscode.workspace.onDidChangeTextDocument(event => {
         try {
             const text = event.document.getText();
             const position = event.contentChanges[0].rangeOffset;
@@ -152,7 +114,84 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }
     });
 
-    context.subscriptions.push(completion);
+    const reload = vscode.commands.registerCommand('echarts.reload', async () => {
+        statusBarItem.changeStatus(BarItemStatus.Loading);
+        optionsStruct = await getOptionsStruct();
+        if (!optionsStruct) {
+            statusBarItem.changeStatus(BarItemStatus.Failed);
+        } else {
+            statusBarItem.changeStatus(BarItemStatus.Loaded);
+        }
+    });
+
+    const deactivateEcharts = vscode.commands.registerCommand('echarts.deactivate', () => {
+        for (let i = 0, len = context.subscriptions.length; i < len; i++) {
+            context.subscriptions.pop();
+        }
+        console.log('done');
+        // statusBarItem.hide();
+    });
+
+    const activateEcharts = vscode.commands.registerCommand('echarts.activate', () => {
+        context.subscriptions.push(reload, deactivateEcharts, activateEcharts, completion, onDidChangeTextDocumentEvent);
+        statusBarItem.changeStatus(BarItemStatus.Loaded);
+    });
+
+    context.subscriptions.push(reload, deactivateEcharts, activateEcharts, completion, onDidChangeTextDocumentEvent);
+}
+
+async function cacheControl(
+    optionsStruct: OptionsStruct | undefined,
+    statusBarItem: EchartsStatusBarItem,
+    context: vscode.ExtensionContext
+): Promise<void> {
+    const cache = new Cache(context);
+    let hasSendRequest = false;
+    const cacheValue = cache.get();
+
+    if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
+    ) {
+        cache.erase();
+    } else if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
+    ) {
+        optionsStruct = cacheValue.value;
+    }
+
+    if (!optionsStruct) {
+        optionsStruct = await getOptionsStruct();
+        hasSendRequest = true;
+    }
+
+    if (!optionsStruct) {
+        statusBarItem.changeStatus(BarItemStatus.Failed);
+        return;
+    }
+
+    if (hasSendRequest) {
+        cache.set({
+            value: {
+                saveTime: +new Date(),
+                expireTime: 7 * 24 * 60 * 60 * 1000,
+                value: optionsStruct
+            }
+        });
+    }
+
+    statusBarItem.changeStatus(BarItemStatus.Loaded);
+}
+
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    let optionsStruct: OptionsStruct | undefined;
+    const statusBarItem = new EchartsStatusBarItem();
+    statusBarItem.addInContext(context);
+    statusBarItem.show();
+
+    addCommandInContext(optionsStruct, statusBarItem, context);
+    cacheControl(optionsStruct, statusBarItem, context);
 }
 
 // export function deactivate() {}

@@ -8,6 +8,12 @@ export interface OptionsStruct {
     }[];
 }
 
+export enum BarItemStatus {
+    Loaded = 'Echarts',
+    Loading = 'Echarts Loading',
+    Failed = 'Echarts Failed, Click to reload',
+}
+
 export interface OptionsNameItem {
     prop?: string;
     arrayItemType?: string;

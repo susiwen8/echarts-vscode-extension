@@ -16,7 +16,9 @@ import {
 } from './type';
 
 const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';
+const OPTION_GL_OUTLINE = 'https://echarts.apache.org/zh/documents/option-gl-parts/option-gl-outline.json';
 // const OPTION_OUTLINE = 'https://loving-goldstine-32d8e8.netlify.com/public/en/documents/option-parts/option-outline.json';
+// const OPTION_GL_OUTLINE = 'https://loving-goldstine-32d8e8.netlify.com/public/en/documents/option-gl-parts/option-gl-outline.json';
 
 /**
  * series option is object, find which chart type it is
@@ -117,21 +119,21 @@ export function findChartType(values: Property['value'], position: number): stri
     return '';
 }
 
-/**
- * get option structure
- */
+// get option structure
 export async function getOptionsStruct(): Promise<OptionsStruct | undefined> {
     try {
         const optionsNames: OptionsStruct = {};
-        const res = await axios.get(OPTION_OUTLINE, {
-            timeout: 10000
+
+        const res = await Promise.all([axios.get(OPTION_OUTLINE), axios.get(OPTION_GL_OUTLINE)]);
+
+        res.map(item => {
+            item.data.children.map((i: OptionsNameItem) => {
+                if (i.children) {
+                    flatObject(i.prop || i.arrayItemType || '', i.children, optionsNames);
+                }
+            });
         });
 
-        res.data.children.map((item: OptionsNameItem) => {
-            if (item.children) {
-                flatObject(item.prop || item.arrayItemType || '', item.children, optionsNames);
-            }
-        });
 
         return optionsNames;
     } catch (error) {
@@ -140,9 +142,7 @@ export async function getOptionsStruct(): Promise<OptionsStruct | undefined> {
 
 }
 
-/**
- * Generate an arry from a-z
- */
+// Generate an arry from a-z
 export function generateAToZArray(): string[] {
     const arr: string[] = [];
     for (let i = 65; i <= 122; i++) {

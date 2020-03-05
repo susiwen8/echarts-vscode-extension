@@ -16,7 +16,20 @@
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
-		"commands": [],
+		"commands": [
+			{
+				"command": "echarts.active",
+				"title": "Active ECharts Extension"
+			},
+			{
+				"command": "echarts.deactivate",
+				"title": "Deactivate ECharts Extension"
+			},
+			{
+				"command": "echarts.reload",
+				"title": "Reload ECharts Extension"
+			}
+		],
 		"snippets": [
 			{
 				"language": "javascript",
