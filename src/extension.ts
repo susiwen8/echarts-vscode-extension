@@ -4,8 +4,7 @@ import { findNodeAround } from 'acorn-walk';
 import {
     generateAToZArray,
     walkNodeRecursive,
-    findChartType,
-    getOptionsStruct
+    findChartType
 } from './utils';
 import {
     isProperty,
@@ -13,91 +12,39 @@ import {
     OptionsStruct,
     BarItemStatus
 } from './type';
-import Cache from './cache';
+import cacheControl from './cache';
 import EchartsStatusBarItem from './statusBarItem';
-
-async function cacheControl(
-    optionsStruct: OptionsStruct | undefined,
-    statusBarItem: EchartsStatusBarItem,
-    context: vscode.ExtensionContext
-): Promise<OptionsStruct | undefined> {
-    const cache = new Cache(context);
-    let hasSendRequest = false;
-    const cacheValue = cache.get();
-
-    if (
-        cacheValue
-        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
-    ) {
-        cache.erase();
-    } else if (
-        cacheValue
-        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
-    ) {
-        optionsStruct = cacheValue.value;
-    }
-
-    if (!optionsStruct) {
-        optionsStruct = await getOptionsStruct();
-        hasSendRequest = true;
-    }
-
-    if (!optionsStruct) {
-        statusBarItem.changeStatus(BarItemStatus.Failed);
-    } else {
-        statusBarItem.changeStatus(BarItemStatus.Loaded);
-    }
-
-    if (hasSendRequest && optionsStruct) {
-        cache.set({
-            value: {
-                saveTime: +new Date(),
-                expireTime: 7 * 24 * 60 * 60 * 1000,
-                value: optionsStruct
-            }
-        });
-    }
-
-    return optionsStruct;
-}
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     let optionsStruct: OptionsStruct | undefined;
     let option = '';
-    let isActive = true;
+    let isActive = false;
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
-    statusBarItem.show();
 
     const reload = vscode.commands.registerCommand('echarts.reload', async () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
-        if (!optionsStruct) {
-            optionsStruct = await getOptionsStruct();
-        }
 
-        if (!optionsStruct) {
-            statusBarItem.changeStatus(BarItemStatus.Failed);
-        } else {
-            statusBarItem.changeStatus(BarItemStatus.Loaded);
-        }
+        !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
+
+        optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
+            : statusBarItem.changeStatus(BarItemStatus.Failed);
     });
 
     const deactivateEcharts = vscode.commands.registerCommand('echarts.deactivate', () => {
         isActive = false;
+        statusBarItem.hide();
+        statusBarItem.changeStatus(BarItemStatus.Loading);
     });
 
     const activateEcharts = vscode.commands.registerCommand('echarts.activate', async () => {
         isActive = true;
-        statusBarItem.changeStatus(BarItemStatus.Loading);
-        if (!optionsStruct) {
-            optionsStruct = await getOptionsStruct();
-        }
+        statusBarItem.show();
 
-        if (!optionsStruct) {
-            statusBarItem.changeStatus(BarItemStatus.Failed);
-        } else {
-            statusBarItem.changeStatus(BarItemStatus.Loaded);
-        }
+        !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
+
+        optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
+            : statusBarItem.changeStatus(BarItemStatus.Failed);
     });
 
     const onDidChangeTextDocumentEvent = vscode.workspace.onDidChangeTextDocument(event => {
@@ -144,10 +91,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             console.error('Acorn parse error');
         }
     });
-
-    context.subscriptions.push(reload, deactivateEcharts, activateEcharts, onDidChangeTextDocumentEvent);
-
-    optionsStruct = await cacheControl(optionsStruct, statusBarItem, context);
 
     const completion = vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
         {
@@ -199,7 +142,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         ...generateAToZArray()
     );
 
-    context.subscriptions.push(completion);
+    context.subscriptions.push(reload, deactivateEcharts, activateEcharts, onDidChangeTextDocumentEvent, completion);
 }
 
 // export function deactivate() {}

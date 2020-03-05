@@ -1,5 +1,6 @@
 import { ExtensionContext } from 'vscode';
 import { OptionsStruct } from './type';
+import { getOptionsStruct } from './utils';
 
 interface CacheValue {
     saveTime: number;
@@ -7,7 +8,7 @@ interface CacheValue {
     value: OptionsStruct
 }
 
-export default class Cache {
+class Cache {
     context: ExtensionContext;
     constructor(context: ExtensionContext) {
         this.context = context;
@@ -27,4 +28,42 @@ export default class Cache {
             value: undefined
         });
     }
+}
+
+export default async function cacheControl(
+    optionsStruct: OptionsStruct | undefined,
+    context: ExtensionContext
+): Promise<OptionsStruct | undefined> {
+    const cache = new Cache(context);
+    let hasSendRequest = false;
+    const cacheValue = cache.get();
+
+    if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime > cacheValue.expireTime)
+    ) {
+        cache.erase();
+    } else if (
+        cacheValue
+        && (+new Date() - cacheValue.saveTime < cacheValue.expireTime)
+    ) {
+        optionsStruct = cacheValue.value;
+    }
+
+    if (!optionsStruct) {
+        optionsStruct = await getOptionsStruct();
+        hasSendRequest = true;
+    }
+
+    if (hasSendRequest && optionsStruct) {
+        cache.set({
+            value: {
+                saveTime: +new Date(),
+                expireTime: 7 * 24 * 60 * 60 * 1000,
+                value: optionsStruct
+            }
+        });
+    }
+
+    return optionsStruct;
 }
