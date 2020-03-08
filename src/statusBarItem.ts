@@ -7,22 +7,22 @@ import {
 import { BarItemStatus } from './type';
 
 export default class EchartsStatusBarItem {
-    #statusBarItem: StatusBarItem
+    #statusBarItem: StatusBarItem;
     #loading = {
         text: BarItemStatus.Loading,
         color: '#f2e746',
         command: undefined
-    }
+    };
     #loaded = {
         text: BarItemStatus.Loaded,
         color: '#fff',
         command: 'echarts.deactivate'
-    }
+    };
     #failed = {
         text: BarItemStatus.Failed,
         color: '#db0f31',
         command: 'echarts.reload'
-    }
+    };
 
     constructor() {
         this.#statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);

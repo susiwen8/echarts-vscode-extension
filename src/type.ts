@@ -47,7 +47,7 @@ export interface ObjectExpression extends Node {
 
 interface Literal extends Node {
     type: 'Literal';
-    value: string;
+    value: any;
     raw: string;
 }
 
