@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import * as acorn from 'acorn';
-import { findNodeAround } from 'acorn-walk';
+import { findNodeAround, simple } from 'acorn-walk';
+import _ from 'lodash';
 import {
     generateAToZArray,
     walkNodeRecursive,
-    findChartType
+    findChartType,
+    getOptionProperties
 } from './utils';
 import {
     isProperty,
@@ -23,6 +25,48 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     let diagnostic: Diagnostic;
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
+
+    isActive = true;
+    statusBarItem.show();
+
+    !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
+
+    optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
+        : statusBarItem.changeStatus(BarItemStatus.Failed);
+
+    if (vscode.window.activeTextEditor && optionsStruct) {
+        const code = vscode.window.activeTextEditor.document.getText();
+        const ast = acorn.parse(code);
+        const optionSet = new Set();
+        const save: {[property: string]: string[] | undefined} = {};
+        simple(ast, {
+            Property(property) {
+                if (isProperty(property)) {
+                    let option = '';
+                    const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
+                    console.log(property.key.name);
+                    option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                    option && optionSet.add(option);
+                    if (!save[option]) {
+                        save[option] = getOptionProperties(prevNode, property.start);
+                    }
+                }
+            }
+        });
+
+        // console.log(save);
+
+        // diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
+        // diagnostic.clearDiagnostics();
+        for (const [key, value] of Object.entries(save)) {
+            if (!key) continue;
+            const compareArr = optionsStruct[key].map(item => item.name);
+            const diff = _.difference(value, compareArr);
+            // console.log(diff);
+            // diagnostic.createDiagnostic();
+        }
+        // diagnostic.showError();
+    }
 
     const reload = vscode.commands.registerCommand('echarts.reload', async () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
@@ -67,8 +111,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             // input is in Literal, then don't show completion
             if (literal && isLiteral(literal.node) && property && isProperty(property.node)) {
                 if (optionsStruct) {
-                    const recursiveName = walkNodeRecursive(ast, property.node, position);
-                    option = `${recursiveName}${recursiveName ? '.' : ''}${property.node.key.name}`;
+                    const prevNodeName = walkNodeRecursive(ast, property.node, position);
+                    option = `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`;
                     option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
                     for (let i = 0, len = optionsStruct[option].length; i < len; i++) {
                         if (optionsStruct[option][i].name === property.node.key.name
@@ -90,7 +134,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && property && isProperty(property.node)
                 && property.node.key.name === 'series'
             ) {
-                option = `series.${findChartType(property?.node.value, position)}`;
+                option = `series.${findChartType(property.node.value, position)}`;
                 return;
             }
 
@@ -100,8 +144,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 && isProperty(property.node)
                 && event.contentChanges[0].text.includes('\n')
             ) {
-                const recursiveName = walkNodeRecursive(ast, property.node, position);
-                option = `${recursiveName}${recursiveName ? '.' : ''}${property.node.key.name}`;
+                const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
+                option = `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`;
                 option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
                 return;
             }

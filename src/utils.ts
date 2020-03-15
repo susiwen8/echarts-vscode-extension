@@ -3,7 +3,7 @@
  */
 
 import axios from 'axios';
-import { findNodeAround } from 'acorn-walk';
+import { findNodeAround, Found } from 'acorn-walk';
 import {
     OptionsStruct,
     Node,
@@ -161,19 +161,61 @@ export function generateAToZArray(): string[] {
  * @param ast AST tree
  * @param node current node
  */
-export function walkNodeRecursive(ast: Node, node: Node, position: number): string {
+export function walkNodeRecursive(ast: Node, node: Node, position: number): {
+    prevNodeName: string,
+    prevNode: Found<unknown> | undefined
+} {
     let nodes = '';
+    let prevNode: Found<unknown> | undefined;
     if (isProperty(node)) {
-        const prevNode = findNodeAround(ast, node.end + 1, 'Property');
+        prevNode = findNodeAround(ast, node.end + 1, 'Property');
         if (prevNode && isProperty(prevNode.node)) {
             if (prevNode.node.key.name === 'series') {
                 prevNode.node.key.name += `.${findChartType(prevNode.node.value, position)}`;
             }
             nodes += prevNode.node.key.name;
-            const prevNodeName = walkNodeRecursive(ast, prevNode.node, position) || '';
-            return `${prevNodeName}${prevNodeName ? '.' : ''}${nodes}`;
+            const { prevNodeName } = walkNodeRecursive(ast, prevNode.node, position);
+            return {
+                prevNodeName: `${prevNodeName}${prevNodeName ? '.' : ''}${nodes}`,
+                prevNode
+            };
         }
     }
 
-    return nodes;
+    return {
+        prevNodeName: nodes,
+        prevNode
+    };
+}
+
+function getObjectProperties(properties: Node[], propertyNames: string[]): void {
+    properties.map(item => {
+        if (isProperty(item)) {
+            propertyNames.push(item.key.name);
+        }
+    });
+}
+
+export function getOptionProperties(node: Found<unknown> | undefined, position: number): string[] | undefined {
+    if (!node) {
+        return;
+    }
+
+    const propertyNames: string[] = [];
+    if (isProperty(node.node) && isObjectExpression(node.node.value)) {
+        getObjectProperties(node.node.value.properties, propertyNames);
+    }
+
+    if (isProperty(node.node) && isArrayExpression(node.node.value)) {
+        node.node.value.elements.map(item => {
+            if (
+                isObjectExpression(item)
+                && position > item.start
+                && position < item.end
+            ) {
+                getObjectProperties(item.properties, propertyNames);
+            }
+        });
+    }
+    return propertyNames;
 }
