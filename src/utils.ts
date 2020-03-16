@@ -170,10 +170,9 @@ export function walkNodeRecursive(ast: Node, node: Node, position: number): {
     if (isProperty(node)) {
         prevNode = findNodeAround(ast, node.end + 1, 'Property');
         if (prevNode && isProperty(prevNode.node)) {
-            if (prevNode.node.key.name === 'series') {
-                prevNode.node.key.name += `.${findChartType(prevNode.node.value, position)}`;
-            }
-            nodes += prevNode.node.key.name;
+            nodes += prevNode.node.key.name === 'series' ? `${prevNode.node.key.name}.${findChartType(prevNode.node.value, position)}`
+                : prevNode.node.key.name;
+
             const { prevNodeName } = walkNodeRecursive(ast, prevNode.node, position);
             return {
                 prevNodeName: `${prevNodeName}${prevNodeName ? '.' : ''}${nodes}`,
