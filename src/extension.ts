@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as acorn from 'acorn';
 import { findNodeAround, simple } from 'acorn-walk';
-import _ from 'lodash';
+import difference from 'lodash/difference';
 import {
     generateAToZArray,
     walkNodeRecursive,
@@ -44,7 +44,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 if (isProperty(property)) {
                     let option = '';
                     const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
-                    console.log(property.key.name);
                     option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
                     option && optionSet.add(option);
                     if (!save[option]) {
@@ -54,15 +53,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
         });
 
-        // console.log(save);
-
         // diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
         // diagnostic.clearDiagnostics();
         for (const [key, value] of Object.entries(save)) {
             if (!key) continue;
             const compareArr = optionsStruct[key].map(item => item.name);
-            const diff = _.difference(value, compareArr);
-            // console.log(diff);
+            const diff = difference(value, compareArr);
+            console.log(diff);
             // diagnostic.createDiagnostic();
         }
         // diagnostic.showError();
