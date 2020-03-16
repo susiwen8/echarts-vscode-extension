@@ -9,6 +9,7 @@ import {
     Node,
     Property,
     OptionsNameItem,
+    PropertyLoc,
     isProperty,
     isLiteral,
     isArrayExpression,
@@ -187,20 +188,24 @@ export function walkNodeRecursive(ast: Node, node: Node, position: number): {
     };
 }
 
-function getObjectProperties(properties: Node[], propertyNames: string[]): void {
+function getObjectProperties(properties: Node[], propertyNames: PropertyLoc[]): void {
     properties.map(item => {
         if (isProperty(item)) {
-            propertyNames.push(item.key.name);
+            const optionLoc: PropertyLoc = {
+                name: item.key.name,
+                loc: item.loc
+            };
+            propertyNames.push(optionLoc);
         }
     });
 }
 
-export function getOptionProperties(node: Found<unknown> | undefined, position: number): string[] | undefined {
+export function getOptionProperties(node: Found<unknown> | undefined, position: number): PropertyLoc[] | undefined {
     if (!node) {
         return;
     }
 
-    const propertyNames: string[] = [];
+    const propertyNames: PropertyLoc[] = [];
     if (isProperty(node.node) && isObjectExpression(node.node.value)) {
         getObjectProperties(node.node.value.properties, propertyNames);
     }

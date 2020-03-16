@@ -8,6 +8,11 @@ export interface OptionsStruct {
     }[];
 }
 
+export interface PropertyLoc {
+    name: string;
+    loc: Property['loc'];
+}
+
 export enum BarItemStatus {
     Loaded = 'Echarts',
     Loading = 'Echarts Loading',
