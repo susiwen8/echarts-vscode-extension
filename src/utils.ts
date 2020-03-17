@@ -13,8 +13,7 @@ import {
     isProperty,
     isLiteral,
     isArrayExpression,
-    isObjectExpression,
-    isIdentifier
+    isObjectExpression
 } from './type';
 
 const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';

@@ -47,17 +47,20 @@ export interface Identifier extends Node {
 export interface ArrayExpression extends Node {
     type: 'ArrayExpression';
     elements: Node[];
+    loc: acorn.SourceLocation;
 }
 
 export interface ObjectExpression extends Node {
     type: 'ObjectExpression';
     properties: Node[];
+    loc: acorn.SourceLocation;
 }
 
 interface Literal extends Node {
     type: 'Literal';
-    value: any;
+    value: unknown;
     raw: string;
+    loc: acorn.SourceLocation;
 }
 
 export function isProperty(node: Node): node is Property {

@@ -10,7 +10,8 @@ import difference from 'lodash/difference';
 import flattenDeep from 'lodash/flattenDeep';
 import {
     OptionLoc,
-    OptionsStruct
+    OptionsStruct,
+    Property
 } from './type';
 
 export default class EchartsDiagnostic {
@@ -56,6 +57,21 @@ export default class EchartsDiagnostic {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    checkOptionValue(optionsStruct: OptionsStruct, option: string, node: Property, value: unknown): void {
+        for (let i = 0, len = optionsStruct[option].length; i < len; i++) {
+            if (optionsStruct[option][i].name === node.key.name
+                && !optionsStruct[option][i].type.includes(typeof value)) {
+                this.createDiagnostic(
+                    new Range(
+                        new Position(node.value.loc.start.line - 1, node.value.loc.start.column),
+                        new Position(node.value.loc.end.line - 1, node.value.loc.end.column)
+                    ),
+                    `wrong type for ${node.key.name}`
+                );
             }
         }
     }

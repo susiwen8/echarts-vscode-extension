@@ -35,11 +35,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         : statusBarItem.changeStatus(BarItemStatus.Failed);
 
     if (vscode.window.activeTextEditor && optionsStruct) {
+        diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
         const code = vscode.window.activeTextEditor.document.getText();
         const ast = acorn.parse(code, {
             locations: true
         });
         const optionsLoc: OptionLoc = {};
+
         simple(ast, {
             Property(property) {
                 if (isProperty(property)) {
@@ -50,11 +52,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                         optionsLoc[option] = getOptionProperties(prevNode, property.start);
                     }
                 }
+            },
+            Literal(literal) {
+                const property = findNodeAround(ast, literal.start, 'Property');
+                if (optionsStruct && property && isProperty(property.node) && isLiteral(literal)) {
+                    const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
+                    option = prevNodeName;
+                    option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                    diagnostic.checkOptionValue(optionsStruct, option, property.node, literal.value);
+                }
             }
         });
 
-        diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
-        diagnostic.clearDiagnostics();
         diagnostic.checkOption(optionsLoc, optionsStruct);
         diagnostic.showError();
     }
@@ -73,6 +82,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         statusBarItem.hide();
         statusBarItem.changeStatus(BarItemStatus.Loading);
         // TODO value check
+        diagnostic.clearDiagnostics();
     });
 
     const activateEcharts = vscode.commands.registerCommand('echarts.activate', async () => {
@@ -100,21 +110,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             const property = findNodeAround(ast, position, 'Property');
 
             // input is in Literal, then don't show completion
-            if (literal && isLiteral(literal.node) && property && isProperty(property.node)) {
-                if (optionsStruct) {
-                    const prevNodeName = walkNodeRecursive(ast, property.node, position);
-                    option = `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`;
-                    option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                    for (let i = 0, len = optionsStruct[option].length; i < len; i++) {
-                        if (optionsStruct[option][i].name === property.node.key.name
-                            && !optionsStruct[option][i].type.includes(typeof literal.node.value)) {
-                            diagnostic.clearDiagnostics();
-                            diagnostic.createDiagnostic(event.contentChanges[0].range, `wrong type for ${property.node.key.name}`);
-                            diagnostic.showError();
-                        }
-                    }
-
-                }
+            if (literal && isLiteral(literal.node)) {
                 option = '';
                 return;
             }
