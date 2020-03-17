@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as acorn from 'acorn';
 import { findNodeAround, simple } from 'acorn-walk';
-import difference from 'lodash/difference';
 import {
     generateAToZArray,
     walkNodeRecursive,
@@ -12,7 +11,8 @@ import {
     isProperty,
     isLiteral,
     OptionsStruct,
-    BarItemStatus
+    BarItemStatus,
+    OptionLoc
 } from './type';
 import cacheControl from './cache';
 import EchartsStatusBarItem from './statusBarItem';
@@ -36,33 +36,27 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     if (vscode.window.activeTextEditor && optionsStruct) {
         const code = vscode.window.activeTextEditor.document.getText();
-        const ast = acorn.parse(code);
-        const optionSet = new Set();
-        const save: {[property: string]: string[] | undefined} = {};
+        const ast = acorn.parse(code, {
+            locations: true
+        });
+        const optionsLoc: OptionLoc = {};
         simple(ast, {
             Property(property) {
                 if (isProperty(property)) {
                     let option = '';
                     const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
                     option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                    option && optionSet.add(option);
-                    if (!save[option]) {
-                        save[option] = getOptionProperties(prevNode, property.start);
+                    if (!optionsLoc[option]) {
+                        optionsLoc[option] = getOptionProperties(prevNode, property.start);
                     }
                 }
             }
         });
 
-        // diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
-        // diagnostic.clearDiagnostics();
-        for (const [key, value] of Object.entries(save)) {
-            if (!key) continue;
-            const compareArr = optionsStruct[key].map(item => item.name);
-            const diff = difference(value, compareArr);
-            console.log(diff);
-            // diagnostic.createDiagnostic();
-        }
-        // diagnostic.showError();
+        diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
+        diagnostic.clearDiagnostics();
+        diagnostic.checkOption(optionsLoc, optionsStruct);
+        diagnostic.showError();
     }
 
     const reload = vscode.commands.registerCommand('echarts.reload', async () => {

@@ -13,7 +13,8 @@ import {
     isProperty,
     isLiteral,
     isArrayExpression,
-    isObjectExpression
+    isObjectExpression,
+    isIdentifier
 } from './type';
 
 const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';
@@ -190,7 +191,7 @@ export function walkNodeRecursive(ast: Node, node: Node, position: number): {
 
 function getObjectProperties(properties: Node[], propertyNames: PropertyLoc[]): void {
     properties.map(item => {
-        if (isProperty(item)) {
+        if (isProperty(item) && item.loc) {
             const optionLoc: PropertyLoc = {
                 name: item.key.name,
                 loc: item.loc
@@ -207,6 +208,14 @@ export function getOptionProperties(node: Found<unknown> | undefined, position: 
 
     const propertyNames: PropertyLoc[] = [];
     if (isProperty(node.node) && isObjectExpression(node.node.value)) {
+        if (node.node.key.name === 'rich') {
+            node.node.value.properties = node.node.value.properties.map(item => {
+                if (isProperty(item)) {
+                    item.key.name = '<style_name>';
+                }
+                return item;
+            });
+        }
         getObjectProperties(node.node.value.properties, propertyNames);
     }
 

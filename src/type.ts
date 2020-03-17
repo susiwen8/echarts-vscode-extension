@@ -10,7 +10,11 @@ export interface OptionsStruct {
 
 export interface PropertyLoc {
     name: string;
-    loc: Property['loc'];
+    loc: acorn.SourceLocation;
+}
+
+export interface OptionLoc {
+    [property: string]: PropertyLoc[] | undefined
 }
 
 export enum BarItemStatus {
