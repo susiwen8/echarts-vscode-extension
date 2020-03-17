@@ -36,6 +36,7 @@ This extension is automatically activate in JavaScript files
 - [x] Object inside Object ex. title.textStyle
 - [ ] Replace Apache api to other api deployed on other server
 - [x] base on option value type to provide helpful snippet text.
-- [ ] Check if there were wrong or inappropriate value.
+- [x] Check if type of value were correct.
+- [ ] Check if value were resonable.
 - [ ] HoverProvider
 - [x] More command
