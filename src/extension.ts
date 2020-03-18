@@ -19,31 +19,17 @@ import {
 import {
     isProperty,
     isLiteral,
-    OptionsStruct,
     BarItemStatus
 } from './type';
 import cacheControl from './cache';
-import EchartsStatusBarItem from './statusBarItem';
-import Diagnostic from './diagnostic';
+import init from './init';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-    let isActive = true; // TODO
+    if (!window.activeTextEditor) return;
 
-    if (!isActive || !window.activeTextEditor) return;
-
-    let optionsStruct: OptionsStruct | undefined;
-    let option = '';
-    const diagnostic = new Diagnostic(window.activeTextEditor.document.uri);
-    const statusBarItem = new EchartsStatusBarItem();
-    statusBarItem.addInContext(context);
-    statusBarItem.show();
-    !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
-    optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
-        : statusBarItem.changeStatus(BarItemStatus.Failed);
-
-    if (optionsStruct) {
-        checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
-    }
+    const initialValue = await init(window.activeTextEditor, context);
+    let { option, optionsStruct, isActive } = initialValue;
+    const { statusBarItem, diagnostic } = initialValue;
 
     const reload = commands.registerCommand('echarts.reload', async () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
