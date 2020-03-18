@@ -58,7 +58,8 @@ export interface ObjectExpression extends Node {
 
 interface Literal extends Node {
     type: 'Literal';
-    value: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any;
     raw: string;
     loc: acorn.SourceLocation;
 }

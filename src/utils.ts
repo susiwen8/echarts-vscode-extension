@@ -3,18 +3,25 @@
  */
 
 import axios from 'axios';
-import { findNodeAround, Found } from 'acorn-walk';
+import {
+    findNodeAround,
+    simple,
+    Found
+} from 'acorn-walk';
+import * as acorn from 'acorn';
 import {
     OptionsStruct,
     Node,
     Property,
     OptionsNameItem,
     PropertyLoc,
+    OptionLoc,
     isProperty,
     isLiteral,
     isArrayExpression,
     isObjectExpression
 } from './type';
+import Diagnostic from './diagnostic';
 
 const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';
 const OPTION_GL_OUTLINE = 'https://echarts.apache.org/zh/documents/option-gl-parts/option-gl-outline.json';
@@ -230,4 +237,37 @@ export function getOptionProperties(node: Found<unknown> | undefined, position: 
         });
     }
     return propertyNames;
+}
+
+export function checkCode(diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct): void {
+    const ast = acorn.parse(code, {
+        locations: true
+    });
+    const optionsLoc: OptionLoc = {};
+
+    simple(ast, {
+        Property(property) {
+            if (isProperty(property)) {
+                let option = '';
+                const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
+                option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                if (!optionsLoc[option]) {
+                    optionsLoc[option] = getOptionProperties(prevNode, property.start);
+                }
+            }
+        },
+        Literal(literal) {
+            const property = findNodeAround(ast, literal.start, 'Property');
+            if (optionsStruct && property && isProperty(property.node) && isLiteral(literal)) {
+                let option = '';
+                const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
+                option = prevNodeName;
+                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                diagnostic.checkOptionValue(optionsStruct, option, property.node, literal.value);
+            }
+        }
+    });
+
+    diagnostic.checkOption(optionsLoc, optionsStruct);
+    diagnostic.showError();
 }

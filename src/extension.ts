@@ -1,74 +1,51 @@
-import * as vscode from 'vscode';
+import {
+    window,
+    ExtensionContext,
+    commands,
+    workspace,
+    languages,
+    CompletionItem,
+    CompletionItemKind,
+    SnippetString
+} from 'vscode';
 import * as acorn from 'acorn';
-import { findNodeAround, simple } from 'acorn-walk';
+import { findNodeAround } from 'acorn-walk';
 import {
     generateAToZArray,
     walkNodeRecursive,
     findChartType,
-    getOptionProperties
+    checkCode
 } from './utils';
 import {
     isProperty,
     isLiteral,
     OptionsStruct,
-    BarItemStatus,
-    OptionLoc
+    BarItemStatus
 } from './type';
 import cacheControl from './cache';
 import EchartsStatusBarItem from './statusBarItem';
 import Diagnostic from './diagnostic';
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(context: ExtensionContext): Promise<void> {
+    let isActive = true; // TODO
+
+    if (!isActive || !window.activeTextEditor) return;
+
     let optionsStruct: OptionsStruct | undefined;
     let option = '';
-    let isActive = false;
-    let diagnostic: Diagnostic;
+    const diagnostic = new Diagnostic(window.activeTextEditor.document.uri);
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
-
-    isActive = true;
     statusBarItem.show();
-
     !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
-
     optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
         : statusBarItem.changeStatus(BarItemStatus.Failed);
 
-    if (vscode.window.activeTextEditor && optionsStruct) {
-        diagnostic = new Diagnostic(vscode.window.activeTextEditor.document.uri);
-        const code = vscode.window.activeTextEditor.document.getText();
-        const ast = acorn.parse(code, {
-            locations: true
-        });
-        const optionsLoc: OptionLoc = {};
-
-        simple(ast, {
-            Property(property) {
-                if (isProperty(property)) {
-                    let option = '';
-                    const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
-                    option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                    if (!optionsLoc[option]) {
-                        optionsLoc[option] = getOptionProperties(prevNode, property.start);
-                    }
-                }
-            },
-            Literal(literal) {
-                const property = findNodeAround(ast, literal.start, 'Property');
-                if (optionsStruct && property && isProperty(property.node) && isLiteral(literal)) {
-                    const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
-                    option = prevNodeName;
-                    option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                    diagnostic.checkOptionValue(optionsStruct, option, property.node, literal.value);
-                }
-            }
-        });
-
-        diagnostic.checkOption(optionsLoc, optionsStruct);
-        diagnostic.showError();
+    if (optionsStruct) {
+        checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
     }
 
-    const reload = vscode.commands.registerCommand('echarts.reload', async () => {
+    const reload = commands.registerCommand('echarts.reload', async () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
 
         !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
@@ -77,15 +54,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             : statusBarItem.changeStatus(BarItemStatus.Failed);
     });
 
-    const deactivateEcharts = vscode.commands.registerCommand('echarts.deactivate', () => {
+    const deactivateEcharts = commands.registerCommand('echarts.deactivate', () => {
         isActive = false;
         statusBarItem.hide();
         statusBarItem.changeStatus(BarItemStatus.Loading);
-        // TODO value check
         diagnostic.clearDiagnostics();
     });
 
-    const activateEcharts = vscode.commands.registerCommand('echarts.activate', async () => {
+    const activateEcharts = commands.registerCommand('echarts.activate', async () => {
         isActive = true;
         statusBarItem.show();
 
@@ -93,15 +69,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
         optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
             : statusBarItem.changeStatus(BarItemStatus.Failed);
-        // TODO value check
+        if (!optionsStruct || !window.activeTextEditor) return;
+        checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
     });
 
-    const onDidChangeTextDocumentEvent = vscode.workspace.onDidChangeTextDocument(event => {
+    const onDidChangeTextDocumentEvent = workspace.onDidChangeTextDocument(event => {
         if (!isActive) {
             return;
         }
 
-        !diagnostic && (diagnostic = new Diagnostic(event.document.uri));
         try {
             const text = event.document.getText();
             const position = event.contentChanges[0].rangeOffset;
@@ -142,13 +118,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }
     });
 
-    const completion = vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
+    const completion = languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
         {
             provideCompletionItems() {
                 if (!optionsStruct || !isActive) return;
 
                 return optionsStruct[option].map(item => {
-                    const completionItem = new vscode.CompletionItem(item.name, vscode.CompletionItemKind.Keyword);
+                    const completionItem = new CompletionItem(item.name, CompletionItemKind.Keyword);
                     let insertText = `${item.name}: \${1|`;
                     let type: (boolean | number | string | Function)[] = [];
                     item.type.map(i => {
@@ -184,7 +160,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     });
                     type = type.concat(item.valide);
                     insertText += type.join(',') + '|},';
-                    completionItem.insertText = new vscode.SnippetString(insertText);
+                    completionItem.insertText = new SnippetString(insertText);
                     return completionItem;
                 });
             }
