@@ -10,6 +10,7 @@ import {
 } from 'vscode';
 import * as acorn from 'acorn';
 import { findNodeAround } from 'acorn-walk';
+import debounce from 'lodash/debounce';
 import {
     generateAToZArray,
     walkNodeRecursive,
@@ -38,7 +39,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
         optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
             : statusBarItem.changeStatus(BarItemStatus.Failed);
+
+        if (!optionsStruct || !window.activeTextEditor) return;
+        checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
     });
+
+    const checkCodeDebounce = debounce(checkCode, 1500);
 
     const deactivateEcharts = commands.registerCommand('echarts.deactivate', () => {
         isActive = false;
@@ -67,7 +73,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
         try {
             const text = event.document.getText();
             const position = event.contentChanges[0].rangeOffset;
-            const ast = acorn.parse(text);
+            const ast = acorn.parse(text, {
+                locations: true
+            });
+            optionsStruct && checkCodeDebounce(diagnostic, event.document.getText(), optionsStruct, ast);
             const literal = findNodeAround(ast, position, 'Literal');
             const property = findNodeAround(ast, position, 'Property');
 
@@ -100,7 +109,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
             }
 
         } catch (error) {
-            console.error('Acorn parse error');
+            console.error('onDidChangeTextDocument error');
         }
     });
 

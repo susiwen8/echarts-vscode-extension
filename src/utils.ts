@@ -74,7 +74,11 @@ function findChartTypeInArray(elements: Node[], position: number): string {
  * @param children child options
  * @param optionsNames final result
  */
-function flatObject(optionChain: string, children: OptionsNameItem[], optionsNames: OptionsStruct): void {
+function flatObject(
+    optionChain: string,
+    children: OptionsNameItem[],
+    optionsNames: OptionsStruct
+): void {
     children.map(item => {
         if (item.children) {
             flatObject(`${optionChain}.${item.prop || item.arrayItemType || ''}`, item.children, optionsNames);
@@ -115,7 +119,10 @@ function flatObject(optionChain: string, children: OptionsNameItem[], optionsNam
  * @param values series option value
  * @param position input position
  */
-export function findChartType(values: Property['value'], position: number): string {
+export function findChartType(
+    values: Property['value'],
+    position: number
+): string {
     if (isObjectExpression(values)) {
         return findChartTypeInObject(values.properties);
     }
@@ -169,7 +176,11 @@ export function generateAToZArray(): string[] {
  * @param ast AST tree
  * @param node current node
  */
-export function walkNodeRecursive(ast: Node, node: Node, position: number): {
+export function walkNodeRecursive(
+    ast: Node,
+    node: Node,
+    position: number
+): {
     prevNodeName: string,
     prevNode: Found<unknown> | undefined
 } {
@@ -195,7 +206,10 @@ export function walkNodeRecursive(ast: Node, node: Node, position: number): {
     };
 }
 
-function getObjectProperties(properties: Node[], propertyNames: PropertyLoc[]): void {
+function getObjectProperties(
+    properties: Node[],
+    propertyNames: PropertyLoc[]
+): void {
     properties.map(item => {
         if (isProperty(item) && item.loc) {
             const optionLoc: PropertyLoc = {
@@ -207,7 +221,10 @@ function getObjectProperties(properties: Node[], propertyNames: PropertyLoc[]): 
     });
 }
 
-export function getOptionProperties(node: Found<unknown> | undefined, position: number): PropertyLoc[] | undefined {
+export function getOptionProperties(
+    node: Found<unknown> | undefined,
+    position: number
+): PropertyLoc[] | undefined {
     if (!node) {
         return;
     }
@@ -239,8 +256,14 @@ export function getOptionProperties(node: Found<unknown> | undefined, position: 
     return propertyNames;
 }
 
-export function checkCode(diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct): void {
-    const ast = acorn.parse(code, {
+export function checkCode(
+    diagnostic: Diagnostic,
+    code: string,
+    optionsStruct: OptionsStruct,
+    AST?: Node
+): void {
+    diagnostic.clearDiagnostics();
+    const ast = AST || acorn.parse(code, {
         locations: true
     });
     const optionsLoc: OptionLoc = {};
