@@ -31,6 +31,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const initialValue = await init(window.activeTextEditor, context);
     let { option, optionsStruct, isActive } = initialValue;
     const { statusBarItem, diagnostic } = initialValue;
+    const checkCodeDebounce = debounce(checkCode, 1500);
 
     const reload = commands.registerCommand('echarts.reload', async () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
@@ -44,7 +45,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
         checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
     });
 
-    const checkCodeDebounce = debounce(checkCode, 1500);
+    const onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
+        diagnostic.clearDiagnostics();
+        if (!editor) return;
+
+        if (editor.document.languageId === 'javascript' && isActive && optionsStruct) {
+            checkCode(diagnostic, editor.document.getText(), optionsStruct);
+        }
+    });
 
     const deactivateEcharts = commands.registerCommand('echarts.deactivate', () => {
         isActive = false;
@@ -163,7 +171,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
         ...generateAToZArray()
     );
 
-    context.subscriptions.push(reload, deactivateEcharts, activateEcharts, onDidChangeTextDocumentEvent, completion);
+    context.subscriptions.push(
+        reload,
+        deactivateEcharts,
+        activateEcharts,
+        onDidChangeTextDocumentEvent,
+        completion,
+        onDidChangeActiveTextEditor
+    );
 }
 
 // export function deactivate() {}
