@@ -25,6 +25,7 @@ export default class EchartsDiagnostic {
 
     clearDiagnostics(): void {
         this.#diagnostics = [];
+        this.#diagnosticCollection.clear();
     }
 
     createDiagnostic(range: Range, message = 'warning', severity = DiagnosticSeverity.Warning): void {

@@ -15,7 +15,6 @@ export default async function init(activeTextEditor: TextEditor, context: Extens
     const diagnostic = new Diagnostic(activeTextEditor.document.uri);
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
-    statusBarItem.show();
     !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
     optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
         : statusBarItem.changeStatus(BarItemStatus.Failed);
