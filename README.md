@@ -20,15 +20,17 @@ PS: Start from 0.1.2, extension won't provide completion at first, user need to 
 
 ## Example
 ![example](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
-## Command
-This extension is automatically activate in JavaScript files
 
 ## Problems
 * ~~All options information were received by ajax, useless when there were no Internet.~~ Cache response data
 * ~~Due to Apache server response speed, sometime connection timeout.~~
 * ~~Use closest node to determine CompletionItem which sometime is inaccurate.~~ Solution: Use [acorn](https://github.com/acornjs/acorn) to generate AST and find closest node by using [acorn-walk](https://github.com/acornjs/acorn/tree/master/acorn-walk)
 * ~~Don't support completion when object inside object~~ Find out all ancestors option
-* All options must be in one root object (There is nothing I can do about it, it has to be)
+* All options must be in one root object (There is nothing I can do about it, it has to be :man_shrugging:)
+
+## Suggestion
+For the purpose of functionnality, I strongly recommend that putting ECharts option object at seperated js file.
+(Actually, this will reduce losts of work, make my life much easy :stuck_out_tongue_winking_eye:)
 
 ## TODO
 - [x] Downgrade
