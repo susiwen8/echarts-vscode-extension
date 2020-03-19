@@ -66,13 +66,41 @@ export default class EchartsDiagnostic {
         for (let i = 0, len = optionsStruct[option].length; i < len; i++) {
             if (optionsStruct[option][i].name === node.key.name
                 && !optionsStruct[option][i].type.includes(typeof value)) {
+                // Check color value
+                if (
+                    optionsStruct[option][i].type.includes('Color')
+                    && typeof value === 'string'
+                    && !(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value))
+                    && !(/^rgb/.test(value))
+                    && !(/^rgba/.test(value))
+                ) {
+                    this.createDiagnostic(
+                        new Range(
+                            new Position(node.value.loc.start.line - 1, node.value.loc.start.column),
+                            new Position(node.value.loc.end.line - 1, node.value.loc.end.column)
+                        ),
+                        `wrong value for ${node.key.name}`
+                    );
+                } else if (
+                    optionsStruct[option][i].type.includes('Color')
+                    && typeof value === 'string'
+                    && (
+                        /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value)
+                        || /^rgb/.test(value)
+                        || /^rgba/.test(value)
+                    )
+                ) {
+                    continue;
+                }
+
                 this.createDiagnostic(
                     new Range(
                         new Position(node.value.loc.start.line - 1, node.value.loc.start.column),
                         new Position(node.value.loc.end.line - 1, node.value.loc.end.column)
                     ),
-                    `wrong type for ${node.key.name}`
+                    `wrong type for ${node.key.name}, valide type are ${optionsStruct[option][i].type.join(',')}`
                 );
+
             }
         }
     }

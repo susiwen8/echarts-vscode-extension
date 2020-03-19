@@ -80,11 +80,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
         try {
             const text = event.document.getText();
+            const ast = acorn.parse(text, { locations: true });
+            optionsStruct && checkCodeDebounce(diagnostic, text, optionsStruct, ast);
+
+            if (!event.contentChanges[0]) return;
+
             const position = event.contentChanges[0].rangeOffset;
-            const ast = acorn.parse(text, {
-                locations: true
-            });
-            optionsStruct && checkCodeDebounce(diagnostic, event.document.getText(), optionsStruct, ast);
             const literal = findNodeAround(ast, position, 'Literal');
             const property = findNodeAround(ast, position, 'Property');
 

@@ -263,9 +263,7 @@ export function checkCode(
     AST?: Node
 ): void {
     diagnostic.clearDiagnostics();
-    const ast = AST || acorn.parse(code, {
-        locations: true
-    });
+    const ast = AST || acorn.parse(code, { locations: true });
     const optionsLoc: OptionLoc = {};
 
     simple(ast, {
