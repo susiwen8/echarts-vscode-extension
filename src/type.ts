@@ -5,6 +5,7 @@ export interface OptionsStruct {
         name: string;
         type: string[];
         valide: (string | number)[];
+        desc: string;
     }[];
 }
 

@@ -2,7 +2,6 @@
  * @file util functions
  */
 
-import axios from 'axios';
 import {
     findNodeAround,
     simple,
@@ -13,7 +12,6 @@ import {
     OptionsStruct,
     Node,
     Property,
-    OptionsNameItem,
     PropertyLoc,
     OptionLoc,
     isProperty,
@@ -22,11 +20,8 @@ import {
     isObjectExpression
 } from './type';
 import Diagnostic from './diagnostic';
-
-const OPTION_OUTLINE = 'https://echarts.apache.org/zh/documents/option-parts/option-outline.json';
-const OPTION_GL_OUTLINE = 'https://echarts.apache.org/zh/documents/option-gl-parts/option-gl-outline.json';
-// const OPTION_OUTLINE = 'https://loving-goldstine-32d8e8.netlify.com/public/en/documents/option-parts/option-outline.json';
-// const OPTION_GL_OUTLINE = 'https://loving-goldstine-32d8e8.netlify.com/public/en/documents/option-gl-parts/option-gl-outline.json';
+import * as json from './json/option/option.json';
+import * as jsonGL from './json/option/option-gl.json';
 
 /**
  * series option is object, find which chart type it is
@@ -69,52 +64,6 @@ function findChartTypeInArray(elements: Node[], position: number): string {
 }
 
 /**
- * Flatten object
- * @param optionChain chain of option names
- * @param children child options
- * @param optionsNames final result
- */
-function flatObject(
-    optionChain: string,
-    children: OptionsNameItem[],
-    optionsNames: OptionsStruct
-): void {
-    children.map(item => {
-        if (item.children) {
-            flatObject(`${optionChain}.${item.prop || item.arrayItemType || ''}`, item.children, optionsNames);
-        }
-
-        if (!optionsNames[optionChain]) {
-            optionsNames[optionChain] = [];
-        }
-
-        let type: string[] = [];
-        let valide: (string | number)[] = [];
-        item.type = item.type === '*' ? 'object' : (item.type ? item.type : typeof item.default);
-        if (typeof item.type === 'string') {
-            type = [item.type];
-        } else {
-            type = item.type;
-        }
-
-        if (typeof item.default === 'string' && item.default.length) {
-            item.default = item.default.replace(/,/g, '\',\'');
-            valide = item.default.split(',');
-        } else if (item.default === '') {
-            valide = [''];
-        } else if (typeof item.default === 'number') {
-            valide = [item.default];
-        }
-
-        optionsNames[optionChain].push({
-            type,
-            valide,
-            name: item.prop || item.arrayItemType || '',
-        });
-    });
-}
-
-/**
  * find out input at which chart type
  * @param values series option value
  * @param position input position
@@ -135,26 +84,11 @@ export function findChartType(
 }
 
 // get option structure
-export async function getOptionsStruct(): Promise<OptionsStruct | undefined> {
-    try {
-        const optionsNames: OptionsStruct = {};
-
-        const res = await Promise.all([axios.get(OPTION_OUTLINE), axios.get(OPTION_GL_OUTLINE)]);
-
-        res.map(item => {
-            item.data.children.map((i: OptionsNameItem) => {
-                if (i.children) {
-                    flatObject(i.prop || i.arrayItemType || '', i.children, optionsNames);
-                }
-            });
-        });
-
-
-        return optionsNames;
-    } catch (error) {
-        console.error(`getOptionsStruct: ${error}`);
-    }
-
+export function getOptionsStruct(): OptionsStruct {
+    const optionsNames: OptionsStruct = {};
+    Object.assign(optionsNames, json);
+    Object.assign(optionsNames, jsonGL);
+    return optionsNames;
 }
 
 // Generate an arry from a-z

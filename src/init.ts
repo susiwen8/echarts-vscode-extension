@@ -2,7 +2,7 @@ import { OptionsStruct, BarItemStatus } from './type';
 import { TextEditor, ExtensionContext } from 'vscode';
 import Diagnostic from './diagnostic';
 import EchartsStatusBarItem from './statusBarItem';
-import cacheControl from './cache';
+import { getOptionsStruct } from './utils';
 
 export default async function init(activeTextEditor: TextEditor, context: ExtensionContext): Promise<{
     option: string,
@@ -15,10 +15,9 @@ export default async function init(activeTextEditor: TextEditor, context: Extens
     const diagnostic = new Diagnostic(activeTextEditor.document.uri);
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
-    !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
+    !optionsStruct && (optionsStruct = getOptionsStruct());
     optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
         : statusBarItem.changeStatus(BarItemStatus.Failed);
-
 
     return {
         option: '',

@@ -15,14 +15,14 @@ import {
     generateAToZArray,
     walkNodeRecursive,
     findChartType,
-    checkCode
+    checkCode,
+    getOptionsStruct
 } from './utils';
 import {
     isProperty,
     isLiteral,
     BarItemStatus
 } from './type';
-import cacheControl from './cache';
 import init from './init';
 
 export async function activate(context: ExtensionContext): Promise<void> {
@@ -36,7 +36,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const reload = commands.registerCommand('echarts.reload', async () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
 
-        !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
+        !optionsStruct && (optionsStruct = getOptionsStruct());
 
         optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
             : statusBarItem.changeStatus(BarItemStatus.Failed);
@@ -65,7 +65,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         isActive = true;
         statusBarItem.show();
 
-        !optionsStruct && (optionsStruct = await cacheControl(optionsStruct, context));
+        !optionsStruct && (optionsStruct = getOptionsStruct());
 
         optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
             : statusBarItem.changeStatus(BarItemStatus.Failed);
@@ -165,6 +165,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
                     type = type.concat(item.valide);
                     insertText += type.join(',') + '|},';
                     completionItem.insertText = new SnippetString(insertText);
+                    completionItem.documentation = item.desc;
                     return completionItem;
                 });
             }
