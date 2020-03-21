@@ -1,3 +1,8 @@
+## [0.1.3] - 2020-03-21
+## Added
+- Check option and option value type
+- Provide documentation for each option
+
 ## [0.1.2] - 2020-03-05
 ## Fix
 - Cache time
