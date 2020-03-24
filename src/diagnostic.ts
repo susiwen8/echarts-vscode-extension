@@ -64,6 +64,13 @@ export default class EchartsDiagnostic {
 
     checkOptionValue(optionsStruct: OptionsStruct, option: string, node: Property, value: unknown): void {
         for (let i = 0, len = optionsStruct[option].length; i < len; i++) {
+            if (
+                node.value.type === 'ArrayExpression'
+                && optionsStruct[option][i].name === node.key.name
+                && optionsStruct[option][i].type.includes('Array')) {
+                continue;
+            }
+
             if (optionsStruct[option][i].name === node.key.name
                 && !optionsStruct[option][i].type.includes(typeof value)) {
                 // Check color value
