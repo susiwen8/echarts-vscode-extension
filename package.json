@@ -57,6 +57,7 @@
 		"@types/vscode": "^1.43.0",
 		"@typescript-eslint/eslint-plugin": "^2.24.0",
 		"@typescript-eslint/parser": "^2.24.0",
+		"@types/lodash": "^4.14.149",
 		"eslint": "^6.8.0",
 		"eslint-config-airbnb-typescript": "^7.0.0",
 		"eslint-config-prettier": "^6.9.0",
@@ -69,10 +70,10 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
-		"@types/lodash": "^4.14.149",
 		"acorn": "^7.1.1",
-		"acorn-walk": "^7.0.0",
+		"acorn-walk": "^7.1.1",
 		"axios": "^0.19.0",
-		"lodash": "^4.17.15"
+		"lodash": "^4.17.15",
+		"ts-morph": "^7.0.0"
 	}
 }
