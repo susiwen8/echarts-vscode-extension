@@ -1,3 +1,7 @@
+## [0.1.4] - 2020-03-24
+## Fixed
+- Fix value type is array will show warning
+
 ## [0.1.3] - 2020-03-21
 ## Added
 - Check option and option value type
