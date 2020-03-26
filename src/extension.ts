@@ -50,6 +50,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         if (!editor) return;
 
         if (editor.document.languageId === 'javascript' && isActive && optionsStruct) {
+            diagnostic.changeActiveEditor(editor.document.uri);
             checkCode(diagnostic, editor.document.getText(), optionsStruct);
         }
     });

@@ -28,6 +28,10 @@ export default class EchartsDiagnostic {
         this.#diagnosticCollection.clear();
     }
 
+    changeActiveEditor(uri: Uri): void {
+        this.#uri = uri;
+    }
+
     createDiagnostic(range: Range, message = 'warning', severity = DiagnosticSeverity.Warning): void {
         this.#diagnostics.push(new Diagnostic(range, message, severity));
     }
