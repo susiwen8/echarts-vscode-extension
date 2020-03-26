@@ -1,3 +1,7 @@
+## [0.1.5] - 2020-03-26
+## Fixed
+- Fix wrong file associated with diagnostic messages
+
 ## [0.1.4] - 2020-03-24
 ## Fixed
 - Fix value type is array will show warning
