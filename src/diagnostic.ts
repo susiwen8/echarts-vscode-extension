@@ -44,7 +44,7 @@ export default class EchartsDiagnostic {
     //  TODO optimise
     checkOption(optionsLoc: OptionLoc, optionsStruct: OptionsStruct): void {
         for (const [key, value] of Object.entries(optionsLoc)) {
-            if (!key || !value) continue;
+            if (!key || !value || !optionsStruct[key]) continue;
             const valideOption = optionsStruct[key].map(item => item.name);
             const optionsInCode = flattenDeep(value.map(item => item.name));
             const diff = difference(optionsInCode, valideOption);

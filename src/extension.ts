@@ -126,7 +126,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const completion = languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
         {
             provideCompletionItems() {
-                if (!optionsStruct || !isActive) return;
+                if (!optionsStruct || !isActive || !optionsStruct[option]) return;
 
                 return optionsStruct[option].map(item => {
                     const completionItem = new CompletionItem(item.name, CompletionItemKind.Keyword);

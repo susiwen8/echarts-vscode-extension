@@ -218,6 +218,9 @@ export function checkCode(
                 const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
                 option = prevNodeName;
                 option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                if (!optionsStruct[option]) {
+                    return;
+                }
                 diagnostic.checkOptionValue(optionsStruct, option, property.node, literal.value);
             }
         }
