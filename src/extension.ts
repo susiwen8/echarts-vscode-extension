@@ -118,6 +118,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
                 return;
             }
 
+            option = '';
         } catch (error) {
             console.error('onDidChangeTextDocument error');
         }
