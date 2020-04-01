@@ -1,3 +1,11 @@
+## [0.1.6] - 2020-04-01
+## Fixed
+- Fix throw 'cannot read length of undefined'
+- Fix visualMap and dataZoom
+
+## Update
+- Update option.json
+
 ## [0.1.5] - 2020-03-26
 ## Fixed
 - Fix wrong file associated with diagnostic messages

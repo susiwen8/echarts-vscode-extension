@@ -33,7 +33,7 @@ For the purpose of functionnality, I strongly recommend that putting ECharts opt
 (Actually, this will reduce losts of work, make my life much easy :stuck_out_tongue_winking_eye:)
 
 ## Documentation
-Documentation generate from [here](https://github.com/susiwen8/incubator-echarts-doc/tree/api). Will convert html to markdown.
+Documentation generate from [here](https://github.com/susiwen8/incubator-echarts-doc/tree/api).
 
 ## TODO
 - [x] Downgrade
