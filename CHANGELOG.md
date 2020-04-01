@@ -1,3 +1,7 @@
+## [0.1.7] - 2020-04-01
+## Fixed
+- Fix provideCompletion show at wrong place
+
 ## [0.1.6] - 2020-04-01
 ## Fixed
 - Fix throw 'cannot read length of undefined'
