@@ -96,13 +96,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
                 return;
             }
 
-            // Hit enter and input is in series
+            // Hit enter and input is in series/visualMap/dataZoom
             if (
                 event.contentChanges[0].text.includes('\n')
                 && property && isProperty(property.node)
-                && property.node.key.name === 'series'
+                && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
             ) {
-                option = `series.${findChartType(property.node.value, position)}`;
+                option = `${property.node.key.name}.${findChartType(property.node.value, position)}`;
                 return;
             }
 
