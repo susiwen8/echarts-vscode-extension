@@ -11,7 +11,8 @@ import flattenDeep from 'lodash/flattenDeep';
 import {
     OptionLoc,
     OptionsStruct,
-    Property
+    Property,
+    COLOR_VALUE
 } from './type';
 
 export default class EchartsDiagnostic {
@@ -84,6 +85,7 @@ export default class EchartsDiagnostic {
                     && !(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value))
                     && !(/^rgb/.test(value))
                     && !(/^rgba/.test(value))
+                    && !(COLOR_VALUE.includes(value))
                 ) {
                     this.createDiagnostic(
                         new Range(
@@ -99,6 +101,7 @@ export default class EchartsDiagnostic {
                         /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(value)
                         || /^rgb/.test(value)
                         || /^rgba/.test(value)
+                        || COLOR_VALUE.includes(value)
                     )
                 ) {
                     continue;
