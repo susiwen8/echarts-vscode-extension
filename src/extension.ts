@@ -25,15 +25,15 @@ import {
 } from './type';
 import init from './init';
 
-export async function activate(context: ExtensionContext): Promise<void> {
+export function activate(context: ExtensionContext): void {
     if (!window.activeTextEditor) return;
 
-    const initialValue = await init(window.activeTextEditor, context);
+    const initialValue = init(window.activeTextEditor, context);
     let { option, optionsStruct, isActive } = initialValue;
     const { statusBarItem, diagnostic } = initialValue;
     const checkCodeDebounce = debounce(checkCode, 1500);
 
-    const reload = commands.registerCommand('echarts.reload', async () => {
+    const reload = commands.registerCommand('echarts.reload', () => {
         statusBarItem.changeStatus(BarItemStatus.Loading);
 
         !optionsStruct && (optionsStruct = getOptionsStruct());
@@ -62,7 +62,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         diagnostic.clearDiagnostics();
     });
 
-    const activateEcharts = commands.registerCommand('echarts.activate', async () => {
+    const activateEcharts = commands.registerCommand('echarts.activate', () => {
         isActive = true;
         statusBarItem.show();
 

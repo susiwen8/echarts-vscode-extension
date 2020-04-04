@@ -4,20 +4,21 @@ import Diagnostic from './diagnostic';
 import EchartsStatusBarItem from './statusBarItem';
 import { getOptionsStruct } from './utils';
 
-export default async function init(activeTextEditor: TextEditor, context: ExtensionContext): Promise<{
+export default function init(
+    activeTextEditor: TextEditor,
+    context: ExtensionContext
+): {
     option: string,
-    optionsStruct: OptionsStruct | undefined,
+    optionsStruct: OptionsStruct,
     statusBarItem: EchartsStatusBarItem,
     diagnostic: Diagnostic,
     isActive: boolean
-}> {
-    let optionsStruct: OptionsStruct | undefined;
+} {
+    const optionsStruct = getOptionsStruct();
     const diagnostic = new Diagnostic(activeTextEditor.document.uri);
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
-    !optionsStruct && (optionsStruct = getOptionsStruct());
-    optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
-        : statusBarItem.changeStatus(BarItemStatus.Failed);
+    statusBarItem.changeStatus(BarItemStatus.Loaded);
 
     return {
         option: '',

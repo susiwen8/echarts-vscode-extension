@@ -30,10 +30,10 @@ class Cache {
     }
 }
 
-export default async function cacheControl(
-    optionsStruct: OptionsStruct | undefined,
+export default function cacheControl(
+    optionsStruct: OptionsStruct,
     context: ExtensionContext
-): Promise<OptionsStruct | undefined> {
+): OptionsStruct {
     const cache = new Cache(context);
     let hasSendRequest = false;
     const cacheValue = cache.get();
@@ -51,7 +51,7 @@ export default async function cacheControl(
     }
 
     if (!optionsStruct) {
-        optionsStruct = await getOptionsStruct();
+        optionsStruct = getOptionsStruct();
         hasSendRequest = true;
     }
 

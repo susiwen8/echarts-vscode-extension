@@ -158,14 +158,10 @@ function getObjectProperties(
     });
 }
 
-export function getOptionProperties(
-    node: Found<unknown> | undefined,
+function getOptionProperties(
+    node: Found<unknown>,
     position: number
-): PropertyLoc[] | undefined {
-    if (!node) {
-        return;
-    }
-
+): PropertyLoc[] {
     const propertyNames: PropertyLoc[] = [];
     if (isProperty(node.node) && isObjectExpression(node.node.value)) {
         if (node.node.key.name === 'rich') {
@@ -209,7 +205,7 @@ export function checkCode(
                 let option = '';
                 const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
                 option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                if (!optionsLoc[option]) {
+                if (!optionsLoc[option] && prevNode) {
                     optionsLoc[option] = getOptionProperties(prevNode, property.start);
                 }
             }

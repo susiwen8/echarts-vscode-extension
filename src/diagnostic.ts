@@ -33,7 +33,11 @@ export default class EchartsDiagnostic {
         this.#uri = uri;
     }
 
-    createDiagnostic(range: Range, message = 'warning', severity = DiagnosticSeverity.Warning): void {
+    createDiagnostic(
+        range: Range,
+        message = 'warning',
+        severity = DiagnosticSeverity.Warning
+    ): void {
         this.#diagnostics.push(new Diagnostic(range, message, severity));
     }
 
@@ -67,7 +71,12 @@ export default class EchartsDiagnostic {
         }
     }
 
-    checkOptionValue(optionsStruct: OptionsStruct, option: string, node: Property, value: unknown): void {
+    checkOptionValue(
+        optionsStruct: OptionsStruct,
+        option: string,
+        node: Property,
+        value: unknown
+    ): void {
         for (let i = 0, len = optionsStruct[option].length; i < len; i++) {
             if (
                 node.value.type === 'ArrayExpression'
