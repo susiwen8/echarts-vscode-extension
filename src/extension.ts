@@ -6,7 +6,8 @@ import {
     languages,
     CompletionItem,
     CompletionItemKind,
-    SnippetString
+    SnippetString,
+    MarkdownString
 } from 'vscode';
 import * as acorn from 'acorn';
 import { findNodeAround } from 'acorn-walk';
@@ -167,7 +168,7 @@ export function activate(context: ExtensionContext): void {
                     type = type.concat(item.valide);
                     insertText += type.join(',') + '|},';
                     completionItem.insertText = new SnippetString(insertText);
-                    completionItem.documentation = item.desc;
+                    completionItem.documentation = new MarkdownString(item.desc);
                     return completionItem;
                 });
             }
