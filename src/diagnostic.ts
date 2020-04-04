@@ -85,6 +85,24 @@ export default class EchartsDiagnostic {
                 continue;
             }
 
+            if (
+                optionsStruct[option][i].type.includes('number')
+                && typeof value === 'number'
+                && optionsStruct[option][i].range
+                && (
+                    value < optionsStruct[option][i].range[0]
+                    || value > optionsStruct[option][i].range[1]
+                )
+            ) {
+                this.createDiagnostic(
+                    new Range(
+                        new Position(node.value.loc.start.line - 1, node.value.loc.start.column),
+                        new Position(node.value.loc.end.line - 1, node.value.loc.end.column)
+                    ),
+                    `${node.key.name} value is out of range, value should at ${optionsStruct[option][i].range}`
+                );
+            }
+
             if (optionsStruct[option][i].name === node.key.name
                 && !optionsStruct[option][i].type.includes(typeof value)) {
                 // Check color value

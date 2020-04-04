@@ -119,7 +119,6 @@ export function activate(context: ExtensionContext): void {
                 return;
             }
 
-            option = '';
         } catch (error) {
             console.error('onDidChangeTextDocument error');
         }

@@ -6,6 +6,8 @@ export interface OptionsStruct {
         type: string[];
         valide: (string | number)[];
         desc: string;
+        range: number[];
+        require: string;
     }[];
 }
 
