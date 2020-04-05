@@ -44,7 +44,7 @@ Documentation generate from [here](https://github.com/susiwen8/incubator-echarts
 - [x] Check if type of value were correct.
 - [x] Provide english documentation
 - [ ] Provide chinese documentation
-- [ ] Convert HTML to Markdown (documentation)
-- [ ] Check if value were resonable.
+- [x] Convert HTML to Markdown (documentation)
+- [x] Check if value were resonable.
 - [ ] HoverProvider
 - [x] More command

@@ -1,3 +1,11 @@
+## [0.1.8] - 2020-04-05
+## Feature
+- Use markdown for description
+- Check certain option value
+
+## Fixed
+- Color check warning
+
 ## [0.1.7] - 2020-04-01
 ## Fixed
 - Fix provideCompletion show at wrong place
