@@ -22,7 +22,8 @@ import {
 import {
     isProperty,
     isLiteral,
-    BarItemStatus
+    BarItemStatus,
+    COLOR_VALUE
 } from './type';
 import init from './init';
 
@@ -152,7 +153,7 @@ export function activate(context: ExtensionContext): void {
                                 break;
 
                             case 'color':
-                                type.push('\'#\'', '\'rgb()\'', '\'rgba()\'');
+                                type.push('\'#\'', '\'rgb()\'', '\'rgba()\'', ...(COLOR_VALUE.map(item => `'${item}'`)));
                                 break;
 
                             case 'function':
