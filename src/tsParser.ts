@@ -35,13 +35,13 @@ function getChildrenFunction(
 }
 
 function getStartSafe(node: ts.Node, sourceFile: ts.SourceFile): number {
-    // workaround for compiler api bug with getStart(sourceFile, true) (see PR #35029 in typescript repo)
     const jsDocs = ((node as any).jsDoc) as ts.Node[] | undefined;
     if (jsDocs && jsDocs.length > 0)
         return jsDocs[0].getStart(sourceFile);
     return node.getStart(sourceFile);
 }
 
+/* credit to David Sherret */
 function getDescendantAtRange(
     sourceFile: ts.SourceFile,
     range: [number, number],
@@ -87,7 +87,7 @@ function getDescendantAtRange(
     return bestMatch.node;
 }
 
-function walkNodeRecursive(
+function walkTSNodeRecursive(
     sourceFile: ts.SourceFile,
     position: number,
     optionChain: string
@@ -101,10 +101,10 @@ function walkNodeRecursive(
     ) {
         const res = getDescendantAtRange(sourceFile, [result.pos - 1, result.pos - 1]);
         if (res.kind === ts.SyntaxKind.Identifier) {
-            optionChain = `${res.getText(sourceFile)}.${optionChain}`;
+            optionChain = `${res.getText(sourceFile)}${optionChain ? '.' + optionChain : ''}`;
         }
 
-        return walkNodeRecursive(sourceFile, res.pos, optionChain);
+        return walkTSNodeRecursive(sourceFile, res.pos, optionChain);
     }
 
     return optionChain;
@@ -113,5 +113,5 @@ function walkNodeRecursive(
 
 export default function tsParser(code: string, position: number): string {
     const sourceFile = ts.createSourceFile('Example.ts', code, ts.ScriptTarget.Latest);
-    return walkNodeRecursive(sourceFile, position, '');
+    return walkTSNodeRecursive(sourceFile, position, '');
 }

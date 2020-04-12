@@ -52,7 +52,10 @@ export function activate(context: ExtensionContext): void {
         diagnostic.clearDiagnostics();
         if (!editor) return;
 
-        if (editor.document.languageId === 'javascript' && isActive && optionsStruct) {
+        if (
+            ['javascript', 'typescript'].includes(editor.document.languageId)
+            && isActive && optionsStruct
+        ) {
             diagnostic.changeActiveEditor(editor.document.uri);
             checkCode(diagnostic, editor.document.getText(), optionsStruct);
         }
@@ -93,6 +96,7 @@ export function activate(context: ExtensionContext): void {
 
             if (event.document.languageId === 'typescript') {
                 option = tsParser(code, position);
+                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
                 return;
             }
 
@@ -137,54 +141,63 @@ export function activate(context: ExtensionContext): void {
         }
     });
 
-    const completion = languages.registerCompletionItemProvider({ scheme: 'file', language: 'javascript' },
-        {
-            provideCompletionItems() {
-                if (!optionsStruct || !isActive || !optionsStruct[option]) return;
+    const provideCompletionItems = {
+        provideCompletionItems(): CompletionItem[] | undefined {
+            if (!optionsStruct || !isActive || !optionsStruct[option]) return;
 
-                return optionsStruct[option].map(item => {
-                    const completionItem = new CompletionItem(item.name, CompletionItemKind.Keyword);
-                    let insertText = `${item.name}: \${1|`;
-                    let type: (boolean | number | string | Function)[] = [];
-                    item.type.map(i => {
-                        switch (i.toLocaleLowerCase()) {
-                            case 'string':
-                                type.push('\'\'');
-                                break;
+            return optionsStruct[option].map(item => {
+                const completionItem = new CompletionItem(item.name, CompletionItemKind.Keyword);
+                let insertText = `${item.name}: \${1|`;
+                let type: (boolean | number | string | Function)[] = [];
+                item.type.map(i => {
+                    switch (i.toLocaleLowerCase()) {
+                        case 'string':
+                            type.push('\'\'');
+                            break;
 
-                            case 'number':
-                                type.push(1);
-                                break;
+                        case 'number':
+                            type.push(1);
+                            break;
 
-                            case 'boolean':
-                                type.push(true, false);
-                                break;
+                        case 'boolean':
+                            type.push(true, false);
+                            break;
 
-                            case 'array':
-                                type.push('[]');
-                                break;
+                        case 'array':
+                            type.push('[]');
+                            break;
 
-                            case 'color':
-                                type.push('\'#\'', '\'rgb()\'', '\'rgba()\'', ...(COLOR_VALUE.map(item => `'${item}'`)));
-                                break;
+                        case 'color':
+                            type.push('\'#\'', '\'rgb()\'', '\'rgba()\'', ...(COLOR_VALUE.map(item => `'${item}'`)));
+                            break;
 
-                            case 'function':
-                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                type.push(function () {});
-                                break;
+                        case 'function':
+                            // eslint-disable-next-line @typescript-eslint/no-empty-function
+                            type.push(function () {});
+                            break;
 
-                            default:
-                                type.push('{}');
-                        }
-                    });
-                    type = type.concat(item.valide);
-                    insertText += type.join(',') + '|},';
-                    completionItem.insertText = new SnippetString(insertText);
-                    completionItem.documentation = new MarkdownString(item.desc);
-                    return completionItem;
+                        default:
+                            type.push('{}');
+                    }
                 });
-            }
-        },
+                type = type.concat(item.valide);
+                insertText += type.join(',') + '|},';
+                completionItem.insertText = new SnippetString(insertText);
+                completionItem.documentation = new MarkdownString(item.desc);
+                return completionItem;
+            });
+        }
+    };
+
+    const jsCompletion = languages.registerCompletionItemProvider(
+        { scheme: 'file', language: 'javascript' },
+        provideCompletionItems,
+        ...generateAToZArray()
+    );
+
+    const tsCompletion = languages.registerCompletionItemProvider(
+        { scheme: 'file', language: 'typescript' },
+        provideCompletionItems,
         ...generateAToZArray()
     );
 
@@ -193,7 +206,8 @@ export function activate(context: ExtensionContext): void {
         deactivateEcharts,
         activateEcharts,
         onDidChangeTextDocumentEvent,
-        completion,
+        jsCompletion,
+        tsCompletion,
         onDidChangeActiveTextEditor
     );
 }
