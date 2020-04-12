@@ -35,6 +35,9 @@ For the purpose of functionnality, I strongly recommend that putting ECharts opt
 ## Documentation
 Documentation generate from [here](https://github.com/susiwen8/incubator-echarts-doc/tree/api).
 
+## TypeScript support
+I want to thanks [David Sherret](https://github.com/dsherret) for doing an amazing project [ts-ast-viewer](https://github.com/dsherret/ts-ast-viewer). I have took the core function `getDescendantAtRange` to this project which can find out which node the cursor in.
+
 ## TODO
 - [x] Downgrade
 - [x] Optimization
@@ -48,3 +51,4 @@ Documentation generate from [here](https://github.com/susiwen8/incubator-echarts
 - [x] Check if value were resonable.
 - [ ] HoverProvider
 - [x] More command
+- [x] TypeScript support
