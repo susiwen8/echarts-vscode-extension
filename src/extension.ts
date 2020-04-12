@@ -26,6 +26,7 @@ import {
     COLOR_VALUE
 } from './type';
 import init from './init';
+import tsParser from './tsParser';
 
 export function activate(context: ExtensionContext): void {
     if (!window.activeTextEditor) return;
@@ -72,7 +73,12 @@ export function activate(context: ExtensionContext): void {
 
         optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
             : statusBarItem.changeStatus(BarItemStatus.Failed);
-        if (!optionsStruct || !window.activeTextEditor) return;
+        if (
+            !optionsStruct
+            || !window.activeTextEditor
+            || window.activeTextEditor.document.languageId !== 'javascript'
+        ) return;
+
         checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
     });
 
@@ -82,13 +88,19 @@ export function activate(context: ExtensionContext): void {
         }
 
         try {
-            const text = event.document.getText();
-            const ast = acorn.parse(text, { locations: true });
-            optionsStruct && checkCodeDebounce(diagnostic, text, optionsStruct, ast);
+            const code = event.document.getText();
+            const position = event.contentChanges[0].rangeOffset;
+
+            if (event.document.languageId === 'typescript') {
+                option = tsParser(code, position);
+                return;
+            }
+
+            const ast = acorn.parse(code, { locations: true });
+            optionsStruct && checkCodeDebounce(diagnostic, code, optionsStruct, ast);
 
             if (!event.contentChanges[0]) return;
 
-            const position = event.contentChanges[0].rangeOffset;
             const literal = findNodeAround(ast, position, 'Literal');
             const property = findNodeAround(ast, position, 'Property');
 

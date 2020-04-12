@@ -1,8 +1,9 @@
-import { ts } from 'ts-morph';
+import * as ts from 'typescript';
+import { TreeMode } from './type';
 
-enum TreeMode {
-    forEachChild,
-    getChildren
+type BestMatch = {
+    node: ts.Node;
+    start: number;
 }
 
 function getChildrenFunction(
@@ -42,12 +43,15 @@ function getStartSafe(node: ts.Node, sourceFile: ts.SourceFile): number {
 }
 
 function getDescendantAtRange(
-    mode: TreeMode,
     sourceFile: ts.SourceFile,
-    range: [number, number]
+    range: [number, number],
+    mode: TreeMode = TreeMode.forEachChild
 ): ts.Node {
     const getChildren = getChildrenFunction(mode, sourceFile);
-    let bestMatch: { node: ts.Node; start: number; } = { node: sourceFile, start: sourceFile.getStart(sourceFile) };
+    let bestMatch: BestMatch = {
+        node: sourceFile,
+        start: sourceFile.getStart(sourceFile)
+    };
 
     function isBeforeRange(pos: number): boolean {
         return pos < range[0];
@@ -83,19 +87,31 @@ function getDescendantAtRange(
     return bestMatch.node;
 }
 
-export default function tsParser(code: string): void {
+function walkNodeRecursive(
+    sourceFile: ts.SourceFile,
+    position: number,
+    optionChain: string
+): string {
+    const result = getDescendantAtRange(sourceFile, [position, position]);
+    if (
+        [
+            ts.SyntaxKind.ObjectLiteralExpression,
+            ts.SyntaxKind.ArrayLiteralExpression
+        ].includes(result.kind)
+    ) {
+        const res = getDescendantAtRange(sourceFile, [result.pos - 1, result.pos - 1]);
+        if (res.kind === ts.SyntaxKind.Identifier) {
+            optionChain = `${res.getText(sourceFile)}.${optionChain}`;
+        }
+
+        return walkNodeRecursive(sourceFile, res.pos, optionChain);
+    }
+
+    return optionChain;
+
+}
+
+export default function tsParser(code: string, position: number): string {
     const sourceFile = ts.createSourceFile('Example.ts', code, ts.ScriptTarget.Latest);
-    console.log(getDescendantAtRange(TreeMode.forEachChild, sourceFile, [100, 100]));
-
-    // console.log(sourceFile.getChildAtPos(1)?.getText());
-    // sourceFile.transform(traversal => {
-    //     const node = traversal.visitChildren();
-    //     node.forEachChild(item => {
-    //         if (SyntaxKind.Identifier === item.kind) {
-    //             const lineAndColumn = sourceFile.getLineAndColumnAtPos(item.getStart());
-    //         }
-    //     });
-
-    //     return node;
-    // });
+    return walkNodeRecursive(sourceFile, position, '');
 }
