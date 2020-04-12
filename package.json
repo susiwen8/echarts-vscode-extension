@@ -13,7 +13,8 @@
 	"publisher": "susiwen8",
 	"repository": "https://github.com/susiwen8/echarts-vscode-extension.git",
 	"activationEvents": [
-		"onLanguage:javascript"
+		"onLanguage:javascript",
+		"onLanguage:typescript"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
