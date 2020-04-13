@@ -105,13 +105,29 @@ function walkTSNodeRecursive(
         }
 
         return walkTSNodeRecursive(sourceFile, res.pos, optionChain);
+    } else if (
+        [
+            ts.SyntaxKind.NumericLiteral,
+            ts.SyntaxKind.FalseKeyword,
+            ts.SyntaxKind.TrueKeyword,
+            ts.SyntaxKind.StringLiteral,
+            ts.SyntaxKind.FunctionExpression
+        ].includes(result.kind)
+    ) {
+        return '';
     }
 
     return optionChain;
 
 }
 
+/**
+ * Base on cursor position to get option chaine
+ * @param code TypeScript code string
+ * @param position cursor position
+ */
 export default function tsParser(code: string, position: number): string {
     const sourceFile = ts.createSourceFile('Example.ts', code, ts.ScriptTarget.Latest);
-    return walkTSNodeRecursive(sourceFile, position, '');
+    const option = walkTSNodeRecursive(sourceFile, position, '');
+    return option.replace(/.rich.(\S*)/, '.rich.<style_name>');
 }

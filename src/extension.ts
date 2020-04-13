@@ -9,24 +9,19 @@ import {
     SnippetString,
     MarkdownString
 } from 'vscode';
-import * as acorn from 'acorn';
-import { findNodeAround } from 'acorn-walk';
 import debounce from 'lodash/debounce';
 import {
     generateAToZArray,
-    walkNodeRecursive,
-    findChartType,
     checkCode,
     getOptionsStruct
 } from './utils';
 import {
-    isProperty,
-    isLiteral,
     BarItemStatus,
     COLOR_VALUE
 } from './type';
 import init from './init';
 import tsParser from './tsParser';
+import jsParser from './jsParser';
 
 export function activate(context: ExtensionContext): void {
     if (!window.activeTextEditor) return;
@@ -96,44 +91,15 @@ export function activate(context: ExtensionContext): void {
 
             if (event.document.languageId === 'typescript') {
                 option = tsParser(code, position);
-                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                return;
-            }
-
-            const ast = acorn.parse(code, { locations: true });
-            optionsStruct && checkCodeDebounce(diagnostic, code, optionsStruct, ast);
-
-            if (!event.contentChanges[0]) return;
-
-            const literal = findNodeAround(ast, position, 'Literal');
-            const property = findNodeAround(ast, position, 'Property');
-
-            // input is in Literal, then don't show completion
-            if (literal && isLiteral(literal.node)) {
-                option = '';
-                return;
-            }
-
-            // Hit enter and input is in series/visualMap/dataZoom
-            if (
-                event.contentChanges[0].text.includes('\n')
-                && property && isProperty(property.node)
-                && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
-            ) {
-                option = `${property.node.key.name}.${findChartType(property.node.value, position)}`;
-                return;
-            }
-
-            // input at somewhere other than series
-            if (
-                property
-                && isProperty(property.node)
-                && event.contentChanges[0].text.includes('\n')
-            ) {
-                const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
-                option = `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`;
-                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                return;
+            } else if (event.document.languageId === 'javascript') {
+                option = jsParser(
+                    code,
+                    optionsStruct,
+                    position,
+                    diagnostic,
+                    event,
+                    checkCodeDebounce
+                );
             }
 
         } catch (error) {
