@@ -11,7 +11,6 @@ import {
 } from 'vscode';
 import debounce from 'lodash/debounce';
 import {
-    generateAToZArray,
     checkCode,
     getOptionsStruct
 } from './utils';
@@ -28,7 +27,7 @@ export function activate(context: ExtensionContext): void {
 
     const initialValue = init(window.activeTextEditor, context);
     let { option, optionsStruct, isActive } = initialValue;
-    const { statusBarItem, diagnostic } = initialValue;
+    const { statusBarItem, diagnostic, activeKeys } = initialValue;
     const checkCodeDebounce = debounce(checkCode, 1500);
 
     const reload = commands.registerCommand('echarts.reload', () => {
@@ -85,25 +84,21 @@ export function activate(context: ExtensionContext): void {
             return;
         }
 
-        try {
-            const code = event.document.getText();
-            const position = event.contentChanges[0].rangeOffset;
+        const code = event.document.getText();
+        const position = event.contentChanges[0].rangeOffset;
 
-            if (event.document.languageId === 'typescript') {
-                option = tsParser(code, position);
-            } else if (event.document.languageId === 'javascript') {
-                option = jsParser(
-                    code,
-                    optionsStruct,
-                    position,
-                    diagnostic,
-                    event,
-                    checkCodeDebounce
-                );
-            }
-
-        } catch (error) {
-            console.error('onDidChangeTextDocument error');
+        if (event.document.languageId === 'typescript') {
+            option = tsParser(code, position, option);
+        } else if (event.document.languageId === 'javascript') {
+            option = jsParser(
+                code,
+                optionsStruct,
+                position,
+                diagnostic,
+                event,
+                option,
+                checkCodeDebounce
+            );
         }
     });
 
@@ -111,7 +106,16 @@ export function activate(context: ExtensionContext): void {
         provideCompletionItems(): CompletionItem[] | undefined {
             if (!optionsStruct || !isActive || !optionsStruct[option]) return;
 
-            return optionsStruct[option].map(item => {
+            let res = optionsStruct[option];
+
+            if (option === 'option') {
+                res = res.concat(optionsStruct['option-gl']);
+            }
+            if (option === 'option-gl') {
+                res = res.concat(optionsStruct['option']);
+            }
+
+            return res.map(item => {
                 const completionItem = new CompletionItem(item.name, CompletionItemKind.Keyword);
                 let insertText = `${item.name}: \${1|`;
                 let type: (boolean | number | string | Function)[] = [];
@@ -158,13 +162,13 @@ export function activate(context: ExtensionContext): void {
     const jsCompletion = languages.registerCompletionItemProvider(
         { scheme: 'file', language: 'javascript' },
         provideCompletionItems,
-        ...generateAToZArray()
+        ...activeKeys
     );
 
     const tsCompletion = languages.registerCompletionItemProvider(
         { scheme: 'file', language: 'typescript' },
         provideCompletionItems,
-        ...generateAToZArray()
+        ...activeKeys
     );
 
     context.subscriptions.push(

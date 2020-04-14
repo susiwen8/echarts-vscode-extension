@@ -2,7 +2,7 @@ import { OptionsStruct, BarItemStatus } from './type';
 import { TextEditor, ExtensionContext } from 'vscode';
 import Diagnostic from './diagnostic';
 import EchartsStatusBarItem from './statusBarItem';
-import { getOptionsStruct } from './utils';
+import { getOptionsStruct, generateAToZArray } from './utils';
 
 export default function init(
     activeTextEditor: TextEditor,
@@ -12,7 +12,8 @@ export default function init(
     optionsStruct: OptionsStruct,
     statusBarItem: EchartsStatusBarItem,
     diagnostic: Diagnostic,
-    isActive: boolean
+    isActive: boolean,
+    activeKeys: string[]
 } {
     const optionsStruct = getOptionsStruct();
     const diagnostic = new Diagnostic(activeTextEditor.document.uri);
@@ -25,6 +26,7 @@ export default function init(
         optionsStruct,
         statusBarItem,
         diagnostic,
-        isActive: false
+        isActive: false,
+        activeKeys: generateAToZArray()
     };
 }

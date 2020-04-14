@@ -28,39 +28,45 @@ export default function jsParse(
     position: number,
     diagnostic: Diagnostic,
     event: TextDocumentChangeEvent,
+    option: string,
     checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: acorn.Node | undefined) => void) & Cancelable
 ): string {
-    const ast = acorn.parse(code, { locations: true });
-    optionsStruct && checkCodeDebounce(diagnostic, code, optionsStruct, ast);
+    try {
+        const ast = acorn.parse(code, { locations: true });
+        optionsStruct && checkCodeDebounce(diagnostic, code, optionsStruct, ast);
 
-    if (!event.contentChanges[0]) return '';
+        if (!event.contentChanges[0]) return '';
 
-    const literal = findNodeAround(ast, position, 'Literal');
-    const property = findNodeAround(ast, position, 'Property');
+        const literal = findNodeAround(ast, position, 'Literal');
+        const property = findNodeAround(ast, position, 'Property');
 
-    // input is in Literal, then don't show completion
-    if (literal && isLiteral(literal.node)) {
-        return '';
+        // input is in Literal, then don't show completion
+        if (literal && isLiteral(literal.node)) {
+            return '';
+        }
+
+        // Hit enter and input is in series/visualMap/dataZoom
+        if (
+            event.contentChanges[0].text.includes('\n')
+            && property && isProperty(property.node)
+            && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
+        ) {
+            return `${property.node.key.name}.${findChartType(property.node.value, position)}`;
+        }
+
+        // input at somewhere other than series
+        if (
+            property
+            && isProperty(property.node)
+            && event.contentChanges[0].text.includes('\n')
+        ) {
+            const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
+            return `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`.replace(/.rich.(\S*)/, '.rich.<style_name>');
+        }
+
+        return property ? option : 'option';
+    } catch (error) {
+        console.error('jsParse error');
+        return option;
     }
-
-    // Hit enter and input is in series/visualMap/dataZoom
-    if (
-        event.contentChanges[0].text.includes('\n')
-        && property && isProperty(property.node)
-        && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
-    ) {
-        return `${property.node.key.name}.${findChartType(property.node.value, position)}`;
-    }
-
-    // input at somewhere other than series
-    if (
-        property
-        && isProperty(property.node)
-        && event.contentChanges[0].text.includes('\n')
-    ) {
-        const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
-        return `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`.replace(/.rich.(\S*)/, '.rich.<style_name>');
-    }
-
-    return '';
 }
