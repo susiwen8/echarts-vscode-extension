@@ -2,7 +2,7 @@ import { OptionsStruct, BarItemStatus } from './type';
 import { TextEditor, ExtensionContext } from 'vscode';
 import Diagnostic from './diagnostic';
 import EchartsStatusBarItem from './statusBarItem';
-import { getOptionsStruct, generateAToZArray } from './utils';
+import { getOptionsStruct, generateAToZArray } from './jsUtils';
 
 export default function init(
     activeTextEditor: TextEditor,

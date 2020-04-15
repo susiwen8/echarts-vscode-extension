@@ -8,7 +8,7 @@ import {
 import {
     walkNodeRecursive,
     findChartType
-} from './utils';
+} from './jsUtils';
 import Diagnostic from './diagnostic';
 import { TextDocumentChangeEvent } from 'vscode';
 import { Cancelable } from 'lodash/index';

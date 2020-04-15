@@ -13,7 +13,7 @@ import debounce from 'lodash/debounce';
 import {
     checkCode,
     getOptionsStruct
-} from './utils';
+} from './jsUtils';
 import {
     BarItemStatus,
     COLOR_VALUE

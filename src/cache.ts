@@ -1,6 +1,6 @@
 import { ExtensionContext } from 'vscode';
 import { OptionsStruct } from './type';
-import { getOptionsStruct } from './utils';
+import { getOptionsStruct } from './jsUtils';
 
 interface CacheValue {
     saveTime: number;
