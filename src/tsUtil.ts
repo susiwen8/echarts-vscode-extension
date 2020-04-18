@@ -96,7 +96,7 @@ function findChartTypeInTSObject(
     for (let i = 0, len = properties.length; i < len; i++) {
         const propertie = properties[i] as ts.PropertyAssignment;
         if (propertie.name.getText(sourceFile) === 'type') {
-            return propertie.initializer.getText(sourceFile).replace('\'', '');
+            return propertie.initializer.getText(sourceFile).replace(/'/g, '');
         }
     }
 
@@ -104,10 +104,13 @@ function findChartTypeInTSObject(
 }
 
 function findChartTypeInTS(
-    node: ts.Expression,
+    node: ts.Node,
     position: number,
     sourceFile: ts.SourceFile
 ): string {
+    if (node.kind === ts.SyntaxKind.PropertyAssignment) {
+        node = (node as ts.PropertyAssignment).initializer;
+    }
     if (node.kind === ts.SyntaxKind.ArrayLiteralExpression) {
         const elements = (node as ts.ArrayLiteralExpression).elements;
         for (let i = 0, len = elements.length; i < len; i++) {
@@ -138,14 +141,22 @@ export default function walkTSNodeRecursive(
     ) {
         const res = getDescendantAtRange(sourceFile, [result.pos - 1, result.pos - 1]);
         if (res.kind === ts.SyntaxKind.Identifier) {
-            optionChain = `${res.getText(sourceFile)}${optionChain ? '.' + optionChain : ''}`;
+            const identifier = res.getText(sourceFile);
+            if (['series', 'visualMap', 'dataZoom'].includes(identifier)) {
+                const chartType = findChartTypeInTS(result, cursorPosition, sourceFile);
+                optionChain = `${identifier}${('.' + chartType)}${optionChain ? ('.' + optionChain) : ''}`;
+            } else {
+                optionChain = `${identifier}${optionChain ? '.' + optionChain : ''}`;
+            }
         }
 
         return walkTSNodeRecursive(sourceFile, res.pos, cursorPosition, optionChain);
-    } else if (ts.SyntaxKind.PropertyAssignment === result.kind) {
+    } else if (
+        ts.SyntaxKind.PropertyAssignment === result.kind
+    ) {
         const name = (result as ts.PropertyAssignment).name.getText(sourceFile);
-        const chartType = findChartTypeInTS((result as ts.PropertyAssignment).initializer, cursorPosition, sourceFile);
-        return `${name}.${chartType}`;
+        const chartType = findChartTypeInTS(result, cursorPosition, sourceFile);
+        return `${name}.${chartType}${optionChain ? ('.' + optionChain) : ''}`;
     } else if (
         [
             ts.SyntaxKind.NumericLiteral,

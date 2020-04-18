@@ -31,12 +31,6 @@
 				"command": "echarts.reload",
 				"title": "Reload ECharts Extension"
 			}
-		],
-		"snippets": [
-			{
-				"language": "javascript",
-				"path": "./src/json/snippets.json"
-			}
 		]
 	},
 	"scripts": {
