@@ -51,7 +51,7 @@
 		"@types/node": "^13.13.4",
 		"@types/vscode": "^1.44.0",
 		"@typescript-eslint/eslint-plugin": "^2.24.0",
-		"@typescript-eslint/parser": "^2.24.0",
+		"@typescript-eslint/parser": "^2.30.0",
 		"@types/lodash": "^4.14.150",
 		"eslint": "^6.8.0",
 		"eslint-config-airbnb-typescript": "^7.0.0",
