@@ -1,3 +1,7 @@
+## [0.2.0] - 2020-05-03
+## Fixed
+- Wrong completion in some case for JavaScript
+
 ## [0.1.9] - 2020-05-02
 ## Feature
 - TypeScript completion
