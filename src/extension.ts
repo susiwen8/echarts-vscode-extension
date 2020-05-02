@@ -85,7 +85,12 @@ export function activate(context: ExtensionContext): void {
         }
 
         const code = event.document.getText();
-        const position = event.contentChanges[0].rangeOffset;
+        let position = 0;
+        for (let i = 0, len = event.contentChanges.length; i < len; i++) {
+            if (!event.contentChanges[i].text) continue;
+            position = event.contentChanges[i].rangeOffset;
+            break;
+        }
 
         if (event.document.languageId === 'typescript') {
             option = tsParser(code, position, option);
