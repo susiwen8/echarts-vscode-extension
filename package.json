@@ -5,7 +5,7 @@
 	"version": "0.1.9",
 	"icon": "images/logo.png",
 	"engines": {
-		"vscode": "^1.43.0"
+		"vscode": "^1.44.0"
 	},
 	"categories": [
 		"Snippets"
