@@ -1,3 +1,13 @@
+## [0.1.9] - 2020-05-02
+## Feature
+- TypeScript completion
+
+## Fixed
+- Wrong completion in some case
+
+## Update
+- Update documentation
+
 ## [0.1.8] - 2020-04-05
 ## Feature
 - Use markdown for description
