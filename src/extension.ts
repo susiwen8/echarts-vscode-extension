@@ -86,9 +86,11 @@ export function activate(context: ExtensionContext): void {
 
         const code = event.document.getText();
         let position = 0;
+        let index = 0;
         for (let i = 0, len = event.contentChanges.length; i < len; i++) {
             if (!event.contentChanges[i].text) continue;
             position = event.contentChanges[i].rangeOffset;
+            index = i;
             break;
         }
 
@@ -102,7 +104,8 @@ export function activate(context: ExtensionContext): void {
                 diagnostic,
                 event,
                 option,
-                checkCodeDebounce
+                checkCodeDebounce,
+                index
             );
         }
     });

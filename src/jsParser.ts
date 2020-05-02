@@ -21,6 +21,7 @@ import { Cancelable } from 'lodash/index';
  * @param diagnostic check result
  * @param event Text editor change event
  * @param checkCodeDebounce check option and value function
+ * @param index index of real contentChanges
  */
 export default function jsParse(
     code: string,
@@ -29,13 +30,14 @@ export default function jsParse(
     diagnostic: Diagnostic,
     event: TextDocumentChangeEvent,
     option: string,
-    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: acorn.Node | undefined) => void) & Cancelable
+    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: acorn.Node | undefined) => void) & Cancelable,
+    index: number
 ): string {
     try {
         const ast = acorn.parse(code, { locations: true });
         optionsStruct && checkCodeDebounce(diagnostic, code, optionsStruct, ast);
 
-        if (!event.contentChanges[0]) return '';
+        if (!event.contentChanges[index]) return '';
 
         const literal = findNodeAround(ast, position, 'Literal');
         const property = findNodeAround(ast, position, 'Property');
@@ -47,7 +49,7 @@ export default function jsParse(
 
         // Hit enter and input is in series/visualMap/dataZoom
         if (
-            event.contentChanges[0].text.includes('\n')
+            event.contentChanges[index].text.includes('\n')
             && property && isProperty(property.node)
             && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
         ) {
@@ -58,7 +60,7 @@ export default function jsParse(
         if (
             property
             && isProperty(property.node)
-            && event.contentChanges[0].text.includes('\n')
+            && event.contentChanges[index].text.includes('\n')
         ) {
             const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
             return `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`.replace(/.rich.(\S*)/, '.rich.<style_name>');
