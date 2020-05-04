@@ -30,12 +30,12 @@ export default function jsParse(
     diagnostic: Diagnostic,
     event: TextDocumentChangeEvent,
     option: string,
-    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: acorn.Node | undefined) => void) & Cancelable,
+    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: acorn.Node) => void) & Cancelable,
     index: number
 ): string {
     try {
         const ast = acorn.parse(code, { locations: true });
-        optionsStruct && checkCodeDebounce(diagnostic, code, optionsStruct, ast);
+        checkCodeDebounce(diagnostic, code, optionsStruct, ast);
 
         if (!event.contentChanges[index]) return '';
 

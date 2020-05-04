@@ -11,11 +11,9 @@ import {
 } from 'vscode';
 import debounce from 'lodash/debounce';
 import {
-    checkCode,
-    getOptionsStruct
+    checkCode
 } from './jsUtils';
 import {
-    BarItemStatus,
     COLOR_VALUE
 } from './type';
 import init from './init';
@@ -26,21 +24,9 @@ export function activate(context: ExtensionContext): void {
     if (!window.activeTextEditor) return;
 
     const initialValue = init(window.activeTextEditor, context);
-    let { option, optionsStruct, isActive } = initialValue;
-    const { statusBarItem, diagnostic, activeKeys } = initialValue;
+    let { option, isActive } = initialValue;
+    const { statusBarItem, diagnostic, activeKeys, optionsStruct } = initialValue;
     const checkCodeDebounce = debounce(checkCode, 1500);
-
-    const reload = commands.registerCommand('echarts.reload', () => {
-        statusBarItem.changeStatus(BarItemStatus.Loading);
-
-        !optionsStruct && (optionsStruct = getOptionsStruct());
-
-        optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
-            : statusBarItem.changeStatus(BarItemStatus.Failed);
-
-        if (!optionsStruct || !window.activeTextEditor) return;
-        checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
-    });
 
     const onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
         diagnostic.clearDiagnostics();
@@ -48,7 +34,7 @@ export function activate(context: ExtensionContext): void {
 
         if (
             ['javascript', 'typescript'].includes(editor.document.languageId)
-            && isActive && optionsStruct
+            && isActive
         ) {
             diagnostic.changeActiveEditor(editor.document.uri);
             checkCode(diagnostic, editor.document.getText(), optionsStruct);
@@ -58,7 +44,6 @@ export function activate(context: ExtensionContext): void {
     const deactivateEcharts = commands.registerCommand('echarts.deactivate', () => {
         isActive = false;
         statusBarItem.hide();
-        statusBarItem.changeStatus(BarItemStatus.Loading);
         diagnostic.clearDiagnostics();
     });
 
@@ -66,13 +51,9 @@ export function activate(context: ExtensionContext): void {
         isActive = true;
         statusBarItem.show();
 
-        !optionsStruct && (optionsStruct = getOptionsStruct());
-
-        optionsStruct ? statusBarItem.changeStatus(BarItemStatus.Loaded)
-            : statusBarItem.changeStatus(BarItemStatus.Failed);
+        statusBarItem.changeStatus();
         if (
-            !optionsStruct
-            || !window.activeTextEditor
+            !window.activeTextEditor
             || window.activeTextEditor.document.languageId !== 'javascript'
         ) return;
 
@@ -112,7 +93,7 @@ export function activate(context: ExtensionContext): void {
 
     const provideCompletionItems = {
         provideCompletionItems(): CompletionItem[] | undefined {
-            if (!optionsStruct || !isActive || !optionsStruct[option]) return;
+            if (!isActive || !optionsStruct[option]) return;
 
             let res = optionsStruct[option];
 
@@ -180,7 +161,6 @@ export function activate(context: ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        reload,
         deactivateEcharts,
         activateEcharts,
         onDidChangeTextDocumentEvent,

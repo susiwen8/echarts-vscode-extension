@@ -26,10 +26,6 @@
 			{
 				"command": "echarts.deactivate",
 				"title": "Deactivate ECharts Extension"
-			},
-			{
-				"command": "echarts.reload",
-				"title": "Reload ECharts Extension"
 			}
 		]
 	},
@@ -47,12 +43,12 @@
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
+		"@types/lodash": "^4.14.150",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.13.4",
 		"@types/vscode": "^1.44.0",
 		"@typescript-eslint/eslint-plugin": "^2.24.0",
 		"@typescript-eslint/parser": "^2.30.0",
-		"@types/lodash": "^4.14.150",
 		"eslint": "^6.8.0",
 		"eslint-config-airbnb-typescript": "^7.0.0",
 		"eslint-config-prettier": "^6.9.0",

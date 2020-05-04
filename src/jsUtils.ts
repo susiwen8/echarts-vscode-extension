@@ -212,7 +212,7 @@ export function checkCode(
         },
         Literal(literal) {
             const property = findNodeAround(ast, literal.start, 'Property');
-            if (optionsStruct && property && isProperty(property.node) && isLiteral(literal)) {
+            if (property && isProperty(property.node) && isLiteral(literal)) {
                 let option = '';
                 const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
                 option = prevNodeName;

@@ -1,7 +1,7 @@
 import * as acorn from 'acorn';
 
 export interface OptionsStruct {
-    [propName: string]: {
+    [key: string]: {
         name: string;
         type: string[];
         valide: (string | number)[];
@@ -17,14 +17,7 @@ export interface PropertyLoc {
 }
 
 export interface OptionLoc {
-    [property: string]: PropertyLoc[] | undefined
-}
-
-export enum BarItemStatus {
-    Loaded = 'Echarts',
-    Loading = 'Echarts Loading',
-    Failed = 'Echarts Failed, Click to reload',
-    Deactivated = 'Echarts Deactivated, Click to activate',
+    [key: string]: PropertyLoc[] | undefined;
 }
 
 export interface OptionsNameItem {

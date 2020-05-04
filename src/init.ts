@@ -1,8 +1,14 @@
-import { OptionsStruct, BarItemStatus } from './type';
-import { TextEditor, ExtensionContext } from 'vscode';
+import { OptionsStruct } from './type';
+import {
+    TextEditor,
+    ExtensionContext
+} from 'vscode';
 import Diagnostic from './diagnostic';
 import EchartsStatusBarItem from './statusBarItem';
-import { getOptionsStruct, generateAToZArray } from './jsUtils';
+import {
+    getOptionsStruct,
+    generateAToZArray
+} from './jsUtils';
 
 export default function init(
     activeTextEditor: TextEditor,
@@ -19,7 +25,7 @@ export default function init(
     const diagnostic = new Diagnostic(activeTextEditor.document.uri);
     const statusBarItem = new EchartsStatusBarItem();
     statusBarItem.addInContext(context);
-    statusBarItem.changeStatus(BarItemStatus.Loaded);
+    statusBarItem.changeStatus();
 
     return {
         option: '',
