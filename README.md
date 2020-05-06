@@ -2,7 +2,7 @@
 
 ![logo](https://github.com/susiwen8/echarts-vscode-extension/blob/master/images/logo.png)
 
-This is unofficial vscode extension for ECharts
+This is unofficial vscode extension for [ECharts](https://github.com/apache/incubator-echarts)
 
 ## Install
 * `ext install vscode-echarts-extension`
@@ -10,13 +10,12 @@ This is unofficial vscode extension for ECharts
 
 ## Commands
 
-This extension provides 3 commands
+This extension provides 2 commands
 
 * `echarts.activate`: extension provides completion when matched case occur
 * `echarts.deactivate`: extension never show completion
-* `echarts.reload`: re-request api when request api failure
 
-PS: From 0.1.2, extension won't provide completion at first, because JS file may not contain ECharts. User need to execute `echarts.activate` at command panel.
+PS: From 0.1.2, extension won't provide completion at first, because JS file may not import [ECharts](https://github.com/apache/incubator-echarts). User need to execute `echarts.activate` at command panel.
 
 ## Example
 ![example](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
