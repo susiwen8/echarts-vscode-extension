@@ -1,6 +1,4 @@
 import {
-    isProperty,
-    isLiteral,
     OptionsStruct,
     Node
 } from './type';
