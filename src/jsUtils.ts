@@ -48,7 +48,10 @@ function findChartTypeInObject(properties: Node[]): string {
  * @param elements Array elements
  * @param position input postion
  */
-function findChartTypeInArray(elements: Node[], position: number): string {
+function findChartTypeInArray(
+    elements: Node[],
+    position: number
+): string {
     for (let i = 0, len = elements.length; i < len; i++) {
         const element = elements[i];
         if (
@@ -227,4 +230,61 @@ export function checkCode(
 
     diagnostic.checkOption(optionsLoc, optionsStruct);
     diagnostic.showError();
+}
+
+export function parseJSCode(
+    code: string,
+    position: number
+): {
+    ast: acorn.Node,
+    literal: Found<unknown>
+    property: Found<unknown>
+} | undefined {
+    try {
+        const ast = acorn.parse(code, { locations: true });
+        const literal = findNodeAround(ast, position, 'Literal')!;
+        const property = findNodeAround(ast, position, 'Property')!;
+        return {
+            ast,
+            literal,
+            property
+        };
+    } catch (error) {
+        console.error('jsParse error');
+    }
+}
+
+export function getOption(
+    literal: Found<unknown>,
+    property: Found<unknown>,
+    text: string,
+    position: number,
+    ast: Node,
+    option: string
+): string {
+    // input is in Literal, then don't show completion
+    if (literal && isLiteral(literal.node)) {
+        return '';
+    }
+
+    // Hit enter and input is in series/visualMap/dataZoom
+    if (
+        text.includes('\n')
+        && property && isProperty(property.node)
+        && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
+    ) {
+        return `${property.node.key.name}.${findChartType(property.node.value, position)}`;
+    }
+
+    // input at somewhere other than series
+    if (
+        property
+        && isProperty(property.node)
+        && text.includes('\n')
+    ) {
+        const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
+        return `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`.replace(/.rich.(\S*)/, '.rich.<style_name>');
+    }
+
+    return property ? option : 'option';
 }

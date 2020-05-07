@@ -30,6 +30,7 @@ module.exports = {
         'semi': ['error', 'always'],
         'indent': ['error', 4, {
             'SwitchCase': 1
-        }]
+        }],
+        'no-non-null-assertion': false
     }
   };

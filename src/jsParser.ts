@@ -1,13 +1,12 @@
-import * as acorn from 'acorn';
-import { findNodeAround } from 'acorn-walk';
 import {
     isProperty,
     isLiteral,
-    OptionsStruct
+    OptionsStruct,
+    Node
 } from './type';
 import {
-    walkNodeRecursive,
-    findChartType
+    parseJSCode,
+    getOption
 } from './jsUtils';
 import Diagnostic from './diagnostic';
 import { TextDocumentChangeEvent } from 'vscode';
@@ -23,52 +22,23 @@ import { Cancelable } from 'lodash/index';
  * @param checkCodeDebounce check option and value function
  * @param index index of real contentChanges
  */
-export default function jsParse(
+export default function jsParser(
     code: string,
     optionsStruct: OptionsStruct,
     position: number,
     diagnostic: Diagnostic,
     event: TextDocumentChangeEvent,
     option: string,
-    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: acorn.Node) => void) & Cancelable,
+    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: Node) => void) & Cancelable,
     index: number
 ): string {
-    try {
-        const ast = acorn.parse(code, { locations: true });
-        checkCodeDebounce(diagnostic, code, optionsStruct, ast);
+    if (!event.contentChanges[index]) return '';
 
-        if (!event.contentChanges[index]) return '';
-
-        const literal = findNodeAround(ast, position, 'Literal');
-        const property = findNodeAround(ast, position, 'Property');
-
-        // input is in Literal, then don't show completion
-        if (literal && isLiteral(literal.node)) {
-            return '';
-        }
-
-        // Hit enter and input is in series/visualMap/dataZoom
-        if (
-            event.contentChanges[index].text.includes('\n')
-            && property && isProperty(property.node)
-            && ['series', 'visualMap', 'dataZoom'].includes(property.node.key.name)
-        ) {
-            return `${property.node.key.name}.${findChartType(property.node.value, position)}`;
-        }
-
-        // input at somewhere other than series
-        if (
-            property
-            && isProperty(property.node)
-            && event.contentChanges[index].text.includes('\n')
-        ) {
-            const { prevNodeName } = walkNodeRecursive(ast, property.node, position);
-            return `${prevNodeName}${prevNodeName ? '.' : ''}${property.node.key.name}`.replace(/.rich.(\S*)/, '.rich.<style_name>');
-        }
-
-        return property ? option : 'option';
-    } catch (error) {
-        console.error('jsParse error');
+    const { ast, literal, property } = parseJSCode(code, position)!;
+    if (!ast && !literal && !property) {
         return option;
     }
+
+    checkCodeDebounce(diagnostic, code, optionsStruct, ast);
+    return getOption(literal, property, event.contentChanges[index].text, position, ast, option);
 }
