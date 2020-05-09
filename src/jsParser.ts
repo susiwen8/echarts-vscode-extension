@@ -1,14 +1,11 @@
 import {
-    OptionsStruct,
-    Node
+    OptionsStruct
 } from './type';
 import {
     parseJSCode,
     getOption
 } from './jsUtils';
 import Diagnostic from './diagnostic';
-import { TextDocumentChangeEvent } from 'vscode';
-import { Cancelable } from 'lodash/index';
 
 /**
  * Base on cursor position to get option chaine
@@ -20,23 +17,21 @@ import { Cancelable } from 'lodash/index';
  * @param checkCodeDebounce check option and value function
  * @param index index of real contentChanges
  */
-export default function jsParser(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function jsParser<T extends (...args: any) => any>(
     code: string,
     optionsStruct: OptionsStruct,
     position: number,
     diagnostic: Diagnostic,
-    event: TextDocumentChangeEvent,
+    text: string,
     option: string,
-    checkCodeDebounce: ((diagnostic: Diagnostic, code: string, optionsStruct: OptionsStruct, AST?: Node) => void) & Cancelable,
-    index: number
+    checkCodeDebounce: T
 ): string {
-    if (!event.contentChanges[index]) return '';
-
     const { ast, literal, property } = parseJSCode(code, position)!;
     if (!ast && !literal && !property) {
         return option;
     }
 
     checkCodeDebounce(diagnostic, code, optionsStruct, ast);
-    return getOption(literal, property, event.contentChanges[index].text, position, ast, option);
+    return getOption(literal, property, text, position, ast, option);
 }

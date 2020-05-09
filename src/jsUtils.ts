@@ -232,31 +232,27 @@ export function checkCode(
     diagnostic.showError();
 }
 
-export function parseJSCode(
+export function parseJSCode<T extends Found<unknown>>(
     code: string,
     position: number
 ): {
     ast: acorn.Node,
-    literal: Found<unknown>
-    property: Found<unknown>
+    literal: T
+    property: T
 } | undefined {
     try {
         const ast = acorn.parse(code, { locations: true });
-        const literal = findNodeAround(ast, position, 'Literal')!;
-        const property = findNodeAround(ast, position, 'Property')!;
-        return {
-            ast,
-            literal,
-            property
-        };
+        const literal = findNodeAround(ast, position, 'Literal')! as T;
+        const property = findNodeAround(ast, position, 'Property')! as T;
+        return { ast, literal, property };
     } catch (error) {
         console.error('jsParse error');
     }
 }
 
-export function getOption(
-    literal: Found<unknown>,
-    property: Found<unknown>,
+export function getOption<T extends Found<unknown>>(
+    literal: T,
+    property: T,
     text: string,
     position: number,
     ast: Node,

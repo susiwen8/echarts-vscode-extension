@@ -28,9 +28,9 @@ module.exports = {
         'object-curly-spacing': ['error', 'always'],
         'no-tabs': 'error',
         'semi': ['error', 'always'],
+        '@typescript-eslint/no-non-null-assertion': 'off',
         'indent': ['error', 4, {
             'SwitchCase': 1
-        }],
-        'no-non-null-assertion': false
+        }]
     }
   };

@@ -66,27 +66,21 @@ export function activate(context: ExtensionContext): void {
         }
 
         const code = event.document.getText();
-        let position = 0;
         let index = 0;
-        for (let i = 0, len = event.contentChanges.length; i < len; i++) {
-            if (!event.contentChanges[i].text) continue;
-            position = event.contentChanges[i].rangeOffset;
-            index = i;
+        const len = event.contentChanges.length;
+        for (; index < len; index++) {
+            if (!event.contentChanges[index].text) continue;
             break;
         }
 
+        const { rangeOffset, text } = event.contentChanges[index];
+
         if (event.document.languageId === 'typescript') {
-            option = tsParser(code, position, option);
+            option = tsParser(code, rangeOffset, option);
         } else if (event.document.languageId === 'javascript') {
-            option = jsParser(
-                code,
-                optionsStruct,
-                position,
-                diagnostic,
-                event,
-                option,
-                checkCodeDebounce,
-                index
+            option = jsParser(code, optionsStruct, rangeOffset,
+                diagnostic, text,
+                option, checkCodeDebounce
             );
         }
     });
