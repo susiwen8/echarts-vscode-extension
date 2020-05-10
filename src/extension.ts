@@ -86,8 +86,8 @@ export function activate(context: ExtensionContext): void {
     });
 
     const provideCompletionItems = {
-        provideCompletionItems(): CompletionItem[] | undefined {
-            if (!isActive || !optionsStruct[option]) return;
+        provideCompletionItems(): CompletionItem[] {
+            if (!isActive || !optionsStruct[option]) return [];
 
             let res = optionsStruct[option];
 
@@ -100,7 +100,6 @@ export function activate(context: ExtensionContext): void {
 
             return res.map(item => {
                 const completionItem = new CompletionItem(item.name, CompletionItemKind.Keyword);
-                let insertText = `${item.name}: \${1|`;
                 let type: (boolean | number | string | Function)[] = [];
                 item.type.map(i => {
                     switch (i.toLocaleLowerCase()) {
@@ -134,22 +133,15 @@ export function activate(context: ExtensionContext): void {
                     }
                 });
                 type = type.concat(item.valide);
-                insertText += type.join(',') + '|},';
-                completionItem.insertText = new SnippetString(insertText);
+                completionItem.insertText = new SnippetString(`${item.name}: $\{1|${type.join(',')}|},`);
                 completionItem.documentation = new MarkdownString(item.desc);
                 return completionItem;
             });
         }
     };
 
-    const jsCompletion = languages.registerCompletionItemProvider(
-        { scheme: 'file', language: 'javascript' },
-        provideCompletionItems,
-        ...activeKeys
-    );
-
-    const tsCompletion = languages.registerCompletionItemProvider(
-        { scheme: 'file', language: 'typescript' },
+    const completion = languages.registerCompletionItemProvider(
+        ['javascript', 'typescript'],
         provideCompletionItems,
         ...activeKeys
     );
@@ -158,8 +150,7 @@ export function activate(context: ExtensionContext): void {
         deactivateEcharts,
         activateEcharts,
         onDidChangeTextDocumentEvent,
-        jsCompletion,
-        tsCompletion,
+        completion,
         onDidChangeActiveTextEditor
     );
 }

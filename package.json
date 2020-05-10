@@ -8,13 +8,12 @@
 		"vscode": "^1.44.0"
 	},
 	"categories": [
-		"Snippets"
+		"Other"
 	],
 	"publisher": "susiwen8",
 	"repository": "https://github.com/susiwen8/echarts-vscode-extension.git",
 	"activationEvents": [
-		"onLanguage:javascript",
-		"onLanguage:typescript"
+		"onCommand:echarts.activate"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
