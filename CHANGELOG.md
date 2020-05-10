@@ -1,3 +1,7 @@
+## [0.2.1] - 2020-05-10
+## Fixed
+- some option had wrong insertText
+
 ## [0.2.0] - 2020-05-03
 ## Fixed
 - Wrong completion in some case for JavaScript

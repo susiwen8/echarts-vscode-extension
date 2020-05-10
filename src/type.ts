@@ -52,11 +52,6 @@ export interface ObjectExpression extends Node {
     loc: acorn.SourceLocation;
 }
 
-export enum TreeMode {
-    forEachChild,
-    getChildren
-}
-
 interface Literal extends Node {
     type: 'Literal';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

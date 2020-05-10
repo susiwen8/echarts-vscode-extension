@@ -1,39 +1,16 @@
 import * as ts from 'typescript';
-import {
-    TreeMode
-} from './type';
 
 type BestMatch = {
     node: ts.Node;
     start: number;
 }
 
-function getChildrenFunction(
-    mode: TreeMode,
-    sourceFile: ts.SourceFile
-): (node: ts.Node) => ts.Node[] {
-    function getAllChildren(node: ts.Node): ts.Node[] {
-        return node.getChildren(sourceFile);
-    }
-
-    function forEachChild(node: ts.Node): ts.Node[] {
-        const nodes: ts.Node[] = [];
-        node.forEachChild(child => {
-            nodes.push(child);
-            return undefined;
-        });
-        return nodes;
-    }
-
-    switch (mode) {
-        case TreeMode.getChildren:
-            return getAllChildren;
-
-        case TreeMode.forEachChild:
-        default:
-            return forEachChild;
-    }
-
+function forEachChild(node: ts.Node): ts.Node[] {
+    const nodes: ts.Node[] = [];
+    node.forEachChild(child => {
+        nodes.push(child);
+    });
+    return nodes;
 }
 
 function getStartSafe(node: ts.Node, sourceFile: ts.SourceFile): number {
@@ -46,10 +23,8 @@ function getStartSafe(node: ts.Node, sourceFile: ts.SourceFile): number {
 /* credit to David Sherret */
 function getDescendantAtRange(
     sourceFile: ts.SourceFile,
-    range: [number, number],
-    mode: TreeMode = TreeMode.forEachChild
+    range: [number, number]
 ): ts.Node {
-    const getChildren = getChildrenFunction(mode, sourceFile);
     let bestMatch: BestMatch = {
         node: sourceFile,
         start: sourceFile.getStart(sourceFile)
@@ -64,7 +39,7 @@ function getDescendantAtRange(
     }
 
     function searchDescendants(node: ts.Node): void {
-        const children = getChildren(node);
+        const children = forEachChild(node);
         for (const child of children) {
             if (child.kind !== ts.SyntaxKind.SyntaxList) {
                 if (isBeforeRange(child.end))
@@ -170,5 +145,4 @@ export default function walkTSNodeRecursive(
     }
 
     return optionChain;
-
 }
