@@ -199,7 +199,10 @@ export function checkCode(
     AST?: Node
 ): void {
     diagnostic.clearDiagnostics();
-    const ast = AST || acorn.parse(code, { locations: true });
+    const ast = AST || acorn.parse(code, {
+        locations: true,
+        sourceType: 'module'
+    });
     const optionsLoc: OptionLoc = {};
 
     simple(ast, {
@@ -241,7 +244,10 @@ export function parseJSCode<T extends Found<unknown>>(
     property: T
 } | undefined {
     try {
-        const ast = acorn.parse(code, { locations: true });
+        const ast = acorn.parse(code, {
+            locations: true,
+            sourceType: 'module'
+        });
         const literal = findNodeAround(ast, position, 'Literal')! as T;
         const property = findNodeAround(ast, position, 'Property')! as T;
         return { ast, literal, property };
