@@ -1,3 +1,7 @@
+## [0.2.2] - 2020-05-12
+## Fixed
+- Command 'Active ECharts Extension' resulted in an error [#70](https://github.com/susiwen8/echarts-vscode-extension/issues/70)
+
 ## [0.2.1] - 2020-05-10
 ## Fixed
 - some option had wrong insertText
