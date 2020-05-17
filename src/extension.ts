@@ -10,12 +10,8 @@ import {
     MarkdownString
 } from 'vscode';
 import debounce from 'lodash/debounce';
-import {
-    checkCode
-} from './jsUtils';
-import {
-    COLOR_VALUE
-} from './type';
+import { checkCode } from './jsUtils';
+import { COLOR_VALUE } from './type';
 import init from './init';
 import tsParser from './tsParser';
 import jsParser from './jsParser';
@@ -134,7 +130,7 @@ export function activate(context: ExtensionContext): void {
                 });
                 type = type.concat(item.valide);
                 completionItem.insertText = new SnippetString(`${item.name}: $\{1|${type.join(',')}|},`);
-                completionItem.documentation = new MarkdownString(item.desc);
+                item.desc && (completionItem.documentation = new MarkdownString(item.desc));
                 return completionItem;
             });
         }

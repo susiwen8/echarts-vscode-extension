@@ -5,10 +5,8 @@ import {
 } from 'vscode';
 import Diagnostic from './diagnostic';
 import EchartsStatusBarItem from './statusBarItem';
-import {
-    getOptionsStruct,
-    generateAToZArray
-} from './jsUtils';
+import { generateAToZArray } from './jsUtils';
+import { getOptionsStruct } from './option';
 
 export default function init(
     activeTextEditor: TextEditor,

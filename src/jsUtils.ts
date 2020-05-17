@@ -20,8 +20,6 @@ import {
     isObjectExpression
 } from './type';
 import Diagnostic from './diagnostic';
-import * as json from './json/option/option.json';
-import * as jsonGL from './json/option/option-gl.json';
 
 /**
  * series option is object, find which chart type it is
@@ -84,14 +82,6 @@ export function findChartType(
     }
 
     return '';
-}
-
-// get option structure
-export function getOptionsStruct(): OptionsStruct {
-    const optionsNames: OptionsStruct = {};
-    Object.assign(optionsNames, json);
-    Object.assign(optionsNames, jsonGL);
-    return optionsNames;
 }
 
 // Generate an arry from a-z
