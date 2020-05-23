@@ -60,28 +60,28 @@ export default class EchartsDiagnostic {
                         'Wrong option',
                         DiagnosticSeverity.Error
                     );
-                } else if (optionsStruct[key][optionsInCode.indexOf(item.name)].require) {
-                    const require = optionsStruct[key][optionsInCode.indexOf(item.name)].require;
-                    const requireCondition = optionsStruct[key][optionsInCode.indexOf(item.name)].requireCondition;
-                    if (optionsInCode.indexOf(require) < 0) {
+                } else if (optionsStruct[key][valideOption.indexOf(item.name)].require) {
+                    const requireOption = optionsStruct[key][valideOption.indexOf(item.name)];
+                    if (requireOption.require && optionsInCode.indexOf(requireOption.require) < 0) {
                         this.createDiagnostic(
                             new Range(
                                 new Position(item.loc.start.line - 1, item.loc.start.column),
                                 new Position(item.loc.end.line - 1, item.loc.end.column)
                             ),
-                            `This option requires ${optionsStruct[key][optionsInCode.indexOf(item.name)].require}`,
+                            `This option requires ${requireOption.require}`,
                             DiagnosticSeverity.Information
                         );
                     } else if (
-                        isLiteral(item.value)
-                        && item.value.value !== requireCondition
+                        requireOption.requireCondition
+                        && isLiteral(item.value)
+                        && item.value.value !== requireOption.requireCondition
                     ) {
                         this.createDiagnostic(
                             new Range(
                                 new Position(item.loc.start.line - 1, item.loc.start.column),
                                 new Position(item.loc.end.line - 1, item.loc.end.column)
                             ),
-                            `This option requires ${optionsStruct[key][optionsInCode.indexOf(item.name)].require} value is ${item.value.value}`,
+                            `This option requires ${requireOption.require} value is ${requireOption.requireCondition}`,
                             DiagnosticSeverity.Information
                         );
                     }

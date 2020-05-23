@@ -7,8 +7,8 @@ export interface OptionsStruct {
         valide: (string | number)[];
         desc: string;
         range: number[];
-        require: string;
-        requireCondition: string | number | boolean;
+        require?: string;
+        requireCondition?: string | number | boolean;
     }[];
 }
 
