@@ -8,12 +8,14 @@ export interface OptionsStruct {
         desc: string;
         range: number[];
         require: string;
+        requireCondition: string | number | boolean;
     }[];
 }
 
 export interface PropertyLoc {
     name: string;
     loc: acorn.SourceLocation;
+    value: Literal | ObjectExpression | ArrayExpression
 }
 
 export interface OptionLoc {

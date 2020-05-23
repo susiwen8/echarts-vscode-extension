@@ -6,13 +6,12 @@ import {
     Uri,
     Position
 } from 'vscode';
-import difference from 'lodash/difference';
-import flattenDeep from 'lodash/flattenDeep';
 import {
     OptionLoc,
     OptionsStruct,
     Property,
-    COLOR_VALUE
+    COLOR_VALUE,
+    isLiteral
 } from './type';
 
 export default class EchartsDiagnostic {
@@ -46,28 +45,48 @@ export default class EchartsDiagnostic {
         this.#diagnosticCollection.set(this.#uri, this.#diagnostics);
     }
 
-    //  TODO optimise
     checkOption(optionsLoc: OptionLoc, optionsStruct: OptionsStruct): void {
         for (const [key, value] of Object.entries(optionsLoc)) {
             if (!key || !value || !optionsStruct[key]) continue;
             const valideOption = optionsStruct[key].map(item => item.name);
-            const optionsInCode = flattenDeep(value.map(item => item.name));
-            const diff = difference(optionsInCode, valideOption);
-            for (let i = 0, diffLen = diff.length; i < diffLen; i++) {
-                for (let j = 0, optionsInCodeLen = value.length; j < optionsInCodeLen; j++) {
-                    if (value[j].name === diff[i]) {
+            const optionsInCode = value.map(item => item.name);
+            value.forEach(item => {
+                if (valideOption.indexOf(item.name) < 0) {
+                    this.createDiagnostic(
+                        new Range(
+                            new Position(item.loc.start.line - 1, item.loc.start.column),
+                            new Position(item.loc.end.line - 1, item.loc.end.column)
+                        ),
+                        'Wrong option',
+                        DiagnosticSeverity.Error
+                    );
+                } else if (optionsStruct[key][optionsInCode.indexOf(item.name)].require) {
+                    const require = optionsStruct[key][optionsInCode.indexOf(item.name)].require;
+                    const requireCondition = optionsStruct[key][optionsInCode.indexOf(item.name)].requireCondition;
+                    if (optionsInCode.indexOf(require) < 0) {
                         this.createDiagnostic(
                             new Range(
-                                new Position(value[j].loc.start.line - 1, value[j].loc.start.column),
-                                new Position(value[j].loc.end.line - 1, value[j].loc.end.column)
+                                new Position(item.loc.start.line - 1, item.loc.start.column),
+                                new Position(item.loc.end.line - 1, item.loc.end.column)
                             ),
-                            'Wrong option',
-                            DiagnosticSeverity.Error
+                            `This option requires ${optionsStruct[key][optionsInCode.indexOf(item.name)].require}`,
+                            DiagnosticSeverity.Information
                         );
-                        break;
+                    } else if (
+                        isLiteral(item.value)
+                        && item.value.value !== requireCondition
+                    ) {
+                        this.createDiagnostic(
+                            new Range(
+                                new Position(item.loc.start.line - 1, item.loc.start.column),
+                                new Position(item.loc.end.line - 1, item.loc.end.column)
+                            ),
+                            `This option requires ${optionsStruct[key][optionsInCode.indexOf(item.name)].require} value is ${item.value.value}`,
+                            DiagnosticSeverity.Information
+                        );
                     }
                 }
-            }
+            });
         }
     }
 

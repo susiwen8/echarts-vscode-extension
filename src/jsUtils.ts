@@ -144,7 +144,8 @@ function getObjectProperties(
         if (isProperty(item) && item.loc) {
             const optionLoc: PropertyLoc = {
                 name: item.key.name,
-                loc: item.loc
+                loc: item.loc,
+                value: item.value
             };
             propertyNames.push(optionLoc);
         }
