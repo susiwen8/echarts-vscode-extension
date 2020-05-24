@@ -51,40 +51,56 @@ export default class EchartsDiagnostic {
             const valideOption = optionsStruct[key].map(item => item.name);
             const optionsInCode = value.map(item => item.name);
             value.forEach(item => {
+                const option = optionsStruct[key][valideOption.indexOf(item.name)];
+                // Find those options which are not legal option
                 if (valideOption.indexOf(item.name) < 0) {
                     this.createDiagnostic(
                         new Range(
                             new Position(item.loc.start.line - 1, item.loc.start.column),
                             new Position(item.loc.end.line - 1, item.loc.end.column)
                         ),
-                        'Wrong option',
+                        `${item.name} doesn't exist`,
                         DiagnosticSeverity.Error
                     );
-                } else if (optionsStruct[key][valideOption.indexOf(item.name)].require) {
-                    const requireOption = optionsStruct[key][valideOption.indexOf(item.name)];
-                    if (requireOption.require && optionsInCode.indexOf(requireOption.require) < 0) {
-                        this.createDiagnostic(
-                            new Range(
-                                new Position(item.loc.start.line - 1, item.loc.start.column),
-                                new Position(item.loc.end.line - 1, item.loc.end.column)
-                            ),
-                            `This option requires ${requireOption.require}`,
-                            DiagnosticSeverity.Information
-                        );
-                    } else if (
-                        requireOption.requireCondition
-                        && isLiteral(item.value)
-                        && item.value.value !== requireOption.requireCondition
-                    ) {
-                        this.createDiagnostic(
-                            new Range(
-                                new Position(item.loc.start.line - 1, item.loc.start.column),
-                                new Position(item.loc.end.line - 1, item.loc.end.column)
-                            ),
-                            `This option requires ${requireOption.require} value is ${requireOption.requireCondition}`,
-                            DiagnosticSeverity.Information
-                        );
-                    }
+                } else if (option.require) {// option requires another options
+                    option.require.split(',').forEach((require, index) => {
+                        // require option is not present
+                        if (optionsInCode.indexOf(require) < 0) {
+                            this.createDiagnostic(
+                                new Range(
+                                    new Position(item.loc.start.line - 1, item.loc.start.column),
+                                    new Position(item.loc.end.line - 1, item.loc.end.column)
+                                ),
+                                `${item.name} requires ${require}`,
+                                DiagnosticSeverity.Information
+                            );
+                        } else if (option.requireCondition) {
+                            // require other option has specify value for this option
+                            const requireValue = value[optionsInCode.indexOf(require)];
+                            if (isLiteral(requireValue.value)) {
+                                const requireConditionArr = option.requireCondition.split(',');
+                                if (
+                                    (
+                                        requireConditionArr[index].indexOf('!==') > -1
+                                        && requireConditionArr[index] === `!== ${requireValue.value.value}`
+                                    )
+                                    || (
+                                        requireConditionArr[index].indexOf('!==') < 0
+                                        && requireConditionArr[index] !== `${requireValue.value.value}`
+                                    )
+                                ) {
+                                    this.createDiagnostic(
+                                        new Range(
+                                            new Position(requireValue.loc.start.line - 1, requireValue.loc.start.column),
+                                            new Position(requireValue.loc.end.line - 1, requireValue.loc.end.column)
+                                        ),
+                                        `${item.name} requires ${require} value is ${requireConditionArr[index]}`,
+                                        DiagnosticSeverity.Information
+                                    );
+                                }
+                            }
+                        }
+                    });
                 }
             });
         }

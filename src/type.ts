@@ -8,7 +8,7 @@ export interface OptionsStruct {
         desc: string;
         range: number[];
         require?: string;
-        requireCondition?: string | number | boolean;
+        requireCondition?: string;
     }[];
 }
 
@@ -83,6 +83,7 @@ export function isObjectExpression(node: Node): node is ObjectExpression {
 }
 
 export const COLOR_VALUE = [
+    'transparent',
     'black',
     'silver',
     'gray',
