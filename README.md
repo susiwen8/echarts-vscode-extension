@@ -1,6 +1,6 @@
 # echarts-vscode-extension
 
-![logo](https://github.com/susiwen8/echarts-vscode-extension/blob/master/images/logo.png)
+![logo](./images/logo.png)
 
 This is unofficial vscode extension for [ECharts](https://github.com/apache/incubator-echarts)
 
@@ -18,11 +18,11 @@ This extension provides 2 commands
 PS: From 0.1.2, extension won't provide completion at first, because JS file may not import [ECharts](https://github.com/apache/incubator-echarts). User need to execute `echarts.activate` at command panel.
 
 ## Example
-![example](https://github.com/susiwen8/echarts-vscode-extension/blob/master/gif/example.gif)
+![example](./gif/example.gif)
 
 ## Problems
 * ~~All options information were received by ajax, useless when there were no Internet.~~ Cache response data (<font color="red">Update: json file store at local</font>)
-* ~~Due to Apache server response speed, sometime connection timeout.~~(<font color="red">Trying Netlify, but JSON files are so big and may have other known issues</font>)
+* ~~Due to Apache server response speed, sometime connection timeout.~~(<font color="red">Trying Netlify, but JSON files are so big and may have other known issues</font>)(<font color="red">Update: json file store at local</font>)
 * ~~Use closest node to determine CompletionItem which sometime is inaccurate.~~ Solution: Use [acorn](https://github.com/acornjs/acorn) to generate AST and find closest node by using [acorn-walk](https://github.com/acornjs/acorn/tree/master/acorn-walk)
 * ~~Don't support completion when object inside object~~ Find out all ancestors option
 * All options must be in one root object (There is nothing I can do about it, it has to be :man_shrugging:)
