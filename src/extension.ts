@@ -69,16 +69,22 @@ export function activate(context: ExtensionContext): void {
             break;
         }
 
-        const { rangeOffset, text } = event.contentChanges[index];
-
-        if (event.document.languageId === 'typescript') {
-            option = tsParser(code, rangeOffset, option);
-        } else if (event.document.languageId === 'javascript') {
-            option = jsParser(code, optionsStruct, rangeOffset,
-                diagnostic, text,
-                option, checkCodeDebounce
-            );
+        if (index < event.contentChanges.length) {
+            const { rangeOffset, text } = event.contentChanges[index];
+            if (event.document.languageId === 'typescript') {
+                option = tsParser(code, rangeOffset, option);
+            } else if (event.document.languageId === 'javascript') {
+                option = jsParser(code, optionsStruct, rangeOffset,
+                    diagnostic, text,
+                    option, checkCodeDebounce
+                );
+            }
+        } else {
+            if (event.document.languageId === 'javascript') {
+                checkCodeDebounce(diagnostic, code, optionsStruct);
+            }
         }
+
     });
 
     const provideCompletionItems = {

@@ -6,7 +6,11 @@ import { createSourceFile, ScriptTarget } from 'typescript';
  * @param code TypeScript code string
  * @param position cursor position
  */
-export default function tsParser(code: string, position: number, option: string): string {
+export default function tsParser(
+    code: string,
+    position: number,
+    option: string
+): string {
     try {
         const sourceFile = createSourceFile('Example.ts', code, ScriptTarget.Latest);
         option = walkTSNodeRecursive(sourceFile, position, position, '') || option;

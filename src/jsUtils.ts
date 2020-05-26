@@ -189,41 +189,45 @@ export function checkCode(
     optionsStruct: OptionsStruct,
     AST?: Node
 ): void {
-    diagnostic.clearDiagnostics();
-    const ast = AST || acorn.parse(code, {
-        locations: true,
-        sourceType: 'module'
-    });
-    const optionsLoc: OptionLoc = {};
+    try {
+        diagnostic.clearDiagnostics();
+        const ast = AST || acorn.parse(code, {
+            locations: true,
+            sourceType: 'module'
+        });
+        const optionsLoc: OptionLoc = {};
 
-    simple(ast, {
-        Property(property) {
-            if (isProperty(property)) {
-                let option = '';
-                const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
-                option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                if (!optionsLoc[option] && prevNode) {
-                    optionsLoc[option] = getOptionProperties(prevNode, property.start);
+        simple(ast, {
+            Property(property) {
+                if (isProperty(property)) {
+                    let option = '';
+                    const { prevNodeName, prevNode } = walkNodeRecursive(ast, property, property.start);
+                    option = prevNodeName.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                    if (!optionsLoc[option] && prevNode) {
+                        optionsLoc[option] = getOptionProperties(prevNode, property.start);
+                    }
+                }
+            },
+            Literal(literal) {
+                const property = findNodeAround(ast, literal.start, 'Property');
+                if (property && isProperty(property.node) && isLiteral(literal)) {
+                    let option = '';
+                    const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
+                    option = prevNodeName;
+                    option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
+                    if (!optionsStruct[option]) {
+                        return;
+                    }
+                    diagnostic.checkOptionValue(optionsStruct, option, property.node, literal.value);
                 }
             }
-        },
-        Literal(literal) {
-            const property = findNodeAround(ast, literal.start, 'Property');
-            if (property && isProperty(property.node) && isLiteral(literal)) {
-                let option = '';
-                const { prevNodeName } = walkNodeRecursive(ast, property.node, literal.start);
-                option = prevNodeName;
-                option = option.replace(/.rich.(\S*)/, '.rich.<style_name>');
-                if (!optionsStruct[option]) {
-                    return;
-                }
-                diagnostic.checkOptionValue(optionsStruct, option, property.node, literal.value);
-            }
-        }
-    });
+        });
 
-    diagnostic.checkOption(optionsLoc, optionsStruct);
-    diagnostic.showError();
+        diagnostic.checkOption(optionsLoc, optionsStruct);
+        diagnostic.showError();
+    } catch (error) {
+        console.error('checkCode error');
+    }
 }
 
 export function parseJSCode<T extends Found<unknown>>(
