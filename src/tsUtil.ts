@@ -1,4 +1,13 @@
 import * as ts from 'typescript';
+import {
+    OptionsStruct
+} from './type';
+import Diagnostic from './diagnostic';
+import {
+    Range,
+    DiagnosticSeverity,
+    Position
+} from 'vscode';
 
 type BestMatch = {
     node: ts.Node;
@@ -145,4 +154,59 @@ export default function walkTSNodeRecursive(
     }
 
     return optionChain;
+}
+
+function traverse(
+    node: ts.Node,
+    sourceFile: ts.SourceFile,
+    optionsStruct: OptionsStruct,
+    diagnostic: Diagnostic
+): void {
+    function traverseNode(node: ts.Node): void {
+        switch (node.kind) {
+            case ts.SyntaxKind.PropertyAssignment: {
+                const name = (node as ts.PropertyAssignment).name as ts.Identifier;
+                const initializer = (node as ts.PropertyAssignment).initializer as ts.ObjectLiteralExpression;
+                const option = walkTSNodeRecursive(sourceFile, name.pos, name.pos, '');
+                const key = `${option}${option ? '.' : ''}${name.text}`
+                    .replace(/.rich.(\S*)/, '.rich.<style_name>');
+                const legalOptions = optionsStruct[key];
+
+                if (initializer.kind === ts.SyntaxKind.ObjectLiteralExpression && legalOptions) {
+                    const valideOption = legalOptions.map(item => item.name);
+                    initializer.properties.forEach(property => {
+                        const name = ((property as ts.PropertyAssignment).name as ts.Identifier);
+                        if (valideOption.indexOf(name.text) < 0) {
+                            const position = ts.getLineAndCharacterOfPosition(sourceFile, name.getStart(sourceFile));
+                            diagnostic.createDiagnostic(
+                                new Range(
+                                    new Position(position.line, position.character),
+                                    new Position(position.line, position.character)
+                                ),
+                                `${name} doesn't exist`,
+                                DiagnosticSeverity.Error
+                            );
+                        }
+                    });
+                }
+                break;
+            }
+
+            default:
+                break;
+        }
+        ts.forEachChild(node, traverseNode);
+    }
+
+    traverseNode(node);
+    diagnostic.showError();
+
+}
+
+export function checkTsCode(
+    diagnostic: Diagnostic,
+    optionsStruct: OptionsStruct,
+    sourceFile: ts.SourceFile
+): void {
+    traverse(sourceFile, sourceFile, optionsStruct, diagnostic);
 }

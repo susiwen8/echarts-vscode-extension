@@ -50,10 +50,12 @@ export function activate(context: ExtensionContext): void {
         statusBarItem.changeStatus();
         if (
             !window.activeTextEditor
-            || window.activeTextEditor.document.languageId !== 'javascript'
+            || !['javascript', 'typescript'].includes(window.activeTextEditor.document.languageId)
         ) return;
 
-        checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
+        const languageId = window.activeTextEditor.document.languageId;
+        languageId === 'javascript' && checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
+        languageId === 'typescript' && tsParser(window.activeTextEditor.document.getText(), 0, '', optionsStruct, diagnostic);
     });
 
     const onDidChangeTextDocumentEvent = workspace.onDidChangeTextDocument(event => {
@@ -72,7 +74,9 @@ export function activate(context: ExtensionContext): void {
         if (index < event.contentChanges.length) {
             const { rangeOffset, text } = event.contentChanges[index];
             if (event.document.languageId === 'typescript') {
-                option = tsParser(code, rangeOffset, option);
+                option = tsParser(code, rangeOffset,
+                    option, optionsStruct, diagnostic
+                );
             } else if (event.document.languageId === 'javascript') {
                 option = jsParser(code, optionsStruct, rangeOffset,
                     diagnostic, text,
