@@ -1,6 +1,4 @@
-import walkTSNodeRecursive, {
-    checkTsCode
-} from './tsUtil';
+import walkTSNodeRecursive from './tsUtils';
 import { createSourceFile, ScriptTarget } from 'typescript';
 import {
     OptionsStruct
@@ -12,16 +10,17 @@ import Diagnostic from './diagnostic';
  * @param code TypeScript code string
  * @param position cursor position
  */
-export default function tsParser(
+export default function tsParser<T extends (...args: any) => any>(
     code: string,
     position: number,
     option: string,
     optionsStruct: OptionsStruct,
-    diagnostic: Diagnostic
+    diagnostic: Diagnostic,
+    checkTsCodeDebounce: T
 ): string {
     try {
         const sourceFile = createSourceFile('Example.ts', code, ScriptTarget.Latest);
-        checkTsCode(diagnostic, optionsStruct, sourceFile);
+        checkTsCodeDebounce(diagnostic, optionsStruct, code, sourceFile);
         option = walkTSNodeRecursive(sourceFile, position, position, '') || option;
         return option.replace(/.rich.(\S*)/, '.rich.<style_name>');
     } catch (error) {

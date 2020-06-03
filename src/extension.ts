@@ -11,6 +11,7 @@ import {
 } from 'vscode';
 import debounce from 'lodash/debounce';
 import { checkCode } from './jsUtils';
+import { checkTsCode } from './tsUtils';
 import { COLOR_VALUE } from './type';
 import init from './init';
 import tsParser from './tsParser';
@@ -23,6 +24,7 @@ export function activate(context: ExtensionContext): void {
     let { option, isActive } = initialValue;
     const { statusBarItem, diagnostic, activeKeys, optionsStruct } = initialValue;
     const checkCodeDebounce = debounce(checkCode, 1500);
+    const checkTsCodeDebounce = debounce(checkTsCode, 1500);
 
     const onDidChangeActiveTextEditor = window.onDidChangeActiveTextEditor(editor => {
         diagnostic.clearDiagnostics();
@@ -55,7 +57,7 @@ export function activate(context: ExtensionContext): void {
 
         const languageId = window.activeTextEditor.document.languageId;
         languageId === 'javascript' && checkCode(diagnostic, window.activeTextEditor.document.getText(), optionsStruct);
-        languageId === 'typescript' && tsParser(window.activeTextEditor.document.getText(), 0, '', optionsStruct, diagnostic);
+        languageId === 'typescript' && checkTsCode(diagnostic, optionsStruct, window.activeTextEditor.document.getText());
     });
 
     const onDidChangeTextDocumentEvent = workspace.onDidChangeTextDocument(event => {
@@ -74,11 +76,14 @@ export function activate(context: ExtensionContext): void {
         if (index < event.contentChanges.length) {
             const { rangeOffset, text } = event.contentChanges[index];
             if (event.document.languageId === 'typescript') {
-                option = tsParser(code, rangeOffset,
-                    option, optionsStruct, diagnostic
+                option = tsParser(
+                    code, rangeOffset,
+                    option, optionsStruct,
+                    diagnostic, checkTsCodeDebounce
                 );
             } else if (event.document.languageId === 'javascript') {
-                option = jsParser(code, optionsStruct, rangeOffset,
+                option = jsParser(
+                    code, optionsStruct, rangeOffset,
                     diagnostic, text,
                     option, checkCodeDebounce
                 );
@@ -86,6 +91,8 @@ export function activate(context: ExtensionContext): void {
         } else {
             if (event.document.languageId === 'javascript') {
                 checkCodeDebounce(diagnostic, code, optionsStruct);
+            } else if (event.document.languageId === 'typescript') {
+                checkTsCodeDebounce(diagnostic, optionsStruct, code);
             }
         }
 

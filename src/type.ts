@@ -1,16 +1,18 @@
 import * as acorn from 'acorn';
 import * as ts from 'typescript';
 
+export type Option = {
+    name: string;
+    type: string[];
+    valide: (string | number)[];
+    desc: string;
+    range: number[];
+    require?: string;
+    requireCondition?: string;
+};
+
 export interface OptionsStruct {
-    [key: string]: {
-        name: string;
-        type: string[];
-        valide: (string | number)[];
-        desc: string;
-        range: number[];
-        require?: string;
-        requireCondition?: string;
-    }[];
+    [key: string]: Option[];
 }
 
 export interface PropertyLoc {

@@ -3,7 +3,8 @@ import {
     OptionsStruct,
     isTsProperty,
     isTsObjectExpression,
-    isTsArrayExpression
+    isTsArrayExpression,
+    Option
 } from './type';
 import Diagnostic from './diagnostic';
 import {
@@ -159,6 +160,29 @@ export default function walkTSNodeRecursive(
     return optionChain;
 }
 
+function processObjectLiteralExpression(
+    element: ts.ObjectLiteralExpression,
+    diagnostic: Diagnostic,
+    sourceFile: ts.SourceFile,
+    legalOptions: Option[]
+): void {
+    const valideOption = legalOptions.map(item => item.name);
+    element.properties.forEach(property => {
+        const codeOptionname = property.name as ts.Identifier;
+        if (valideOption.indexOf(codeOptionname.text) < 0) {
+            const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
+            diagnostic.createDiagnostic(
+                new Range(
+                    new Position(position.line, position.character),
+                    new Position(position.line, position.character)
+                ),
+                `${codeOptionname.text} doesn't exist`,
+                DiagnosticSeverity.Error
+            );
+        }
+    });
+}
+
 function traverse(
     node: ts.Node,
     sourceFile: ts.SourceFile,
@@ -176,21 +200,7 @@ function traverse(
             if (isTsObjectExpression(initializer)) {
                 const legalOptions = optionsStruct[key];
                 if (!legalOptions) return;
-                const valideOption = legalOptions.map(item => item.name);
-                initializer.properties.forEach(property => {
-                    const codeOptionname = property.name as ts.Identifier;
-                    if (valideOption.indexOf(codeOptionname.text) < 0) {
-                        const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
-                        diagnostic.createDiagnostic(
-                            new Range(
-                                new Position(position.line, position.character),
-                                new Position(position.line, position.character)
-                            ),
-                            `${codeOptionname.text} doesn't exist`,
-                            DiagnosticSeverity.Error
-                        );
-                    }
-                });
+                processObjectLiteralExpression(initializer, diagnostic, sourceFile, legalOptions);
             } else if (isTsArrayExpression(initializer)) {
                 initializer.elements.forEach(element => {
                     if (isTsObjectExpression(element)) {
@@ -198,22 +208,7 @@ function traverse(
                             const chartType = `${key}.` + findChartTypeInTS(element, element.pos, sourceFile);
                             const legalOptions = optionsStruct[chartType];
                             if (!legalOptions) return;
-                            const valideOption = legalOptions.map(item => item.name);
-                            // TODO extract as a function
-                            element.properties.forEach(property => {
-                                const codeOptionname = property.name as ts.Identifier;
-                                if (valideOption.indexOf(codeOptionname.text) < 0) {
-                                    const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
-                                    diagnostic.createDiagnostic(
-                                        new Range(
-                                            new Position(position.line, position.character),
-                                            new Position(position.line, position.character)
-                                        ),
-                                        `${codeOptionname.text} doesn't exist`,
-                                        DiagnosticSeverity.Error
-                                    );
-                                }
-                            });
+                            processObjectLiteralExpression(element, diagnostic, sourceFile, legalOptions);
                         }
                     }
                 });
@@ -230,8 +225,10 @@ function traverse(
 export function checkTsCode(
     diagnostic: Diagnostic,
     optionsStruct: OptionsStruct,
-    sourceFile: ts.SourceFile
+    code: string,
+    sourceFile?: ts.SourceFile
 ): void {
     diagnostic.clearDiagnostics();
+    sourceFile = sourceFile || ts.createSourceFile('Example.ts', code, ts.ScriptTarget.Latest);
     traverse(sourceFile, sourceFile, optionsStruct, diagnostic);
 }
