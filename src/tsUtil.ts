@@ -1,6 +1,9 @@
 import * as ts from 'typescript';
 import {
-    OptionsStruct
+    OptionsStruct,
+    isTsProperty,
+    isTsObjectExpression,
+    isTsArrayExpression
 } from './type';
 import Diagnostic from './diagnostic';
 import {
@@ -92,11 +95,11 @@ function findChartTypeInTS(
     position: number,
     sourceFile: ts.SourceFile
 ): string {
-    if (node.kind === ts.SyntaxKind.PropertyAssignment) {
-        node = (node as ts.PropertyAssignment).initializer;
+    if (isTsProperty(node)) {
+        node = node.initializer;
     }
-    if (node.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-        const elements = (node as ts.ArrayLiteralExpression).elements;
+    if (isTsArrayExpression(node)) {
+        const elements = node.elements;
         for (let i = 0, len = elements.length; i < len; i++) {
             if (position > elements[i].pos && position < elements[i].end) {
                 return findChartTypeInTSObject((elements[i] as ts.ObjectLiteralExpression).properties, sourceFile);
@@ -104,8 +107,8 @@ function findChartTypeInTS(
         }
     }
 
-    if (node.kind === ts.SyntaxKind.ObjectLiteralExpression) {
-        return findChartTypeInTSObject((node as ts.ObjectLiteralExpression).properties, sourceFile);
+    if (isTsObjectExpression(node)) {
+        return findChartTypeInTSObject(node.properties, sourceFile);
     }
     return '';
 }
@@ -136,9 +139,9 @@ export default function walkTSNodeRecursive(
 
         return walkTSNodeRecursive(sourceFile, res.pos, cursorPosition, optionChain);
     } else if (
-        ts.SyntaxKind.PropertyAssignment === result.kind
+        isTsProperty(result)
     ) {
-        const name = (result as ts.PropertyAssignment).name.getText(sourceFile);
+        const name = result.name.getText(sourceFile);
         const chartType = findChartTypeInTS(result, cursorPosition, sourceFile);
         return `${name}.${chartType}${optionChain ? ('.' + optionChain) : ''}`;
     } else if (
@@ -163,37 +166,58 @@ function traverse(
     diagnostic: Diagnostic
 ): void {
     function traverseNode(node: ts.Node): void {
-        switch (node.kind) {
-            case ts.SyntaxKind.PropertyAssignment: {
-                const name = (node as ts.PropertyAssignment).name as ts.Identifier;
-                const initializer = (node as ts.PropertyAssignment).initializer as ts.ObjectLiteralExpression;
-                const option = walkTSNodeRecursive(sourceFile, name.pos, name.pos, '');
-                const key = `${option}${option ? '.' : ''}${name.text}`
-                    .replace(/.rich.(\S*)/, '.rich.<style_name>');
+        if (isTsProperty(node)) {
+            const name = node.name as ts.Identifier;
+            const initializer = node.initializer;
+            const option = walkTSNodeRecursive(sourceFile, name.pos, name.pos, '');
+            const key = `${option}${option ? '.' : ''}${name.text}`
+                .replace(/.rich.(\S*)/, '.rich.<style_name>');
+
+            if (isTsObjectExpression(initializer)) {
                 const legalOptions = optionsStruct[key];
-
-                if (initializer.kind === ts.SyntaxKind.ObjectLiteralExpression && legalOptions) {
-                    const valideOption = legalOptions.map(item => item.name);
-                    initializer.properties.forEach(property => {
-                        const name = ((property as ts.PropertyAssignment).name as ts.Identifier);
-                        if (valideOption.indexOf(name.text) < 0) {
-                            const position = ts.getLineAndCharacterOfPosition(sourceFile, name.getStart(sourceFile));
-                            diagnostic.createDiagnostic(
-                                new Range(
-                                    new Position(position.line, position.character),
-                                    new Position(position.line, position.character)
-                                ),
-                                `${name} doesn't exist`,
-                                DiagnosticSeverity.Error
-                            );
+                if (!legalOptions) return;
+                const valideOption = legalOptions.map(item => item.name);
+                initializer.properties.forEach(property => {
+                    const codeOptionname = property.name as ts.Identifier;
+                    if (valideOption.indexOf(codeOptionname.text) < 0) {
+                        const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
+                        diagnostic.createDiagnostic(
+                            new Range(
+                                new Position(position.line, position.character),
+                                new Position(position.line, position.character)
+                            ),
+                            `${codeOptionname.text} doesn't exist`,
+                            DiagnosticSeverity.Error
+                        );
+                    }
+                });
+            } else if (isTsArrayExpression(initializer)) {
+                initializer.elements.forEach(element => {
+                    if (isTsObjectExpression(element)) {
+                        if (['series', 'visualMap', 'dataZoom'].includes(key)) {
+                            const chartType = `${key}.` + findChartTypeInTS(element, element.pos, sourceFile);
+                            const legalOptions = optionsStruct[chartType];
+                            if (!legalOptions) return;
+                            const valideOption = legalOptions.map(item => item.name);
+                            // TODO extract as a function
+                            element.properties.forEach(property => {
+                                const codeOptionname = property.name as ts.Identifier;
+                                if (valideOption.indexOf(codeOptionname.text) < 0) {
+                                    const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
+                                    diagnostic.createDiagnostic(
+                                        new Range(
+                                            new Position(position.line, position.character),
+                                            new Position(position.line, position.character)
+                                        ),
+                                        `${codeOptionname.text} doesn't exist`,
+                                        DiagnosticSeverity.Error
+                                    );
+                                }
+                            });
                         }
-                    });
-                }
-                break;
+                    }
+                });
             }
-
-            default:
-                break;
         }
         ts.forEachChild(node, traverseNode);
     }
@@ -208,5 +232,6 @@ export function checkTsCode(
     optionsStruct: OptionsStruct,
     sourceFile: ts.SourceFile
 ): void {
+    diagnostic.clearDiagnostics();
     traverse(sourceFile, sourceFile, optionsStruct, diagnostic);
 }

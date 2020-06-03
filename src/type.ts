@@ -1,4 +1,5 @@
 import * as acorn from 'acorn';
+import * as ts from 'typescript';
 
 export interface OptionsStruct {
     [key: string]: {
@@ -80,6 +81,18 @@ export function isArrayExpression(node: Node): node is ArrayExpression {
 
 export function isObjectExpression(node: Node): node is ObjectExpression {
     return node.type === 'ObjectExpression';
+}
+
+export function isTsObjectExpression(node: ts.Node): node is ts.ObjectLiteralExpression {
+    return node.kind === ts.SyntaxKind.ObjectLiteralExpression;
+}
+
+export function isTsProperty(node: ts.Node): node is ts.PropertyAssignment {
+    return node.kind === ts.SyntaxKind.PropertyAssignment;
+}
+
+export function isTsArrayExpression(node: ts.Node): node is ts.ArrayLiteralExpression {
+    return node.kind === ts.SyntaxKind.ArrayLiteralExpression;
 }
 
 export const COLOR_VALUE = [
