@@ -167,9 +167,11 @@ function processObjectLiteralExpression(
     legalOptions: Option[]
 ): void {
     const valideOption = legalOptions.map(item => item.name);
+    const optionsInCode = element.properties.map(prop => (prop.name as ts.Identifier).text);
     element.properties.forEach(property => {
         const codeOptionname = property.name as ts.Identifier;
-        if (valideOption.indexOf(codeOptionname.text) < 0) {
+        const index = valideOption.indexOf(codeOptionname.text);
+        if (index < 0) {
             const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
             diagnostic.createDiagnostic(
                 new Range(
@@ -179,6 +181,22 @@ function processObjectLiteralExpression(
                 `${codeOptionname.text} doesn't exist`,
                 DiagnosticSeverity.Error
             );
+        } else if (legalOptions[index].require) {
+            const require = legalOptions[index].require!;
+            require.split(',').forEach(require => {
+                // require option is not present
+                if (optionsInCode.indexOf(require) < 0) {
+                    const position = ts.getLineAndCharacterOfPosition(sourceFile, codeOptionname.getStart(sourceFile));
+                    diagnostic.createDiagnostic(
+                        new Range(
+                            new Position(position.line, position.character),
+                            new Position(position.line, position.character)
+                        ),
+                        `${codeOptionname.text} requires ${require}`,
+                        DiagnosticSeverity.Information
+                    );
+                }
+            });
         }
     });
 }
