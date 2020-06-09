@@ -114,7 +114,7 @@ function findChartTypeInTS(
     return '';
 }
 
-export default function walkTSNodeRecursive(
+export function walkTSNodeRecursive(
     sourceFile: ts.SourceFile,
     position: number,
     cursorPosition: number,

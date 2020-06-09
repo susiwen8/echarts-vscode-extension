@@ -1,4 +1,4 @@
-import walkTSNodeRecursive from './tsUtils';
+import { walkTSNodeRecursive } from './tsUtils';
 import { createSourceFile, ScriptTarget } from 'typescript';
 import {
     OptionsStruct
