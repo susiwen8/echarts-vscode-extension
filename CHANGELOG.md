@@ -1,3 +1,9 @@
+## [0.2.3] - 2020-06-17
+## Fixed
+- Deletion didn't trigger option check
+## Feature
+- Check option in TS
+
 ## [0.2.2] - 2020-05-12
 ## Fixed
 - Command 'Active ECharts Extension' resulted in an error [#70](https://github.com/susiwen8/echarts-vscode-extension/issues/70)

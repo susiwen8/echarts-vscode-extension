@@ -3,8 +3,9 @@ import {
     parseJSCode,
     getOption
 } from '../../src/jsUtils';
-import tsParser from '../../src/tsParser';
+import { walkTSNodeRecursive } from '../../src/tsUtils';
 import { getOptionsStruct } from '../../src/option';
+import * as ts from 'typescript';
 
 const code = `
 const option = {
@@ -20,7 +21,7 @@ suite('Extension Test Suite', () => {
         const position = 38;
         const { ast, literal, property } = parseJSCode(code, position)!;
         assert.strictEqual('title', getOption(literal, property, '\n', position, ast, ''));
-        assert.strictEqual('title', tsParser(code, position, ''));
+        assert.strictEqual('title', walkTSNodeRecursive(ts.createSourceFile('expample.ts', code, ts.ScriptTarget.Latest), position, position, ''));
     });
 
     test('Description is empty', () => {

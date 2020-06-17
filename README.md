@@ -51,3 +51,5 @@ I want to thanks [David Sherret](https://github.com/dsherret) for doing an amazi
 - [ ] HoverProvider
 - [x] More command
 - [x] TypeScript support
+- [ ] Add default value for option
+- [ ] New option data structure

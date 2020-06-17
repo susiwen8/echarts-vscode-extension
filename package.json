@@ -2,10 +2,10 @@
 	"name": "vscode-echarts-extension",
 	"displayName": "vscode extension for ECharts",
 	"description": "Autocomplete for ECharts",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"icon": "images/logo.png",
 	"engines": {
-		"vscode": "^1.44.0"
+		"vscode": "^1.46.0"
 	},
 	"categories": [
 		"Other"

@@ -7,3 +7,5 @@ gif/
 .vscode-test/
 src/
 out/
+.mergify.yml
+test/
