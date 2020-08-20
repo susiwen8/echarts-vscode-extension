@@ -2,7 +2,7 @@
 
 ![logo](./images/logo.png)
 
-This is unofficial vscode extension for [ECharts](https://github.com/apache/incubator-echarts)
+This is unofficial vscode extension for [Apache ECharts (incubating)](https://github.com/apache/incubator-echarts)
 
 ## Install
 * `ext install vscode-echarts-extension`
@@ -15,7 +15,7 @@ This extension provides 2 commands
 * `echarts.activate`: extension provides completion when matched case occur
 * `echarts.deactivate`: extension never show completion
 
-PS: From 0.1.2, extension won't provide completion at first, because JS file may not import [ECharts](https://github.com/apache/incubator-echarts). User need to execute `echarts.activate` at command panel.
+PS: From 0.1.2, extension won't provide completion at first, because JS file may not import `echarts`. User need to execute `echarts.activate` at command panel.
 
 ## Example
 ![example](./gif/example.gif)
@@ -28,7 +28,7 @@ PS: From 0.1.2, extension won't provide completion at first, because JS file may
 * All options must be in one root object (There is nothing I can do about it, it has to be :man_shrugging:)
 
 ## Suggestion
-For the purpose of functionnality, I strongly recommend that putting ECharts option object at seperated js file, and put options in same object.
+For the purpose of functionnality, I strongly recommend that putting echarts option object at seperated js file, and put options in same object.
 (Actually, this will reduce losts of work, make my life much easy :stuck_out_tongue_winking_eye:)
 
 ## Documentation
