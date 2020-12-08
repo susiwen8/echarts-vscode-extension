@@ -18,7 +18,7 @@ export interface OptionsStruct {
 export interface PropertyLoc {
     name: string;
     loc: acorn.SourceLocation;
-    value: Literal | ObjectExpression | ArrayExpression
+    value: Literal | ObjectExpression | ArrayExpression;
 }
 
 export interface OptionLoc {
