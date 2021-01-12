@@ -2,7 +2,7 @@
 
 ![logo](./images/logo.png)
 
-This is unofficial vscode extension for [Apache ECharts (incubating)](https://github.com/apache/incubator-echarts)
+This is unofficial vscode extension for [Apache ECharts](https://github.com/apache/echarts)
 
 ## Install
 * `ext install vscode-echarts-extension`
