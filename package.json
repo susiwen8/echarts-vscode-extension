@@ -59,7 +59,7 @@
 		"webpack-cli": "^3.3.12"
 	},
 	"dependencies": {
-		"acorn": "^7.4.0",
+		"acorn": "^8.0.5",
 		"acorn-walk": "^8.0.0",
 		"lodash": "^4.17.20"
 	}
